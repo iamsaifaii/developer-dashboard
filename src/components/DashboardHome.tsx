@@ -33,7 +33,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
 
  // Calculations for productivity index (dynamic)
  const calculateScore = () => {
- const base = 35;
+ const base = 0; // Starts from 0
  const taskScore = completedTasks * 8;
  const commitScore = githubCommits.length * 3;
  const sessionScore = totalSessionsCompleted * 6;
@@ -57,7 +57,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
  Supercharge Your Sprint Workspace
  </h2>
  <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed font-light">
- Welcome back. You completed <span className="text-neutral-700 dark:text-neutral-300 font-bold">{totalSessionsCompleted} pomodoro sprints</span> today. Your automated velocity dashboard is active and synced to <span className="text-neutral-700 dark:text-neutral-300 font-bold">@{settings.githubUsername}</span>.
+ Your automated velocity dashboard is active and synced to <span className="text-neutral-700 dark:text-neutral-300 font-bold">@{settings.githubUsername || 'your account'}</span>. Complete tasks, focus sessions, and GitHub commits to increase your productivity index!
  </p>
  </div>
 

@@ -206,7 +206,7 @@ export const useStore = create<State>()(
  timerMode: 'work',
  timerStatus: 'idle',
  secondsLeft: defaultSettings.pomodoroWorkTime * 60,
- totalSessionsCompleted: 4, // completed sessions
+ totalSessionsCompleted: 0, // completed sessions
  pomodoroHistory: [],
  setTimerMode: (mode) => set((state) => {
  let mins = state.settings.pomodoroWorkTime;
