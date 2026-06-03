@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+}
+
+.dark html, .dark body, .dark #root {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+:root {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Glassmorphism utilities */
+/* Ultra-fast solid panel utilities (replaces glass) */
+.glass-panel {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+}
+
+.dark .glass-panel {
+  background: #000000;
+  border: 1px solid #262626;
+}
+
+.glass-panel-interactive {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+}
+
+.dark .glass-panel-interactive {
+  background: #000000;
+  border: 1px solid #262626;
+}
+
+.glass-panel-interactive:hover {
+  border-color: #a3a3a3;
+}
+
+.dark .glass-panel-interactive:hover {
+  border-color: #525252;
+}
+
+.glass-input {
+  background: #ffffff;
+  border: 1px solid #d4d4d4;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  color: #000000;
+}
+
+.dark .glass-input {
+  background: #000000;
+  border: 1px solid #404040;
+  color: #ffffff;
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: #000000;
+}
+
+.dark .glass-input:focus {
+  border-color: #ffffff;
+}
