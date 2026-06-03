@@ -73,7 +73,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  </div>
  <div>
  <h1 className="text-xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">
- DevPulse
+ DevFlow
  </h1>
  <p className="text-xxs text-neutral-500">v1.0.0 (2026)</p>
  </div>

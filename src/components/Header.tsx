@@ -3,12 +3,11 @@ import { useStore } from '../store/useStore';
 import { auth } from '../lib/firebase';
 import { signOut } from 'firebase/auth';
 import { 
- FiPlus, 
- FiSearch, 
- FiUser,
- FiBell,
- FiLogOut,
- FiMenu
+  FiPlus, 
+  FiSearch, 
+  FiBell,
+  FiLogOut,
+  FiMenu
 } from 'react-icons/fi';
 import { GithubIcon } from './BrandIcons';
 import { ThemeToggle } from './ThemeToggle';
@@ -20,6 +19,8 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar }) => {
  const { currentUser, setCurrentUser, activeTab, githubConnected, githubUsername, settings } = useStore();
+
+ const avatarToShow = settings.avatarUrl || currentUser?.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(settings.userName || currentUser?.displayName || 'Dev')}`;
 
  const handleLogout = async () => {
  try {
@@ -122,15 +123,9 @@ export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar 
  >
  <FiLogOut className="w-4.5 h-4.5" />
  </button>
- <div className="w-9 h-9 rounded-lg bg-neutral-200 dark:bg-neutral-700 p-0.5 flex items-center justify-center cursor-pointer shadow-md shadow-neutral-900/10 overflow-hidden">
- {currentUser?.photoURL ? (
- <img src={currentUser.photoURL} alt="Avatar" className="w-full h-full rounded-[6px] object-cover" />
- ) : (
- <div className="w-full h-full rounded-[6px] bg-white dark:bg-black flex items-center justify-center">
- <FiUser className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
- </div>
- )}
- </div>
+  <div className="w-9 h-9 rounded-lg bg-neutral-200 dark:bg-neutral-700 p-0.5 flex items-center justify-center cursor-pointer shadow-md shadow-neutral-900/10 overflow-hidden">
+    <img src={avatarToShow} alt="Avatar" className="w-full h-full rounded-[6px] object-cover" />
+  </div>
  </div>
  </div>
  </header>

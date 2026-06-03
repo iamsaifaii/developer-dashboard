@@ -8,8 +8,15 @@ import {
   FiAlignLeft,
   FiFlag,
   FiTag,
-  FiGitBranch
+  FiGitBranch,
+  FiArrowRight
 } from 'react-icons/fi';
+
+const STAGE_ADVANCE_MAP: Record<string, { target: string; label: string }> = {
+  'todo': { target: 'in-progress', label: 'In Progress' },
+  'in-progress': { target: 'review', label: 'Review' },
+  'review': { target: 'done', label: 'Complete' }
+};
 
 interface TaskCardProps {
   task: Task;
@@ -17,7 +24,7 @@ interface TaskCardProps {
 }
 
 export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
-  const { deleteTask, currentUser } = useStore();
+  const { deleteTask, currentUser, moveTask } = useStore();
 
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return '';
@@ -164,6 +171,21 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
             <FiGitBranch className="w-3.5 h-3.5 text-neutral-600" />
             <span>{task.subtasks.length} subtasks</span>
           </div>
+        )}
+
+        {/* Move to Next Stage Button (Mobile Phone view only) */}
+        {STAGE_ADVANCE_MAP[task.columnId] && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              moveTask(task.id, STAGE_ADVANCE_MAP[task.columnId].target);
+            }}
+            className="mt-2.5 w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-neutral-800 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white text-[9px] font-bold uppercase tracking-wider cursor-pointer md:hidden transition-all shadow-sm"
+            title={`Move to ${STAGE_ADVANCE_MAP[task.columnId].label}`}
+          >
+            <span>Move to {STAGE_ADVANCE_MAP[task.columnId].label}</span>
+            <FiArrowRight className="w-3 h-3 text-neutral-400" />
+          </button>
         )}
       </div>
     </div>

@@ -108,4 +108,6 @@ export interface DeveloperSettings {
  pomodoroLongBreak: number;
  themeMode: 'dark' | 'glass';
  colorScheme: 'dark' | 'light';
+ avatarUrl?: string;
+ bio?: string;
 }

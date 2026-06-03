@@ -76,14 +76,16 @@ interface State {
 
 export const useStore = create<State>()((set, get) => {
   const defaultSettings: DeveloperSettings = {
- userName: 'Alex Developer',
- githubUsername: 'alexdev-codes',
- pomodoroWorkTime: 25,
- pomodoroShortBreak: 5,
- pomodoroLongBreak: 15,
- themeMode: 'glass',
- colorScheme: 'dark'
- };
+    userName: 'Alex Developer',
+    githubUsername: 'alexdev-codes',
+    pomodoroWorkTime: 25,
+    pomodoroShortBreak: 5,
+    pomodoroLongBreak: 15,
+    themeMode: 'glass',
+    colorScheme: 'dark',
+    avatarUrl: '',
+    bio: ''
+  };
 
  return {
   // Auth state
