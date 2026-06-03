@@ -119,11 +119,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
   const currentStatus = task ? statusConfig[task.columnId] || statusConfig['todo'] : statusConfig['todo'];
   const currentPriority = priorityConfig[priority];
 
-  const formatDisplayDate = (dateStr: string) => {
-    if (!dateStr) return '';
-    const d = new Date(dateStr);
-    return d.toLocaleDateString(undefined, { month: 'numeric', day: 'numeric', year: '2-digit' });
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
