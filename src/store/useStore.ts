@@ -518,44 +518,9 @@ export const useStore = create<State>()((set, get) => {
     } finally {
       set({ githubIsLoading: false });
     }
- }
- };
- },
- {
- name: 'dev-productivity-platform-store',
- partialize: (state) => ({
- activeTab: state.activeTab,
- tasks: state.tasks,
- notes: state.notes,
- folders: state.folders,
- events: state.events,
- totalSessionsCompleted: state.totalSessionsCompleted,
- pomodoroHistory: state.pomodoroHistory,
- settings: state.settings,
- githubConnected: state.githubConnected,
- githubUsername: state.githubUsername,
- githubRepos: state.githubRepos,
- githubIssues: state.githubIssues,
- githubPRs: state.githubPRs,
- githubCommits: state.githubCommits,
- githubToken: state.githubToken,
- currentUser: state.currentUser
- }),
- merge: (persistedState: any, currentState: State) => ({
-    ...currentState,
-    ...persistedState,
-    tasks: persistedState?.tasks || currentState.tasks || [],
-    notes: persistedState?.notes || currentState.notes || [],
-    events: persistedState?.events || currentState.events || [],
-    pomodoroHistory: persistedState?.pomodoroHistory || currentState.pomodoroHistory || [],
-    githubRepos: persistedState?.githubRepos || currentState.githubRepos || [],
-    githubIssues: persistedState?.githubIssues || currentState.githubIssues || [],
-    githubPRs: persistedState?.githubPRs || currentState.githubPRs || [],
-    githubCommits: persistedState?.githubCommits || currentState.githubCommits || []
-  })
- }
- )
-);
+    }
+  };
+});
 
 // Cloud Sync Listener
 useStore.subscribe((state, prevState) => {
