@@ -616,6 +616,10 @@ export const useStore = create<State>()(
       const userRes = await fetch('https://api.github.com/user', {
         headers: { Authorization: `Bearer ${githubToken}` }
       });
+      if (userRes.status === 401 || userRes.status === 403) {
+        set({ githubToken: null, githubConnected: false });
+        throw new Error("Invalid or expired GitHub token");
+      }
       if (!userRes.ok) throw new Error("Failed to fetch user");
       const userData = await userRes.json();
       const realUsername = userData.login;
@@ -691,7 +695,7 @@ export const useStore = create<State>()(
               e.payload.commits.forEach((c: any) => {
                 commits.push({
                   id: c.sha,
-                  message: c.message.split('\\n')[0],
+                  message: c.message.split('\n')[0],
                   date: e.created_at.split('T')[0],
                   repoName: e.repo.name.split('/')[1] || e.repo.name,
                   author: realUsername
@@ -734,7 +738,8 @@ export const useStore = create<State>()(
  githubIssues: state.githubIssues,
  githubPRs: state.githubPRs,
  githubCommits: state.githubCommits,
- githubToken: state.githubToken
+ githubToken: state.githubToken,
+ currentUser: state.currentUser
  })
  }
  )
