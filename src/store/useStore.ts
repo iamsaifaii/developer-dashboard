@@ -67,6 +67,10 @@ interface State {
  settings: DeveloperSettings;
  updateSettings: (updates: Partial<DeveloperSettings>) => void;
 
+ // Cloud sync status
+ cloudSyncStatus: 'synced' | 'syncing' | 'error' | null;
+ cloudSyncError: string | null;
+
  // Real GitHub API
  githubToken: string | null;
  githubIsLoading: boolean;
@@ -92,9 +96,11 @@ export const useStore = create<State>()((set, get) => {
   currentUser: null,
   isHydratingFromCloud: false,
   isReceivingSnapshot: false,
+  cloudSyncStatus: null,
+  cloudSyncError: null,
   setCurrentUser: (user) => {
     if (user) {
-      set({ currentUser: user, isHydratingFromCloud: true });
+      set({ currentUser: user, isHydratingFromCloud: true, cloudSyncStatus: 'syncing', cloudSyncError: null });
       const docRef = doc(db, 'users', user.uid);
       
       // Cleanup previous listener if any
@@ -120,17 +126,19 @@ export const useStore = create<State>()((set, get) => {
               currentUser: user,
               githubToken: currentToken || cloudState.githubToken,
               isHydratingFromCloud: false,
-              isReceivingSnapshot: true
+              isReceivingSnapshot: true,
+              cloudSyncStatus: 'synced',
+              cloudSyncError: null
             });
             // Allow subscribe to trigger normally after this tick
             setTimeout(() => set({ isReceivingSnapshot: false }), 0);
             return;
           }
         }
-        set({ isHydratingFromCloud: false });
+        set({ isHydratingFromCloud: false, cloudSyncStatus: 'synced', cloudSyncError: null });
       }, (err) => {
         console.error("Failed to sync from cloud", err);
-        set({ isHydratingFromCloud: false });
+        set({ cloudSyncStatus: 'error', cloudSyncError: err.message });
       });
 
     } else {
@@ -151,7 +159,9 @@ export const useStore = create<State>()((set, get) => {
        githubCommits: [],
        githubConnected: false,
        githubUsername: '',
-       githubToken: null
+       githubToken: null,
+       cloudSyncStatus: null,
+       cloudSyncError: null
      });
    }
  },
