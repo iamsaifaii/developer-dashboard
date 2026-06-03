@@ -1,6 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import type { 
  Task, Column, Note, CalendarEvent, PomodoroSession, TimerMode, DeveloperSettings,
@@ -11,6 +10,7 @@ interface State {
  // Auth
  currentUser: { uid: string; displayName: string | null; email: string | null; photoURL: string | null } | null;
  isHydratingFromCloud: boolean;
+ isReceivingSnapshot: boolean;
  setCurrentUser: (user: any) => void;
 
  // Navigation
@@ -74,10 +74,8 @@ interface State {
  fetchRealGithubData: () => Promise<void>;
 }
 
-export const useStore = create<State>()(
- persist(
- (set, get) => {
- const defaultSettings: DeveloperSettings = {
+export const useStore = create<State>()((set, get) => {
+  const defaultSettings: DeveloperSettings = {
  userName: 'Alex Developer',
  githubUsername: 'alexdev-codes',
  pomodoroWorkTime: 25,
@@ -88,44 +86,58 @@ export const useStore = create<State>()(
  };
 
  return {
- // Auth state
- currentUser: null,
- isHydratingFromCloud: false,
- setCurrentUser: async (user) => {
-   if (user) {
-     set({ currentUser: user, isHydratingFromCloud: true });
-     try {
-       const docRef = doc(db, 'users', user.uid);
-       const docSnap = await getDoc(docRef);
-       if (docSnap.exists()) {
-         const cloudState = docSnap.data().state;
-         if (cloudState) {
-           const currentToken = get().githubToken;
-           set({ 
-             ...cloudState, 
-             tasks: cloudState.tasks || [],
-             notes: cloudState.notes || [],
-             events: cloudState.events || [],
-             pomodoroHistory: cloudState.pomodoroHistory || [],
-             githubRepos: cloudState.githubRepos || [],
-             githubIssues: cloudState.githubIssues || [],
-             githubPRs: cloudState.githubPRs || [],
-             githubCommits: cloudState.githubCommits || [],
-             currentUser: user,
-             githubToken: currentToken || cloudState.githubToken,
-             isHydratingFromCloud: false
-           });
-           return;
-         }
-       }
-       set({ isHydratingFromCloud: false });
-     } catch (err) {
-       console.error("Failed to load workspace from cloud", err);
-       set({ isHydratingFromCloud: false });
-     }
-   } else {
-     // Reset on logout
-     set({
+  // Auth state
+  currentUser: null,
+  isHydratingFromCloud: false,
+  isReceivingSnapshot: false,
+  setCurrentUser: (user) => {
+    if (user) {
+      set({ currentUser: user, isHydratingFromCloud: true });
+      const docRef = doc(db, 'users', user.uid);
+      
+      // Cleanup previous listener if any
+      if ((window as any)._unsubscribeSnapshot) {
+        (window as any)._unsubscribeSnapshot();
+      }
+
+      (window as any)._unsubscribeSnapshot = onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const cloudState = docSnap.data().state;
+          if (cloudState) {
+            const currentToken = get().githubToken;
+            set({ 
+              ...cloudState, 
+              tasks: cloudState.tasks || [],
+              notes: cloudState.notes || [],
+              events: cloudState.events || [],
+              pomodoroHistory: cloudState.pomodoroHistory || [],
+              githubRepos: cloudState.githubRepos || [],
+              githubIssues: cloudState.githubIssues || [],
+              githubPRs: cloudState.githubPRs || [],
+              githubCommits: cloudState.githubCommits || [],
+              currentUser: user,
+              githubToken: currentToken || cloudState.githubToken,
+              isHydratingFromCloud: false,
+              isReceivingSnapshot: true
+            });
+            // Allow subscribe to trigger normally after this tick
+            setTimeout(() => set({ isReceivingSnapshot: false }), 0);
+            return;
+          }
+        }
+        set({ isHydratingFromCloud: false });
+      }, (err) => {
+        console.error("Failed to sync from cloud", err);
+        set({ isHydratingFromCloud: false });
+      });
+
+    } else {
+      if ((window as any)._unsubscribeSnapshot) {
+        (window as any)._unsubscribeSnapshot();
+        (window as any)._unsubscribeSnapshot = null;
+      }
+      // Reset on logout
+      set({
        currentUser: null,
        tasks: [],
        notes: [],
@@ -547,7 +559,7 @@ export const useStore = create<State>()(
 
 // Cloud Sync Listener
 useStore.subscribe((state, prevState) => {
-  if (state.currentUser && !state.isHydratingFromCloud) {
+  if (state.currentUser && !state.isHydratingFromCloud && !state.isReceivingSnapshot) {
     const stateToSave = {
       activeTab: state.activeTab,
       tasks: state.tasks,
