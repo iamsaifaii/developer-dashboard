@@ -522,6 +522,27 @@ export const useStore = create<State>()((set, get) => {
   };
 });
 
+// Helper to recursively strip undefined properties before saving to Firestore
+function serializeForFirestore(val: any): any {
+  if (val === undefined) {
+    return null;
+  }
+  if (Array.isArray(val)) {
+    return val.map(serializeForFirestore);
+  }
+  if (val !== null && typeof val === 'object') {
+    const cleaned: any = {};
+    for (const key of Object.keys(val)) {
+      const value = val[key];
+      if (value !== undefined) {
+        cleaned[key] = serializeForFirestore(value);
+      }
+    }
+    return cleaned;
+  }
+  return val;
+}
+
 // Cloud Sync Listener
 useStore.subscribe((state, prevState) => {
   if (state.currentUser && !state.isHydratingFromCloud && !state.isReceivingSnapshot) {
@@ -564,7 +585,7 @@ useStore.subscribe((state, prevState) => {
     // Only sync if the actual persistent data changed
     // This prevents the pomodoro timer (which updates secondsLeft every 1s) from triggering a Firebase write every second
     if (JSON.stringify(stateToSave) !== JSON.stringify(prevStateToSave)) {
-      setDoc(doc(db, 'users', state.currentUser.uid), { state: stateToSave }, { merge: true })
+      setDoc(doc(db, 'users', state.currentUser.uid), { state: serializeForFirestore(stateToSave) }, { merge: true })
         .catch(err => console.error('Cloud sync failed:', err));
     }
   }

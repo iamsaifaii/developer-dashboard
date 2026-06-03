@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './lib/firebase';
 import { useStore } from './store/useStore';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
@@ -14,20 +16,40 @@ import { LoginScreen } from './components/Auth/LoginScreen';
 import { playChime } from './components/Pomodoro/SoundPlayer';
 
 function App() {
- const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
- const { 
- currentUser,
- activeTab, 
- timerStatus, 
- tick, 
- addTask,
- settings,
- githubToken,
- githubConnected,
- fetchRealGithubData
- } = useStore();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const { 
+    currentUser,
+    activeTab, 
+    timerStatus, 
+    tick, 
+    addTask,
+    settings,
+    githubToken,
+    githubConnected,
+    fetchRealGithubData,
+    setCurrentUser
+  } = useStore();
 
- const [isQuickTaskOpen, setIsQuickTaskOpen] = useState(false);
+  const [isQuickTaskOpen, setIsQuickTaskOpen] = useState(false);
+
+  // Auth persistence listener
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser({
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        });
+      } else {
+        setCurrentUser(null);
+      }
+      setIsAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, [setCurrentUser]);
 
  // 0. Sync Theme
  useEffect(() => {
@@ -112,9 +134,20 @@ function App() {
  }
  };
 
- if (!currentUser) {
- return <LoginScreen />;
- }
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-[#000000] flex flex-col items-center justify-center p-6 text-neutral-800 dark:text-neutral-200">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-neutral-300 border-t-transparent dark:border-neutral-800 dark:border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 font-light tracking-wide animate-pulse">Syncing workspace...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return <LoginScreen />;
+  }
 
  return (
     <div className={`min-h-screen ${settings.themeMode === 'glass' ? 'bg-white dark:bg-black' : 'bg-white dark:bg-black'} text-black dark:text-neutral-100 flex relative overflow-hidden `}>
