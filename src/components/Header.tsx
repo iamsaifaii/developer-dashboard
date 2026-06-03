@@ -7,16 +7,18 @@ import {
  FiSearch, 
  FiUser,
  FiBell,
- FiLogOut
+ FiLogOut,
+ FiMenu
 } from 'react-icons/fi';
 import { GithubIcon } from './BrandIcons';
 import { ThemeToggle } from './ThemeToggle';
 
 interface HeaderProps {
  onQuickTaskClick: () => void;
+ onOpenSidebar: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick }) => {
+export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar }) => {
  const { currentUser, setCurrentUser, activeTab, githubConnected, githubUsername, settings } = useStore();
 
  const handleLogout = async () => {
@@ -49,13 +51,21 @@ export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick }) => {
  };
 
  return (
- <header className="h-20 border-b border-neutral-200 dark:border-neutral-800/80 px-8 flex items-center justify-between glass-panel sticky top-0 z-20">
+ <header className="h-20 border-b border-neutral-200 dark:border-neutral-800/80 px-4 md:px-8 flex items-center justify-between glass-panel sticky top-0 z-20">
+ <div className="flex items-center gap-3">
+ <button 
+ onClick={onOpenSidebar}
+ className="lg:hidden p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 dark:text-neutral-400"
+ >
+ <FiMenu className="w-5 h-5" />
+ </button>
  {/* Dynamic Title */}
- <div>
- <h2 className="text-xl font-bold tracking-tight text-black dark:text-white">{getTitle()}</h2>
+ <div className="hidden sm:block">
+ <h2 className="text-lg md:text-xl font-bold tracking-tight text-black dark:text-white">{getTitle()}</h2>
  <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
  {getGreeting()}, <span className="text-neutral-700 dark:text-neutral-300 font-medium">{currentUser?.displayName || settings.userName}</span> — let's build something great.
  </p>
+ </div>
  </div>
 
  {/* Header Actions */}

@@ -179,7 +179,7 @@ export const GithubDashboard: React.FC = () => {
  <div className="glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl p-5 shadow-xl flex flex-col gap-4">
  
  {/* Tabs header */}
- <div className="flex gap-2.5 bg-white dark:bg-black/60 p-1 rounded-xl border border-neutral-300 dark:border-black">
+ <div className="flex flex-wrap md:flex-nowrap gap-2.5 bg-white dark:bg-black/60 p-1 rounded-xl border border-neutral-300 dark:border-black">
  {(['repos', 'commits', 'prs', 'issues'] as const).map(tab => (
  <button
  key={tab}

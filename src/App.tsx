@@ -12,7 +12,9 @@ import { SettingsPanel } from './components/Settings/SettingsPanel';
 import { TaskModal } from './components/Kanban/TaskModal';
 import { LoginScreen } from './components/Auth/LoginScreen';
 import { playChime } from './components/Pomodoro/SoundPlayer';
+
 function App() {
+ const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  const { 
  currentUser,
  activeTab, 
@@ -108,15 +110,18 @@ function App() {
     <div className={`min-h-screen ${settings.themeMode === 'glass' ? 'bg-white dark:bg-black' : 'bg-white dark:bg-black'} text-black dark:text-neutral-100 flex relative overflow-hidden `}>
 
  {/* Primary Sidebar Layout */}
- <Sidebar />
+ <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
 
  {/* Main Content Area */}
- <div className="flex-1 pl-64 flex flex-col h-screen overflow-hidden">
+ <div className="flex-1 pl-0 lg:pl-64 flex flex-col h-screen overflow-hidden w-full">
  {/* Workspace Top Header */}
- <Header onQuickTaskClick={() => setIsQuickTaskOpen(true)} />
+ <Header 
+ onQuickTaskClick={() => setIsQuickTaskOpen(true)} 
+ onOpenSidebar={() => setIsMobileMenuOpen(true)}
+ />
 
  {/* Workspace Views Wrapper */}
- <main className="flex-1 overflow-y-auto p-8 relative">
+ <main className="flex-1 overflow-y-auto p-4 md:p-8 relative">
  <>
  <div
  key={activeTab}

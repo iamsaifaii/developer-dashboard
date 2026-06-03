@@ -11,9 +11,11 @@ import {
  FiPause,
  FiRotateCcw
 } from 'react-icons/fi';
+
+
 import { TrelloIcon, GithubIcon } from './BrandIcons';
 
-export const Sidebar: React.FC = () => {
+export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
  const { 
  activeTab, 
  setActiveTab, 
@@ -55,7 +57,14 @@ export const Sidebar: React.FC = () => {
  };
 
  return (
- <aside className="w-64 h-screen fixed left-0 top-0 glass-panel border-r border-neutral-200 dark:border-neutral-800 flex flex-col justify-between z-30">
+ <>
+ {isOpen && (
+ <div 
+ className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity" 
+ onClick={onClose} 
+ />
+ )}
+ <aside className={`w-64 h-screen fixed left-0 top-0 glass-panel border-r border-neutral-200 dark:border-neutral-800 flex flex-col justify-between z-50 transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
  {/* Brand Header */}
  <div className="p-6">
  <div className="flex items-center gap-3">
@@ -150,5 +159,6 @@ export const Sidebar: React.FC = () => {
  </div>
  </div>
  </aside>
+ </>
  );
 };

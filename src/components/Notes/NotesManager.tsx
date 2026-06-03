@@ -182,10 +182,10 @@ export const NotesManager: React.FC = () => {
  };
 
  return (
- <div className="h-[calc(100vh-8.5rem)] grid grid-cols-1 md:grid-cols-4 gap-6">
+ <div className="flex flex-col md:grid md:grid-cols-4 gap-6 h-[calc(100vh-8.5rem)]">
  
  {/* 1. Folders Column */}
- <div className="md:col-span-1 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl p-4 flex flex-col justify-between shadow-xl">
+ <div className="h-48 md:h-auto md:col-span-1 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl p-4 flex flex-col shadow-xl overflow-y-auto">
  <div>
  <div className="flex items-center justify-between mb-4">
  <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">Notebooks</span>
@@ -263,7 +263,7 @@ export const NotesManager: React.FC = () => {
  </div>
 
  {/* 2. Notes List Column */}
- <div className="md:col-span-1 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl p-4 flex flex-col gap-4 shadow-xl">
+ <div className="h-64 md:h-auto md:col-span-1 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl p-4 flex flex-col gap-4 shadow-xl">
  {/* Search */}
  <div className="relative">
  <FiSearch className="w-4 h-4 text-neutral-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
@@ -338,7 +338,7 @@ export const NotesManager: React.FC = () => {
  </div>
 
  {/* 3. Editor Column */}
- <div className="md:col-span-2 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl flex flex-col shadow-xl overflow-hidden">
+ <div className={`flex-1 md:col-span-2 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl flex flex-col shadow-xl overflow-hidden ${!selectedNoteId ? 'max-md:hidden' : ''}`}>
  {activeNote ? (
  <>
  {/* Editor Toolbar */}
