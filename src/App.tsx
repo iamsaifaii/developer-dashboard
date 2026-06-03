@@ -92,25 +92,29 @@ function App() {
  };
  }, [timerStatus, tick]);
 
- // 2. Global Quick Task Saving
- const handleQuickTaskSave = (taskData: {
- title: string;
- description: string;
- priority: 'low' | 'medium' | 'high';
- tags: string[];
- subtasks: any[];
- dueDate?: string;
- }) => {
- addTask({
- title: taskData.title,
- description: taskData.description,
- columnId: 'todo', // defaults to To Do column
- priority: taskData.priority,
- tags: taskData.tags,
- subtasks: taskData.subtasks,
- dueDate: taskData.dueDate
- });
- };
+  // 2. Global Quick Task Saving
+  const handleQuickTaskSave = (taskData: {
+    title: string;
+    description: string;
+    priority: 'low' | 'medium' | 'high' | 'urgent';
+    tags: string[];
+    subtasks: any[];
+    dueDate?: string;
+    coverImage?: string;
+    attachmentCount?: number;
+  }) => {
+    addTask({
+      title: taskData.title,
+      description: taskData.description,
+      columnId: 'todo', // defaults to To Do column
+      priority: taskData.priority,
+      tags: taskData.tags,
+      subtasks: taskData.subtasks,
+      dueDate: taskData.dueDate,
+      coverImage: taskData.coverImage,
+      attachmentCount: taskData.attachmentCount
+    });
+  };
 
  // 3. Tab rendering switcher
  const renderTabContent = () => {

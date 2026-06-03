@@ -8,7 +8,11 @@ import {
  FiSearch, 
  FiFilter, 
  FiArrowRight,
- FiStar
+ FiStar,
+ FiArchive,
+ FiList,
+ FiClock,
+ FiEye
 } from 'react-icons/fi';
 import { TrelloIcon, GithubIcon } from '../BrandIcons';
 export const KanbanBoard: React.FC = () => {
@@ -71,6 +75,8 @@ export const KanbanBoard: React.FC = () => {
  tags: string[];
  subtasks: any[];
  dueDate?: string;
+ coverImage?: string;
+ attachmentCount?: number;
  }) => {
  if (editingTask) {
  // Edit mode
@@ -84,7 +90,9 @@ export const KanbanBoard: React.FC = () => {
  priority: taskData.priority,
  tags: taskData.tags,
  subtasks: taskData.subtasks,
- dueDate: taskData.dueDate
+ dueDate: taskData.dueDate,
+ coverImage: taskData.coverImage,
+ attachmentCount: taskData.attachmentCount
  };
  addTask(newTask);
  }
@@ -106,6 +114,54 @@ export const KanbanBoard: React.FC = () => {
  moveTask(taskId, colId);
  }
  setIsDragOverCol(null);
+ };
+
+ // Status-based color accents for column header/badges
+ const getColumnHeaderBadge = (colId: string) => {
+  switch (colId) {
+    case 'backlog':
+      return {
+        label: 'BACKLOG',
+        bg: 'bg-neutral-800 text-neutral-300 border border-neutral-700/50',
+        icon: <FiArchive className="w-3 h-3 text-neutral-400 shrink-0" />
+      };
+    case 'todo':
+      return {
+        label: 'TO DO',
+        bg: 'bg-neutral-700 text-white border border-neutral-600/50',
+        icon: <FiList className="w-3 h-3 text-neutral-350 shrink-0" />
+      };
+    case 'in-progress':
+      return {
+        label: 'IN PROGRESS',
+        bg: 'bg-blue-650/80 text-white border border-blue-500/20',
+        icon: <FiClock className="w-3.5 h-3.5 text-blue-200 shrink-0" />
+      };
+    case 'review':
+      return {
+        label: 'REVIEW',
+        bg: 'bg-yellow-600/90 text-white border border-yellow-500/20',
+        icon: <FiEye className="w-3.5 h-3.5 text-yellow-100 shrink-0" />
+      };
+    case 'done':
+      return {
+        label: 'COMPLETE',
+        bg: 'bg-emerald-650 text-white border border-emerald-500/20',
+        icon: (
+          <span className="flex items-center justify-center w-3.5 h-3.5 rounded-full bg-white text-emerald-650 shrink-0">
+            <svg className="w-2 h-2 text-emerald-650" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </span>
+        )
+      };
+    default:
+      return {
+        label: colId.toUpperCase(),
+        bg: 'bg-neutral-700 text-white border border-neutral-600',
+        icon: null
+      };
+  }
  };
 
  return (
@@ -137,6 +193,7 @@ export const KanbanBoard: React.FC = () => {
  className="w-full text-xs pl-8 pr-3 py-2 rounded-lg bg-white dark:bg-black/40 border border-neutral-200 dark:border-neutral-800/80 text-neutral-350 focus:outline-none focus:border-neutral-500"
  >
  <option value="all">All Priorities</option>
+ <option value="urgent">Urgent Priority</option>
  <option value="high">High Priority</option>
  <option value="medium">Medium Priority</option>
  <option value="low">Low Priority</option>
@@ -176,40 +233,37 @@ export const KanbanBoard: React.FC = () => {
  const colTasks = getFilteredTasks(col.id);
  const isOver = isDragOverCol === col.id;
 
- // Status-based color accents
- const colColorMap: Record<string, { border: string; bg: string; text: string; badge: string }> = {
- 'backlog': { border: 'border-t-neutral-400', bg: 'bg-neutral-400', text: 'text-neutral-600 dark:text-neutral-400', badge: 'bg-neutral-200 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300' },
- 'todo': { border: 'border-t-neutral-500', bg: 'bg-neutral-500', text: 'text-neutral-600 dark:text-neutral-400', badge: 'bg-neutral-200 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300' },
- 'in-progress': { border: 'border-t-blue-500', bg: 'bg-blue-500', text: 'text-blue-600 dark:text-blue-400', badge: 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' },
- 'review': { border: 'border-t-yellow-500', bg: 'bg-yellow-500', text: 'text-yellow-600 dark:text-yellow-400', badge: 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300' },
- 'done': { border: 'border-t-green-500', bg: 'bg-green-500', text: 'text-green-600 dark:text-green-400', badge: 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300' },
- };
- const accent = colColorMap[col.id] || colColorMap['backlog'];
-
  return (
  <div
  key={col.id}
  onDragOver={(e) => handleDragOver(e, col.id)}
  onDragLeave={handleDragLeave}
  onDrop={(e) => handleDrop(e, col.id)}
- className={`w-72 flex-shrink-0 flex flex-col max-h-full rounded-2xl border border-t-[3px] ${accent.border} ${
+ className={`w-72 flex-shrink-0 flex flex-col max-h-full rounded-2xl border ${
  isOver 
- ? 'bg-white dark:bg-black/40 border-neutral-600 shadow-lg shadow-neutral-900/5' 
- : 'bg-white dark:bg-black/20 border-neutral-200 dark:border-neutral-850'
+ ? 'bg-[#121214] border-neutral-600 shadow-xl' 
+ : 'bg-[#0f0f11]/60 border-neutral-800/80'
  }`}
  >
  {/* Column Header */}
- <div className="p-4 flex items-center justify-between border-b border-neutral-300 dark:border-black bg-white dark:bg-black/10">
+ <div className="p-4 flex items-center justify-between border-b border-neutral-850 bg-neutral-900/10">
  <div className="flex items-center gap-2">
- <span className={`w-2 h-2 rounded-full ${accent.bg}`}></span>
- <h3 className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">{col.title}</h3>
- <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${accent.badge}`}>
- {colTasks.length}
+ {(() => {
+   const badge = getColumnHeaderBadge(col.id);
+   return (
+     <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-extrabold tracking-wider ${badge.bg}`}>
+       {badge.icon}
+       <span>{badge.label}</span>
+     </div>
+   );
+ })()}
+ <span className="text-xs font-semibold text-neutral-500">
+   {colTasks.length}
  </span>
  </div>
  <button
  onClick={() => handleAddNewTaskToColumn(col.id)}
- className="p-1 text-neutral-500 hover:text-black dark:text-white rounded hover:bg-neutral-100 dark:bg-neutral-800 cursor-pointer"
+ className="p-1 text-neutral-500 hover:text-white rounded hover:bg-neutral-800 cursor-pointer"
  title={`Add task to ${col.title}`}
  >
  <FiPlus className="w-4 h-4" />
@@ -219,7 +273,7 @@ export const KanbanBoard: React.FC = () => {
  {/* Cards Container (Scrollable) */}
  <div className="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
  {colTasks.length === 0 ? (
- <div className="h-28 border border-dashed border-neutral-200 dark:border-neutral-850 rounded-xl flex flex-col items-center justify-center text-center p-4 text-neutral-600">
+ <div className="h-28 border border-dashed border-neutral-850 rounded-xl flex flex-col items-center justify-center text-center p-4 text-neutral-600">
  <TrelloIcon className="w-5 h-5 opacity-20 mb-1" />
  <span className="text-[10px] font-medium uppercase tracking-wider">Empty Column</span>
  </div>

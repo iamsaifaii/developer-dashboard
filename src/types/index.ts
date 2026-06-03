@@ -1,4 +1,4 @@
-export type Priority = 'low' | 'medium' | 'high';
+export type Priority = 'low' | 'medium' | 'high' | 'urgent';
 
 export interface Subtask {
  id: string;
@@ -18,6 +18,8 @@ export interface Task {
  githubIssueId?: string;
  githubIssueUrl?: string;
  githubIssueNumber?: number;
+ coverImage?: string;
+ attachmentCount?: number;
  createdAt: string;
 }
 

@@ -3,7 +3,7 @@ import type { Task, Priority, Subtask } from '../../types';
 import { 
   FiX, FiTrash2, FiCalendar, FiTag, FiFlag, 
   FiCheckSquare, FiPlus, FiChevronDown, FiChevronRight,
-  FiClock, FiTarget, FiLink, FiList, FiPaperclip
+  FiTarget, FiLink, FiList, FiPaperclip, FiImage
 } from 'react-icons/fi';
 
 interface TaskModalProps {
@@ -16,6 +16,8 @@ interface TaskModalProps {
     tags: string[];
     subtasks: Subtask[];
     dueDate?: string;
+    coverImage?: string;
+    attachmentCount?: number;
   }) => void;
   task?: Task | null; // If editing, pass the task
 }
@@ -30,6 +32,7 @@ const statusConfig: Record<string, { label: string; bg: string; text: string }> 
 };
 
 const priorityConfig: Record<Priority, { label: string; color: string; flag: string }> = {
+  'urgent': { label: 'Urgent', color: 'text-red-500', flag: 'text-red-500' },
   'high': { label: 'High', color: 'text-orange-500', flag: 'text-orange-500' },
   'medium': { label: 'Medium', color: 'text-yellow-500', flag: 'text-yellow-500' },
   'low': { label: 'Low', color: 'text-blue-400', flag: 'text-blue-400' },
@@ -42,6 +45,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
   const [dueDate, setDueDate] = useState('');
   const [tagsInput, setTagsInput] = useState('');
   const [subtasks, setSubtasks] = useState<Subtask[]>([]);
+  const [coverImage, setCoverImage] = useState('');
+  const [attachmentCount, setAttachmentCount] = useState<number>(0);
   const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
   const [showSubtasks, setShowSubtasks] = useState(true);
   const [showPriorityDropdown, setShowPriorityDropdown] = useState(false);
@@ -55,6 +60,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
       setDueDate(task.dueDate || '');
       setTagsInput(task.tags.join(', '));
       setSubtasks(task.subtasks);
+      setCoverImage(task.coverImage || '');
+      setAttachmentCount(task.attachmentCount || 0);
     } else {
       setTitle('');
       setDescription('');
@@ -62,6 +69,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
       setDueDate('');
       setTagsInput('');
       setSubtasks([]);
+      setCoverImage('');
+      setAttachmentCount(0);
     }
   }, [task, isOpen]);
 
@@ -104,7 +113,9 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
       priority,
       tags: tagsArray,
       subtasks,
-      dueDate: dueDate || undefined
+      dueDate: dueDate || undefined,
+      coverImage: coverImage.trim() || undefined,
+      attachmentCount: attachmentCount > 0 ? attachmentCount : undefined
     });
     
     onClose();
@@ -185,7 +196,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
                 </button>
                 {showPriorityDropdown && (
                   <div className="absolute top-7 left-32 bg-neutral-800 border border-neutral-700 rounded-lg shadow-xl z-30 py-1 min-w-[120px]">
-                    {(['high', 'medium', 'low'] as Priority[]).map(p => (
+                    {(['urgent', 'high', 'medium', 'low'] as Priority[]).map(p => (
                       <button
                         key={p}
                         type="button"
@@ -222,13 +233,35 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
                 </div>
               </div>
 
-              {/* Time estimate (decorative) */}
+              {/* Attachment Count */}
               <div className="flex items-center gap-4">
                 <span className="flex items-center gap-1.5 text-xs text-neutral-400 w-28 shrink-0">
-                  <FiClock className="w-3.5 h-3.5" />
-                  Time estimate
+                  <FiPaperclip className="w-3.5 h-3.5" />
+                  Attachments
                 </span>
-                <span className="text-xs text-neutral-600">Empty</span>
+                <input
+                  type="number"
+                  min="0"
+                  value={attachmentCount || ''}
+                  onChange={(e) => setAttachmentCount(parseInt(e.target.value) || 0)}
+                  placeholder="Count..."
+                  className="w-20 text-xs bg-transparent text-neutral-300 border-none outline-none focus:outline-none"
+                />
+              </div>
+
+              {/* Cover Image URL */}
+              <div className="flex items-center gap-4 col-span-2 border-t border-neutral-800/40 pt-3">
+                <span className="flex items-center gap-1.5 text-xs text-neutral-400 w-28 shrink-0">
+                  <FiImage className="w-3.5 h-3.5" />
+                  Cover Image URL
+                </span>
+                <input
+                  type="text"
+                  placeholder="https://example.com/image.jpg"
+                  value={coverImage}
+                  onChange={(e) => setCoverImage(e.target.value)}
+                  className="flex-1 text-xs bg-transparent text-neutral-350 placeholder-neutral-600 border-none outline-none focus:outline-none"
+                />
               </div>
 
               {/* Tags */}
