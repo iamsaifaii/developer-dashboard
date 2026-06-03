@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { signInWithPopup, GithubAuthProvider } from 'firebase/auth';
-import { auth, googleProvider, githubProvider } from '../../lib/firebase';
+import { auth, githubProvider } from '../../lib/firebase';
 import { useStore } from '../../store/useStore';
 import { FiGithub, FiAlertCircle } from 'react-icons/fi';
-import { FcGoogle } from 'react-icons/fc';
 import { GithubIcon } from '../BrandIcons';
 
 export const LoginScreen: React.FC = () => {
@@ -68,24 +67,15 @@ export const LoginScreen: React.FC = () => {
  )}
 
  <div className="w-full flex flex-col gap-3">
- <button
- onClick={() => handleLogin(githubProvider)}
- disabled={isLoading}
- className="w-full py-3.5 px-4 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 disabled:opacity-50 active:scale-[0.98] rounded-xl border border-neutral-300 dark:border-neutral-700 flex items-center justify-center gap-3 font-semibold text-sm shadow-lg shadow-neutral-900/20 cursor-pointer"
- >
- <FiGithub className="w-5 h-5" />
- <span>Continue with GitHub</span>
- </button>
-
- <button
- onClick={() => handleLogin(googleProvider)}
- disabled={isLoading}
- className="w-full py-3.5 px-4 bg-white dark:bg-black hover:bg-neutral-100 dark:bg-neutral-800 disabled:opacity-50 active:scale-[0.98] rounded-xl border border-neutral-200 dark:border-neutral-800 flex items-center justify-center gap-3 font-semibold text-sm shadow-lg shadow-neutral-900/20 cursor-pointer"
- >
- <FcGoogle className="w-5 h-5" />
- <span>Continue with Google</span>
- </button>
- </div>
+  <button
+  onClick={() => handleLogin(githubProvider)}
+  disabled={isLoading}
+  className="w-full py-3.5 px-4 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 disabled:opacity-50 active:scale-[0.98] rounded-xl border border-neutral-300 dark:border-neutral-700 flex items-center justify-center gap-3 font-semibold text-sm shadow-lg shadow-neutral-900/20 cursor-pointer"
+  >
+  <FiGithub className="w-5 h-5" />
+  <span>Continue with GitHub</span>
+  </button>
+  </div>
 
  <p className="text-xs text-neutral-500 mt-8 text-center max-w-[280px]">
  By continuing, you agree to the terms of service and privacy policy.

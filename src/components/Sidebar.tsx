@@ -88,7 +88,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  return (
  <button
  key={item.id}
- onClick={() => setActiveTab(item.id)}
+ onClick={() => { setActiveTab(item.id); onClose(); }}
  className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl  group cursor-pointer ${
  isActive
  ? 'bg-neutral-100 dark:bg-neutral-800 border-l-2 border-neutral-500 text-neutral-800 dark:text-neutral-200 font-medium'

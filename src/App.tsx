@@ -21,7 +21,10 @@ function App() {
  timerStatus, 
  tick, 
  addTask,
- settings 
+ settings,
+ githubToken,
+ githubConnected,
+ fetchRealGithubData
  } = useStore();
 
  const [isQuickTaskOpen, setIsQuickTaskOpen] = useState(false);
@@ -34,6 +37,13 @@ function App() {
      document.documentElement.classList.remove('dark');
    }
  }, [settings.colorScheme]);
+
+ // Auto fetch GitHub Data
+ useEffect(() => {
+   if (currentUser && githubToken && !githubConnected) {
+     fetchRealGithubData();
+   }
+ }, [currentUser, githubToken, githubConnected, fetchRealGithubData]);
 
  // 1. Global Pomodoro Clock Loop
  useEffect(() => {

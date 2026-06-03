@@ -69,7 +69,7 @@ export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar 
  </div>
 
  {/* Header Actions */}
- <div className="flex items-center gap-5">
+ <div className="flex items-center gap-2 md:gap-5">
  {/* Search Bar */}
  <div className="relative hidden md:block w-64">
  <FiSearch className="w-4.5 h-4.5 text-neutral-500 dark:text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -90,11 +90,11 @@ export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar 
  </button>
 
  {/* Divider */}
- <div className="h-6 w-px bg-neutral-100 dark:bg-neutral-800/60" />
+ <div className="hidden md:block h-6 w-px bg-neutral-100 dark:bg-neutral-800/60" />
 
  {/* GitHub Status Indicator */}
  <div 
- className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs  ${
+ className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs  ${
  githubConnected 
  ? 'bg-neutral-100 dark:bg-neutral-800/40 border-neutral-300 dark:border-neutral-700/50 text-neutral-700 dark:text-neutral-300' 
  : 'bg-white dark:bg-black/40 border-neutral-200 dark:border-neutral-800/60 text-neutral-500 dark:text-neutral-400'

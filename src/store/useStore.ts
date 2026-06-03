@@ -7,223 +7,6 @@ import type {
  GithubRepo, GithubIssue, GithubPR, GithubCommit
 } from '../types';
 
-// Mock Initial Data helper functions
-const getMockTasks = (): Task[] => [
- {
- id: 'task-1',
- title: 'Set up global state management with Zustand',
- description: 'Establish a reliable centralized state container for tasks, notes, Pomodoro, and settings. Apply persist middleware to keep data on page refresh.',
- columnId: 'done',
- priority: 'high',
- tags: ['Architecture', 'React'],
- subtasks: [
- { id: 'sub-1-1', title: 'Define types and interfaces', isCompleted: true },
- { id: 'sub-1-2', title: 'Create Zustand store', isCompleted: true },
- { id: 'sub-1-3', title: 'Connect to local storage', isCompleted: true }
- ],
- dueDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 2 days ago
- githubIssueNumber: 42,
- githubIssueUrl: 'https://github.com/developer/platform/issues/42',
- createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
- },
- {
- id: 'task-2',
- title: 'Design glassmorphic CSS theme',
- description: 'Implement modern dark-mode-first aesthetic with glowing borders, translucent background panels, dynamic blur filters, and fluid layouts.',
- columnId: 'done',
- priority: 'high',
- tags: ['UI/UX', 'Tailwind'],
- subtasks: [
- { id: 'sub-2-1', title: 'Configure Tailwind theme colors', isCompleted: true },
- { id: 'sub-2-2', title: 'Design backdrop blur layouts', isCompleted: true }
- ],
- dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 1 day ago
- githubIssueNumber: 43,
- githubIssueUrl: 'https://github.com/developer/platform/issues/43',
- createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString()
- },
- {
- id: 'task-3',
- title: 'Implement animated Pomodoro circular timer',
- description: 'Construct custom SVG ring countdown that displays work (25m), short break (5m), and long break (15m) sessions. Ensure audio cues play on completion.',
- columnId: 'in-progress',
- priority: 'medium',
- tags: ['Animations', 'Core'],
- subtasks: [
- { id: 'sub-3-1', title: 'Create circular SVG', isCompleted: true },
- { id: 'sub-3-2', title: 'Connect to Zustand countdown loop', isCompleted: false },
- { id: 'sub-3-3', title: 'Add chime sound notification', isCompleted: false }
- ],
- dueDate: new Date().toISOString().split('T')[0], // Today
- createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
- },
- {
- id: 'task-4',
- title: 'Mock GitHub contribution graph grid',
- description: 'Visualize code contributions using an SVG grid resembling the official GitHub profile display. Feed mock commits from state into grid calculations.',
- columnId: 'in-progress',
- priority: 'medium',
- tags: ['GitHub', 'Analytics'],
- subtasks: [
- { id: 'sub-4-1', title: 'Create contribution grid UI', isCompleted: true },
- { id: 'sub-4-2', title: 'Generate mock commit timelines', isCompleted: false }
- ],
- dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Tomorrow
- createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
- },
- {
- id: 'task-5',
- title: 'Add markdown parser support for Notes system',
- description: 'Allow devs to format notes using markdown directives (headings, bold, lists, code blocks). Link notes to relevant projects.',
- columnId: 'todo',
- priority: 'low',
- tags: ['Notes', 'Rich Text'],
- subtasks: [
- { id: 'sub-5-1', title: 'Integrate custom markdown renderer', isCompleted: false },
- { id: 'sub-5-2', title: 'Add rich formatting shortcuts', isCompleted: false }
- ],
- dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // In 3 days
- createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
- },
- {
- id: 'task-6',
- title: 'Optimize calendar drag-and-drop operations',
- description: 'Research browser lag during event rescheduling. Introduce state debouncing or optimistic updates for instantaneous calendar interactions.',
- columnId: 'backlog',
- priority: 'low',
- tags: ['Performance'],
- subtasks: [],
- dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // In a week
- createdAt: new Date().toISOString()
- }
-];
-
-const getMockNotes = (): Note[] => [
- {
- id: 'note-1',
- title: 'Deployment & Release Checklist',
- content: `# Production Deployment Protocol
-1. [ ] Run \`npm run build\` to verify production build.
-2. [ ] Audit dependencies with \`npm audit\`.
-3. [ ] Verify SSL certificates on staging.
-4. [ ] Ensure environment variables are loaded in Vercel/AWS.
-5. [ ] Perform quick sanity test of Kanban reordering and Pomodoro ring.
-6. [ ] Deploy branch \`main\` to live server.
-7. [ ] Monitor Sentry dashboard for exception spikes.`,
- folder: 'Work',
- tags: ['DevOps', 'Guide'],
- updatedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString()
- },
- {
- id: 'note-2',
- title: 'Platform Enhancements Backlog',
- content: `# Ideas for Next Version
-- **Real GitHub Sync**: Transition mock hooks to official REST APIs.
-- **WebSocket Team sync**: Allow multiple users to move cards on a shared Kanban board in real time.
-- **AI Task Estimator**: Prompt API to analyze description and suggest Pomodoro time.
-- **Spotify Integration**: Embedded mini-player inside Sidebar.`,
- folder: 'Ideas',
- tags: ['Brainstorm', 'NextV'],
- updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
- },
- {
- id: 'note-3',
- title: 'Zustand State Strategy',
- content: `# Centralized Zustand Store
-- We store tasks, notes, Pomodoro countdown, and GitHub integrations.
-- Prevents component unmounting issues (e.g. switching tabs doesn't reset running Pomodoro clock).
-- Combines persistence to localStorage using JSON parsing.
-- Easy to extract mock commit data and calculate productivity dashboards directly in getters.`,
- folder: 'Snippets',
- tags: ['Code', 'Architecture'],
- updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
- }
-];
-
-const getMockEvents = (): CalendarEvent[] => {
- const todayStr = new Date().toISOString().split('T')[0];
- const tomorrowStr = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
- const nextDayStr = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
- return [
- {
- id: 'event-1',
- title: 'Daily Standup Sync',
- description: 'Discuss blocking points, review current sprints, check GitHub issues status.',
- start: todayStr,
- end: todayStr,
- color: '#8b5cf6' // violet
- },
- {
- id: 'event-2',
- title: 'Technical Design Review',
- description: 'Go over new database indexes and Tailwind CSS v4 performance benefits.',
- start: tomorrowStr,
- end: tomorrowStr,
- color: '#06b6d4' // cyan
- },
- {
- id: 'event-3',
- title: 'Portfolio Showcase Rehearsal',
- description: 'Review with peers to ensure animations are optimized and responsive.',
- start: nextDayStr,
- end: nextDayStr,
- color: '#ec4899' // pink
- }
- ];
-};
-
-const getMockGithubData = () => {
- const username = 'developer-profile';
- const repos: GithubRepo[] = [
- { name: 'dev-productivity-hub', description: 'Central dashboard showing tasks, calendars, notes, and Pomodoro trackers.', stars: 128, forks: 14, openIssues: 3 },
- { name: 'framer-motion-helpers', description: 'Fluid helper utilities for drag-and-drop React boards.', stars: 54, forks: 4, openIssues: 1 },
- { name: 'zustand-persistent-state', description: 'Simple wrapper for easy persistence configuration.', stars: 92, forks: 8, openIssues: 0 },
- { name: 'tailwind-v4-gradients', description: 'Curated premium gradients specifically built for tailwindcss v4.', stars: 215, forks: 21, openIssues: 2 }
- ];
-
- const issues: GithubIssue[] = [
- { id: 'issue-101', number: 101, title: 'Fix drag lag on high refresh rate displays', state: 'open', url: 'https://github.com/developer/dev-productivity-hub/issues/101', repoName: 'dev-productivity-hub' },
- { id: 'issue-102', number: 102, title: 'Add long break audio chime triggers', state: 'open', url: 'https://github.com/developer/dev-productivity-hub/issues/102', repoName: 'dev-productivity-hub' },
- { id: 'issue-103', number: 103, title: 'Document TS types for Github actions API', state: 'open', url: 'https://github.com/developer/dev-productivity-hub/issues/103', repoName: 'dev-productivity-hub' },
- { id: 'issue-201', number: 201, title: 'Optimize animations in nested lists', state: 'open', url: 'https://github.com/developer/framer-motion-helpers/issues/201', repoName: 'framer-motion-helpers' }
- ];
-
- const prs: GithubPR[] = [
- { id: 'pr-110', number: 110, title: 'feat: Add circular SVG pomodoro dashboard panel', state: 'open', url: 'https://github.com/developer/dev-productivity-hub/pull/110', repoName: 'dev-productivity-hub', merged: false },
- { id: 'pr-108', number: 108, title: 'refactor: Move routing states to Zustand store', state: 'closed', url: 'https://github.com/developer/dev-productivity-hub/pull/108', repoName: 'dev-productivity-hub', merged: true },
- { id: 'pr-105', number: 105, title: 'docs: Update setup scripts for npm dev server', state: 'closed', url: 'https://github.com/developer/dev-productivity-hub/pull/105', repoName: 'dev-productivity-hub', merged: true }
- ];
-
- // Helper to generate past commits
- const commits: GithubCommit[] = [];
- const reposList = ['dev-productivity-hub', 'framer-motion-helpers', 'tailwind-v4-gradients'];
- const commitMessages = [
- 'feat: add zustand persistent middleware configuration',
- 'style: design glow effects for glass panels',
- 'fix: pomodoro interval reset timer tick bug',
- 'docs: write comprehensive README deployment guide',
- 'refactor: type definitions structure cleanup',
- 'test: add mocks for GitHub REST API hooks',
- 'perf: dynamic lazy load sub-calendars',
- 'feat: drag event handler optimizations'
- ];
-
- for (let i = 0; i < 15; i++) {
- const commitDate = new Date();
- commitDate.setDate(commitDate.getDate() - Math.floor(i / 2));
- const dateStr = commitDate.toISOString().split('T')[0];
- commits.push({
- id: `commit-${1000 + i}`,
- message: commitMessages[i % commitMessages.length],
- date: dateStr,
- repoName: reposList[i % reposList.length],
- author: username
- });
- }
-
- return { username, repos, issues, prs, commits };
-};
-
 interface State {
  // Auth
  currentUser: { uid: string; displayName: string | null; email: string | null; photoURL: string | null } | null;
@@ -293,7 +76,6 @@ interface State {
 export const useStore = create<State>()(
  persist(
  (set, get) => {
- const gitData = getMockGithubData();
  const defaultSettings: DeveloperSettings = {
  userName: 'Alex Developer',
  githubUsername: 'alexdev-codes',
@@ -357,7 +139,7 @@ export const useStore = create<State>()(
  { id: 'review', title: 'Review' },
  { id: 'done', title: 'Done' }
  ],
- tasks: getMockTasks(),
+ tasks: [],
  addTask: (task) => set((state) => {
  const newTask: Task = {
  ...task,
@@ -379,7 +161,7 @@ export const useStore = create<State>()(
  })),
 
  // Notes state
- notes: getMockNotes(),
+ notes: [],
  folders: ['Work', 'Ideas', 'Snippets'],
  addNote: (note) => set((state) => {
  const newNote: Note = {
@@ -405,7 +187,7 @@ export const useStore = create<State>()(
  }),
 
  // Calendar state
- events: getMockEvents(),
+ events: [],
  addEvent: (event) => set((state) => {
  const newEvent: CalendarEvent = {
  ...event,
@@ -515,23 +297,13 @@ export const useStore = create<State>()(
  })),
 
  // GitHub mock state
- githubConnected: true, // Connect by default for instant wow factor!
- githubUsername: gitData.username,
- githubRepos: gitData.repos,
- githubIssues: gitData.issues,
- githubPRs: gitData.prs,
- githubCommits: gitData.commits,
- connectGithub: (username) => set(() => {
- const freshData = getMockGithubData();
- return {
- githubConnected: true,
- githubUsername: username,
- githubRepos: freshData.repos,
- githubIssues: freshData.issues.map(i => ({ ...i, repoName: freshData.repos[0].name })),
- githubPRs: freshData.prs.map(p => ({ ...p, repoName: freshData.repos[0].name })),
- githubCommits: freshData.commits
- };
- }),
+ githubConnected: false,
+ githubUsername: '',
+ githubRepos: [],
+ githubIssues: [],
+ githubPRs: [],
+ githubCommits: [],
+ connectGithub: (username) => set(() => ({ githubConnected: true, githubUsername: username })),
  disconnectGithub: () => set({
  githubConnected: false,
  githubUsername: '',
