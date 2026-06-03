@@ -176,13 +176,23 @@ export const KanbanBoard: React.FC = () => {
  const colTasks = getFilteredTasks(col.id);
  const isOver = isDragOverCol === col.id;
 
+ // Status-based color accents
+ const colColorMap: Record<string, { border: string; bg: string; text: string; badge: string }> = {
+ 'backlog': { border: 'border-t-neutral-400', bg: 'bg-neutral-400', text: 'text-neutral-600 dark:text-neutral-400', badge: 'bg-neutral-200 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300' },
+ 'todo': { border: 'border-t-neutral-500', bg: 'bg-neutral-500', text: 'text-neutral-600 dark:text-neutral-400', badge: 'bg-neutral-200 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300' },
+ 'in-progress': { border: 'border-t-blue-500', bg: 'bg-blue-500', text: 'text-blue-600 dark:text-blue-400', badge: 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' },
+ 'review': { border: 'border-t-yellow-500', bg: 'bg-yellow-500', text: 'text-yellow-600 dark:text-yellow-400', badge: 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300' },
+ 'done': { border: 'border-t-green-500', bg: 'bg-green-500', text: 'text-green-600 dark:text-green-400', badge: 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300' },
+ };
+ const accent = colColorMap[col.id] || colColorMap['backlog'];
+
  return (
  <div
  key={col.id}
  onDragOver={(e) => handleDragOver(e, col.id)}
  onDragLeave={handleDragLeave}
  onDrop={(e) => handleDrop(e, col.id)}
- className={`w-72 flex-shrink-0 flex flex-col max-h-full rounded-2xl border  ${
+ className={`w-72 flex-shrink-0 flex flex-col max-h-full rounded-2xl border border-t-[3px] ${accent.border} ${
  isOver 
  ? 'bg-white dark:bg-black/40 border-neutral-600 shadow-lg shadow-neutral-900/5' 
  : 'bg-white dark:bg-black/20 border-neutral-200 dark:border-neutral-850'
@@ -191,8 +201,9 @@ export const KanbanBoard: React.FC = () => {
  {/* Column Header */}
  <div className="p-4 flex items-center justify-between border-b border-neutral-300 dark:border-black bg-white dark:bg-black/10">
  <div className="flex items-center gap-2">
+ <span className={`w-2 h-2 rounded-full ${accent.bg}`}></span>
  <h3 className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">{col.title}</h3>
- <span className="text-[10px] font-bold text-neutral-500 bg-white dark:bg-black px-2 py-0.5 rounded">
+ <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${accent.badge}`}>
  {colTasks.length}
  </span>
  </div>

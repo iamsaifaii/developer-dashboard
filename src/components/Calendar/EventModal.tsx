@@ -17,10 +17,10 @@ interface EventModalProps {
 }
 
 const COLORS = [
- { value: '#64748b', label: 'Slate Focus' },
- { value: '#475569', label: 'Slate Meeting' },
- { value: '#334155', label: 'Slate Release' },
- { value: '#1e293b', label: 'Slate Review' }
+  { value: '#22c55e', label: 'Green' },
+  { value: '#eab308', label: 'Yellow' },
+  { value: '#3b82f6', label: 'Blue' },
+  { value: '#ec4899', label: 'Pink' }
 ];
 
 export const EventModal: React.FC<EventModalProps> = ({ 
@@ -34,19 +34,19 @@ export const EventModal: React.FC<EventModalProps> = ({
  const [title, setTitle] = useState('');
  const [description, setDescription] = useState('');
  const [start, setStart] = useState('');
- const [color, setColor] = useState('#64748b');
+ const [color, setColor] = useState('#22c55e');
 
  useEffect(() => {
  if (event) {
  setTitle(event.title);
  setDescription(event.description);
  setStart(event.start);
- setColor(event.color || '#64748b');
+ setColor(event.color || '#22c55e');
  } else {
  setTitle('');
  setDescription('');
  setStart(initialDate || new Date().toISOString().split('T')[0]);
- setColor('#64748b');
+ setColor('#22c55e');
  }
  }, [event, initialDate, isOpen]);
 
