@@ -10,6 +10,7 @@ import type {
 interface State {
  // Auth
  currentUser: { uid: string; displayName: string | null; email: string | null; photoURL: string | null } | null;
+ isHydratingFromCloud: boolean;
  setCurrentUser: (user: any) => void;
 
  // Navigation
@@ -89,37 +90,43 @@ export const useStore = create<State>()(
  return {
  // Auth state
  currentUser: null,
+ isHydratingFromCloud: false,
  setCurrentUser: async (user) => {
-   set({ currentUser: user });
    if (user) {
+     set({ currentUser: user, isHydratingFromCloud: true });
      try {
        const docRef = doc(db, 'users', user.uid);
        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const cloudState = docSnap.data().state;
-          if (cloudState) {
-            const currentToken = get().githubToken;
-            set({ 
-              ...cloudState, 
-              tasks: cloudState.tasks || [],
-              notes: cloudState.notes || [],
-              events: cloudState.events || [],
-              pomodoroHistory: cloudState.pomodoroHistory || [],
-              githubRepos: cloudState.githubRepos || [],
-              githubIssues: cloudState.githubIssues || [],
-              githubPRs: cloudState.githubPRs || [],
-              githubCommits: cloudState.githubCommits || [],
-              currentUser: user,
-              githubToken: currentToken || cloudState.githubToken 
-            });
-          }
-        }
+       if (docSnap.exists()) {
+         const cloudState = docSnap.data().state;
+         if (cloudState) {
+           const currentToken = get().githubToken;
+           set({ 
+             ...cloudState, 
+             tasks: cloudState.tasks || [],
+             notes: cloudState.notes || [],
+             events: cloudState.events || [],
+             pomodoroHistory: cloudState.pomodoroHistory || [],
+             githubRepos: cloudState.githubRepos || [],
+             githubIssues: cloudState.githubIssues || [],
+             githubPRs: cloudState.githubPRs || [],
+             githubCommits: cloudState.githubCommits || [],
+             currentUser: user,
+             githubToken: currentToken || cloudState.githubToken,
+             isHydratingFromCloud: false
+           });
+           return;
+         }
+       }
+       set({ isHydratingFromCloud: false });
      } catch (err) {
        console.error("Failed to load workspace from cloud", err);
+       set({ isHydratingFromCloud: false });
      }
    } else {
      // Reset on logout
      set({
+       currentUser: null,
        tasks: [],
        notes: [],
        events: [],
@@ -540,7 +547,7 @@ export const useStore = create<State>()(
 
 // Cloud Sync Listener
 useStore.subscribe((state, prevState) => {
-  if (state.currentUser && state !== prevState) {
+  if (state.currentUser && !state.isHydratingFromCloud) {
     const stateToSave = {
       activeTab: state.activeTab,
       tasks: state.tasks,
@@ -558,7 +565,30 @@ useStore.subscribe((state, prevState) => {
       githubCommits: state.githubCommits,
       githubToken: state.githubToken
     };
-    setDoc(doc(db, 'users', state.currentUser.uid), { state: stateToSave }, { merge: true })
-      .catch(err => console.error('Cloud sync failed:', err));
+    
+    const prevStateToSave = {
+      activeTab: prevState.activeTab,
+      tasks: prevState.tasks,
+      notes: prevState.notes,
+      folders: prevState.folders,
+      events: prevState.events,
+      totalSessionsCompleted: prevState.totalSessionsCompleted,
+      pomodoroHistory: prevState.pomodoroHistory,
+      settings: prevState.settings,
+      githubConnected: prevState.githubConnected,
+      githubUsername: prevState.githubUsername,
+      githubRepos: prevState.githubRepos,
+      githubIssues: prevState.githubIssues,
+      githubPRs: prevState.githubPRs,
+      githubCommits: prevState.githubCommits,
+      githubToken: prevState.githubToken
+    };
+
+    // Only sync if the actual persistent data changed
+    // This prevents the pomodoro timer (which updates secondsLeft every 1s) from triggering a Firebase write every second
+    if (JSON.stringify(stateToSave) !== JSON.stringify(prevStateToSave)) {
+      setDoc(doc(db, 'users', state.currentUser.uid), { state: stateToSave }, { merge: true })
+        .catch(err => console.error('Cloud sync failed:', err));
+    }
   }
 });
