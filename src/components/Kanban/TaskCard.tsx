@@ -12,10 +12,22 @@ import {
   FiArrowRight
 } from 'react-icons/fi';
 
-const STAGE_ADVANCE_MAP: Record<string, { target: string; label: string }> = {
-  'todo': { target: 'in-progress', label: 'In Progress' },
-  'in-progress': { target: 'review', label: 'Review' },
-  'review': { target: 'done', label: 'Complete' }
+const STAGE_ADVANCE_MAP: Record<string, { target: string; label: string; styles: string }> = {
+  'todo': { 
+    target: 'in-progress', 
+    label: 'In Progress', 
+    styles: 'border-blue-500/25 text-blue-400 bg-blue-950/10 hover:bg-blue-950/20' 
+  },
+  'in-progress': { 
+    target: 'review', 
+    label: 'Review', 
+    styles: 'border-yellow-500/25 text-yellow-400 bg-yellow-950/10 hover:bg-yellow-950/20' 
+  },
+  'review': { 
+    target: 'done', 
+    label: 'Complete', 
+    styles: 'border-green-500/25 text-green-400 bg-green-950/10 hover:bg-green-950/20' 
+  }
 };
 
 interface TaskCardProps {
@@ -24,7 +36,7 @@ interface TaskCardProps {
 }
 
 export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
-  const { deleteTask, currentUser, moveTask } = useStore();
+  const { deleteTask, currentUser, moveTask, settings } = useStore();
 
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return '';
@@ -75,7 +87,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
   };
 
   // Safe fallback avatar using Dicebear initials API
-  const avatarUrl = currentUser?.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(currentUser?.displayName || 'Developer')}`;
+  const avatarUrl = settings.avatarUrl || currentUser?.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(settings.userName || currentUser?.displayName || 'Developer')}`;
 
   // Use the cover image URL if set, or auto-detect the first attached image to display as cover
   const coverImageSrc = task.coverImage || task.attachments?.find(a => a.type.startsWith('image/'))?.url;
@@ -180,11 +192,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
               e.stopPropagation();
               moveTask(task.id, STAGE_ADVANCE_MAP[task.columnId].target);
             }}
-            className="mt-2.5 w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-neutral-800 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white text-[9px] font-bold uppercase tracking-wider cursor-pointer md:hidden transition-all shadow-sm"
+            className={`mt-2.5 w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border text-[9px] font-bold uppercase tracking-wider cursor-pointer md:hidden transition-all shadow-sm ${STAGE_ADVANCE_MAP[task.columnId].styles}`}
             title={`Move to ${STAGE_ADVANCE_MAP[task.columnId].label}`}
           >
             <span>Move to {STAGE_ADVANCE_MAP[task.columnId].label}</span>
-            <FiArrowRight className="w-3 h-3 text-neutral-400" />
+            <FiArrowRight className="w-3 h-3" />
           </button>
         )}
       </div>
