@@ -134,22 +134,22 @@ export const KanbanBoard: React.FC = () => {
     case 'in-progress':
       return {
         label: 'IN PROGRESS',
-        bg: 'bg-blue-650/80 text-white border border-blue-500/20',
-        icon: <FiClock className="w-3.5 h-3.5 text-blue-200 shrink-0" />
+        bg: 'bg-blue-600 text-white border border-blue-500/20',
+        icon: <FiClock className="w-3.5 h-3.5 text-blue-100 shrink-0" />
       };
     case 'review':
       return {
         label: 'REVIEW',
-        bg: 'bg-yellow-600/90 text-white border border-yellow-500/20',
-        icon: <FiEye className="w-3.5 h-3.5 text-yellow-100 shrink-0" />
+        bg: 'bg-yellow-500 text-black border border-yellow-400/20',
+        icon: <FiEye className="w-3.5 h-3.5 text-black shrink-0" />
       };
     case 'done':
       return {
         label: 'COMPLETE',
-        bg: 'bg-emerald-650 text-white border border-emerald-500/20',
+        bg: 'bg-green-600 text-white border border-green-500/20',
         icon: (
-          <span className="flex items-center justify-center w-3.5 h-3.5 rounded-full bg-white text-emerald-650 shrink-0">
-            <svg className="w-2 h-2 text-emerald-650" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4.5}>
+          <span className="flex items-center justify-center w-3.5 h-3.5 rounded-full bg-white text-green-600 shrink-0">
+            <svg className="w-2 h-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </span>

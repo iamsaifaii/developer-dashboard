@@ -30,7 +30,7 @@ const statusConfig: Record<string, { label: string; bg: string; text: string }> 
   'backlog': { label: 'BACKLOG', bg: 'bg-neutral-600', text: 'text-white' },
   'todo': { label: 'TO DO', bg: 'bg-neutral-500', text: 'text-white' },
   'in-progress': { label: 'IN PROGRESS', bg: 'bg-blue-600', text: 'text-white' },
-  'review': { label: 'REVIEW', bg: 'bg-yellow-505', text: 'text-black' },
+  'review': { label: 'REVIEW', bg: 'bg-yellow-500', text: 'text-black' },
   'done': { label: 'DONE', bg: 'bg-green-600', text: 'text-white' },
 };
 
