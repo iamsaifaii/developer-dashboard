@@ -6,16 +6,43 @@ import {
  FiCheckSquare, 
  FiTrash2, 
  FiEdit2, 
- FiAlertCircle 
+ FiAlertCircle,
+ FiArrowRight 
 } from 'react-icons/fi';
 import { GithubIcon } from '../BrandIcons';
+
 interface TaskCardProps {
  task: Task;
  onEdit: (task: Task) => void;
 }
 
+// Pipeline order for stage progression
+const PIPELINE_ORDER = ['backlog', 'todo', 'in-progress', 'review', 'done'];
+
+const nextStageConfig: Record<string, { label: string; color: string; bg: string }> = {
+  'backlog': { label: 'To Do', color: 'text-neutral-400', bg: 'hover:bg-neutral-200 dark:hover:bg-neutral-700' },
+  'todo': { label: 'In Progress', color: 'text-blue-500', bg: 'hover:bg-blue-50 dark:hover:bg-blue-900/30' },
+  'in-progress': { label: 'Review', color: 'text-yellow-500', bg: 'hover:bg-yellow-50 dark:hover:bg-yellow-900/30' },
+  'review': { label: 'Done', color: 'text-green-500', bg: 'hover:bg-green-50 dark:hover:bg-green-900/30' },
+};
+
 export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
- const { deleteTask } = useStore();
+ const { deleteTask, moveTask } = useStore();
+
+ const getNextColumn = () => {
+    const currentIndex = PIPELINE_ORDER.indexOf(task.columnId);
+    if (currentIndex < 0 || currentIndex >= PIPELINE_ORDER.length - 1) return null;
+    return PIPELINE_ORDER[currentIndex + 1];
+  };
+
+  const handleMoveToNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const nextCol = getNextColumn();
+    if (nextCol) moveTask(task.id, nextCol);
+  };
+
+  const nextColumn = getNextColumn();
+  const nextConfig = task.columnId !== 'done' ? nextStageConfig[task.columnId] : null;
 
  const getPriorityColorClass = () => {
  switch (task.priority) {
@@ -171,6 +198,18 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
  )}
  </div>
  </div>
+
+ {/* Move to Next Stage Button */}
+ {nextColumn && nextConfig && (
+ <button
+ onClick={handleMoveToNext}
+ className={`mt-3 w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-all ${nextConfig.color} ${nextConfig.bg} bg-transparent`}
+ title={`Move to ${nextConfig.label}`}
+ >
+ <span>Move to {nextConfig.label}</span>
+ <FiArrowRight className="w-3 h-3" />
+ </button>
+ )}
  </div>
  );
 };
