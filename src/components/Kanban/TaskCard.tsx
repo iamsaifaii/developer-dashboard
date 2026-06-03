@@ -70,6 +70,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
   // Safe fallback avatar using Dicebear initials API
   const avatarUrl = currentUser?.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(currentUser?.displayName || 'Developer')}`;
 
+  // Use the cover image URL if set, or auto-detect the first attached image to display as cover
+  const coverImageSrc = task.coverImage || task.attachments?.find(a => a.type.startsWith('image/'))?.url;
+
   return (
     <div
       draggable="true"
@@ -78,10 +81,10 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
       className="group rounded-xl border border-neutral-800 bg-[#161618] hover:border-neutral-700 transition-all duration-200 shadow-lg cursor-grab active:cursor-grabbing text-left select-none relative overflow-hidden flex flex-col w-full"
     >
       {/* Cover Image */}
-      {task.coverImage && (
+      {coverImageSrc && (
         <div className="w-full h-32 overflow-hidden border-b border-neutral-800">
           <img 
-            src={task.coverImage} 
+            src={coverImageSrc} 
             className="w-full h-full object-cover transition-transform duration-350 group-hover:scale-103" 
             alt={task.title}
           />
