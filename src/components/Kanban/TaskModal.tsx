@@ -241,7 +241,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
       />
 
       {/* Modal Box */}
-      <div className="w-full max-w-2xl bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl relative z-10 overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="w-[calc(100%-2rem)] max-w-2xl mx-4 bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl relative z-10 overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* Close button */}
         <button 
@@ -255,7 +255,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
         <div className="flex-1 overflow-y-auto custom-scrollbar">
 
           {/* === Title Section === */}
-          <div className="px-8 pt-7 pb-2">
+          <div className="px-5 sm:px-8 pt-7 pb-2">
             <input
               type="text"
               value={title}
@@ -266,8 +266,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
           </div>
 
           {/* === Metadata Grid === */}
-          <div className="px-8 py-4 border-b border-neutral-800/80">
-            <div className="grid grid-cols-2 gap-y-3.5 gap-x-8">
+          <div className="px-5 sm:px-8 py-4 border-b border-neutral-800/80">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3.5 gap-x-4 sm:gap-x-8">
 
               {/* Status */}
               <div className="flex items-center gap-4">
@@ -346,7 +346,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
               </div>
 
               {/* Tags Input */}
-              <div className="flex items-center gap-4 col-span-2">
+              <div className="flex items-center gap-4 sm:col-span-2">
                 <span className="flex items-center gap-1.5 text-xs text-neutral-400 w-28 shrink-0">
                   <FiTag className="w-3.5 h-3.5" />
                   Tags
@@ -356,12 +356,12 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
                   placeholder="Add tags (comma separated)..."
                   value={tagsInput}
                   onChange={(e) => setTagsInput(e.target.value)}
-                  className="flex-1 text-xs bg-transparent text-neutral-300 placeholder-neutral-650 border-none outline-none focus:outline-none"
+                  className="flex-1 text-xs bg-transparent text-neutral-300 placeholder-neutral-655 border-none outline-none focus:outline-none"
                 />
               </div>
 
               {/* Cover Image URL */}
-              <div className="flex items-center gap-4 col-span-2 border-t border-neutral-800/40 pt-3.5">
+              <div className="flex items-center gap-4 sm:col-span-2 border-t border-neutral-800/40 pt-3.5">
                 <span className="flex items-center gap-1.5 text-xs text-neutral-400 w-28 shrink-0">
                   <FiImage className="w-3.5 h-3.5" />
                   Cover Image URL
@@ -379,19 +379,19 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
           </div>
 
           {/* === Description Section === */}
-          <div className="px-8 py-5 border-b border-neutral-800/80">
+          <div className="px-5 sm:px-8 py-5 border-b border-neutral-800/80">
             <textarea
               placeholder="Add description..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full text-sm bg-transparent text-neutral-300 placeholder-neutral-650 border-none outline-none resize-none leading-relaxed focus:outline-none"
+              className="w-full text-sm bg-transparent text-neutral-300 placeholder-neutral-655 border-none outline-none resize-none leading-relaxed focus:outline-none"
             />
           </div>
 
           {/* === Dependencies Selector / Display === */}
           {dependencies.length > 0 && (
-            <div className="px-8 py-4 border-b border-neutral-800/80 bg-neutral-900/40 flex flex-col gap-2">
+            <div className="px-5 sm:px-8 py-4 border-b border-neutral-800/80 bg-neutral-900/40 flex flex-col gap-2">
               <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-neutral-450 flex items-center gap-1.5">
                 <FiLink className="w-3.5 h-3.5 text-neutral-500" />
                 Related Dependencies
@@ -424,7 +424,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
 
           {/* === Checklist Progress === */}
           {subTotal > 0 && (
-            <div className="px-8 py-5 border-b border-neutral-800/80">
+            <div className="px-5 sm:px-8 py-5 border-b border-neutral-800/80">
               <div className="flex items-center gap-4">
                 <span className="flex items-center gap-1.5 text-xs text-neutral-400 w-28 shrink-0">
                   <FiCheckSquare className="w-3.5 h-3.5" />
@@ -444,7 +444,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
           )}
 
           {/* === Subtasks Checklist Section === */}
-          <div className="px-8 py-5 border-b border-neutral-800/80">
+          <div className="px-5 sm:px-8 py-5 border-b border-neutral-800/80">
             <button
               type="button"
               onClick={() => setShowSubtasks(!showSubtasks)}
@@ -537,13 +537,13 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
 
           {/* === File Attachment Preview Section === */}
           {attachments.length > 0 && (
-            <div className="px-8 py-5 border-b border-neutral-800/80 bg-neutral-900/10">
+            <div className="px-5 sm:px-8 py-5 border-b border-neutral-800/80 bg-neutral-900/10">
               <h4 className="text-xs font-bold text-neutral-300 mb-3 flex items-center gap-1.5">
                 <FiPaperclip className="w-4 h-4 text-neutral-400" />
                 Attached Files ({attachments.length})
               </h4>
               
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {attachments.map((file, idx) => {
                   const isImage = file.type.startsWith('image/');
                   const isVideo = file.type.startsWith('video/');
@@ -621,13 +621,13 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
 
           {/* === File warning banner if present === */}
           {fileWarning && (
-            <div className="mx-8 mt-4 p-3 rounded-lg border border-yellow-500/20 bg-yellow-500/5 text-yellow-500 text-xxs leading-relaxed">
+            <div className="mx-5 sm:mx-8 mt-4 p-3 rounded-lg border border-yellow-500/20 bg-yellow-500/5 text-yellow-500 text-xxs leading-relaxed">
               {fileWarning}
             </div>
           )}
 
           {/* === Quick Action Links (Workable) === */}
-          <div className="px-8 py-5 space-y-2.5">
+          <div className="px-5 sm:px-8 py-5 space-y-2.5">
             {/* Relate items action */}
             <div className="relative">
               <button
@@ -687,7 +687,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
         </div>
 
         {/* === Footer Actions === */}
-        <div className="px-8 py-4 border-t border-neutral-800 bg-neutral-900/80 flex justify-end gap-3">
+        <div className="px-5 sm:px-8 py-4 border-t border-neutral-800 bg-neutral-900/80 flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
