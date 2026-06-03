@@ -101,6 +101,14 @@ export const useStore = create<State>()(
             const currentToken = get().githubToken;
             set({ 
               ...cloudState, 
+              tasks: cloudState.tasks || [],
+              notes: cloudState.notes || [],
+              events: cloudState.events || [],
+              pomodoroHistory: cloudState.pomodoroHistory || [],
+              githubRepos: cloudState.githubRepos || [],
+              githubIssues: cloudState.githubIssues || [],
+              githubPRs: cloudState.githubPRs || [],
+              githubCommits: cloudState.githubCommits || [],
               currentUser: user,
               githubToken: currentToken || cloudState.githubToken 
             });
@@ -146,16 +154,16 @@ export const useStore = create<State>()(
  id: `task-${Date.now()}`,
  createdAt: new Date().toISOString()
  };
- return { tasks: [...state.tasks, newTask] };
+ return { tasks: [...(state.tasks || []), newTask] };
  }),
  updateTask: (taskId, updates) => set((state) => ({
- tasks: state.tasks.map((task) => task.id === taskId ? { ...task, ...updates } : task)
+ tasks: (state.tasks || []).map((task) => task.id === taskId ? { ...task, ...updates } : task)
  })),
  deleteTask: (taskId) => set((state) => ({
- tasks: state.tasks.filter((task) => task.id !== taskId)
+ tasks: (state.tasks || []).filter((task) => task.id !== taskId)
  })),
  moveTask: (taskId, targetColumnId) => set((state) => ({
- tasks: state.tasks.map((task) => 
+ tasks: (state.tasks || []).map((task) => 
  task.id === taskId ? { ...task, columnId: targetColumnId } : task
  )
  })),
@@ -169,17 +177,17 @@ export const useStore = create<State>()(
  id: `note-${Date.now()}`,
  updatedAt: new Date().toISOString()
  };
- return { notes: [...state.notes, newNote] };
+ return { notes: [...(state.notes || []), newNote] };
  }),
  updateNote: (noteId, updates) => set((state) => ({
- notes: state.notes.map((note) => 
+ notes: (state.notes || []).map((note) => 
  note.id === noteId 
  ? { ...note, ...updates, updatedAt: new Date().toISOString() } 
  : note
  )
  })),
  deleteNote: (noteId) => set((state) => ({
- notes: state.notes.filter((note) => note.id !== noteId)
+ notes: (state.notes || []).filter((note) => note.id !== noteId)
  })),
  addFolder: (folderName) => set((state) => {
  if (state.folders.includes(folderName)) return {};
@@ -193,13 +201,13 @@ export const useStore = create<State>()(
  ...event,
  id: `event-${Date.now()}`
  };
- return { events: [...state.events, newEvent] };
+ return { events: [...(state.events || []), newEvent] };
  }),
  updateEvent: (eventId, updates) => set((state) => ({
- events: state.events.map((event) => event.id === eventId ? { ...event, ...updates } : event)
+ events: (state.events || []).map((evt) => evt.id === eventId ? { ...evt, ...updates } : evt)
  })),
  deleteEvent: (eventId) => set((state) => ({
- events: state.events.filter((event) => event.id !== eventId)
+ events: (state.events || []).filter((evt) => evt.id !== eventId)
  })),
 
  // Pomodoro state
@@ -497,6 +505,7 @@ export const useStore = create<State>()(
  {
  name: 'dev-productivity-platform-store',
  partialize: (state) => ({
+ activeTab: state.activeTab,
  tasks: state.tasks,
  notes: state.notes,
  folders: state.folders,
@@ -521,6 +530,7 @@ export const useStore = create<State>()(
 useStore.subscribe((state, prevState) => {
   if (state.currentUser && state !== prevState) {
     const stateToSave = {
+      activeTab: state.activeTab,
       tasks: state.tasks,
       notes: state.notes,
       folders: state.folders,
