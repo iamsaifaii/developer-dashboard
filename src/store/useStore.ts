@@ -521,7 +521,19 @@ export const useStore = create<State>()(
  githubCommits: state.githubCommits,
  githubToken: state.githubToken,
  currentUser: state.currentUser
- })
+ }),
+ merge: (persistedState: any, currentState: State) => ({
+    ...currentState,
+    ...persistedState,
+    tasks: persistedState?.tasks || currentState.tasks || [],
+    notes: persistedState?.notes || currentState.notes || [],
+    events: persistedState?.events || currentState.events || [],
+    pomodoroHistory: persistedState?.pomodoroHistory || currentState.pomodoroHistory || [],
+    githubRepos: persistedState?.githubRepos || currentState.githubRepos || [],
+    githubIssues: persistedState?.githubIssues || currentState.githubIssues || [],
+    githubPRs: persistedState?.githubPRs || currentState.githubPRs || [],
+    githubCommits: persistedState?.githubCommits || currentState.githubCommits || []
+  })
  }
  )
 );

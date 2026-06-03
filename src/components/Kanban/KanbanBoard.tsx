@@ -38,7 +38,7 @@ export const KanbanBoard: React.FC = () => {
 
  // Filters tasks based on Title/Description and Priority
  const getFilteredTasks = (colId: string) => {
- return tasks.filter(task => {
+ return (tasks || []).filter(task => {
  const matchesColumn = task.columnId === colId;
  const matchesSearch = 
  task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

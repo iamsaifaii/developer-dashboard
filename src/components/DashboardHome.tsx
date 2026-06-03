@@ -18,9 +18,9 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
  const { tasks, events, githubCommits, timerStatus, secondsLeft, totalSessionsCompleted, settings } = useStore();
 
  // 1. Calculations
- const completedTasks = tasks.filter(t => t.columnId === 'done').length;
- const inProgressTasks = tasks.filter(t => t.columnId === 'in-progress');
- const upcomingEvents = events.filter(e => {
+ const completedTasks = (tasks || []).filter(t => t.columnId === 'done').length;
+ const inProgressTasks = (tasks || []).filter(t => t.columnId === 'in-progress');
+ const upcomingEvents = (events || []).filter(e => {
  const today = new Date().toISOString().split('T')[0];
  return e.start >= today;
  }).slice(0, 3);
@@ -35,7 +35,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
  const calculateScore = () => {
  const base = 0; // Starts from 0
  const taskScore = completedTasks * 8;
- const commitScore = githubCommits.length * 3;
+ const commitScore = (githubCommits || []).length * 3;
  const sessionScore = totalSessionsCompleted * 6;
  return Math.min(100, base + taskScore + commitScore + sessionScore);
  };
@@ -214,7 +214,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
  </div>
 
  <div className="space-y-2 overflow-y-auto max-h-[140px] pr-1">
- {githubCommits.slice(0, 3).map(commit => (
+ {(githubCommits || []).slice(0, 3).map(commit => (
  <div 
  key={commit.id} 
  className="p-2.5 bg-white dark:bg-black/15 border border-neutral-200 dark:border-neutral-850 rounded-xl flex items-center justify-between gap-3 text-[11px]"
