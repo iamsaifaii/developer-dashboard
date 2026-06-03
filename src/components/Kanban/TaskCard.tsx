@@ -96,21 +96,29 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
         </h4>
 
         {/* Attachment & Description Indicators */}
-        {((task.attachmentCount !== undefined && task.attachmentCount > 0) || (task.description && task.description.trim().length > 0)) && (
-          <div className="flex items-center gap-3 text-neutral-500 text-[10px] font-medium mt-0.5">
-            {task.attachmentCount !== undefined && task.attachmentCount > 0 && (
-              <span className="flex items-center gap-1">
-                <FiPaperclip className="w-3.5 h-3.5" />
-                <span>{task.attachmentCount}</span>
-              </span>
-            )}
-            {task.description && task.description.trim().length > 0 && (
-              <span className="flex items-center">
-                <FiAlignLeft className="w-3.5 h-3.5" />
-              </span>
-            )}
-          </div>
-        )}
+        {(() => {
+          const finalAttachmentCount = task.attachments?.length || task.attachmentCount || 0;
+          const hasAttachments = finalAttachmentCount > 0;
+          const hasDescription = task.description && task.description.trim().length > 0;
+          
+          if (!hasAttachments && !hasDescription) return null;
+          
+          return (
+            <div className="flex items-center gap-3 text-neutral-500 text-[10px] font-medium mt-0.5">
+              {hasAttachments && (
+                <span className="flex items-center gap-1">
+                  <FiPaperclip className="w-3.5 h-3.5" />
+                  <span>{finalAttachmentCount}</span>
+                </span>
+              )}
+              {hasDescription && (
+                <span className="flex items-center">
+                  <FiAlignLeft className="w-3.5 h-3.5" />
+                </span>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Bottom row: user, due, priority, tags */}
         <div className="flex items-center gap-2 mt-1">

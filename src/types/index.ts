@@ -6,6 +6,13 @@ export interface Subtask {
  isCompleted: boolean;
 }
 
+export interface TaskAttachment {
+  name: string;
+  type: string;
+  size: number;
+  url: string;
+}
+
 export interface Task {
  id: string;
  title: string;
@@ -20,6 +27,8 @@ export interface Task {
  githubIssueNumber?: number;
  coverImage?: string;
  attachmentCount?: number;
+ attachments?: TaskAttachment[];
+ dependencies?: string[];
  createdAt: string;
 }
 

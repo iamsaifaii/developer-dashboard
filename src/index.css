@@ -48,7 +48,7 @@ html, body, #root {
 }
 
 .dark html, .dark body, .dark #root {
-  background-color: #000000;
+  background-color: #171717;
   color: #ffffff;
 }
 
@@ -65,7 +65,7 @@ html, body, #root {
 }
 
 .dark .glass-panel {
-  background: #000000;
+  background: #171717;
   border: 1px solid #262626;
 }
 
@@ -75,7 +75,7 @@ html, body, #root {
 }
 
 .dark .glass-panel-interactive {
-  background: #000000;
+  background: #171717;
   border: 1px solid #262626;
 }
 

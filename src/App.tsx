@@ -140,7 +140,7 @@ function App() {
 
   if (isAuthLoading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#000000] flex flex-col items-center justify-center p-6 text-neutral-800 dark:text-neutral-200">
+      <div className="min-h-screen bg-white dark:bg-neutral-900 flex flex-col items-center justify-center p-6 text-neutral-800 dark:text-neutral-200">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-4 border-neutral-300 border-t-transparent dark:border-neutral-800 dark:border-t-transparent rounded-full animate-spin"></div>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 font-light tracking-wide animate-pulse">Syncing workspace...</p>
@@ -154,7 +154,7 @@ function App() {
   }
 
  return (
-    <div className={`min-h-screen ${settings.themeMode === 'glass' ? 'bg-white dark:bg-black' : 'bg-white dark:bg-black'} text-black dark:text-neutral-100 flex relative overflow-hidden `}>
+    <div className={`min-h-screen ${settings.themeMode === 'glass' ? 'bg-white dark:bg-neutral-900' : 'bg-white dark:bg-neutral-900'} text-black dark:text-neutral-100 flex relative overflow-hidden `}>
 
  {/* Primary Sidebar Layout */}
  <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />

@@ -44,11 +44,11 @@ export const LoginScreen: React.FC = () => {
  };
 
  return (
- <div className="min-h-screen bg-white dark:bg-[#000000] flex flex-col items-center justify-center p-6 text-neutral-800 dark:text-neutral-200 relative overflow-hidden">
+ <div className="min-h-screen bg-white dark:bg-neutral-900 flex flex-col items-center justify-center p-6 text-neutral-800 dark:text-neutral-200 relative overflow-hidden">
 
  <div className="glass-panel border border-neutral-200 dark:border-neutral-800/80 p-8 md:p-12 rounded-3xl shadow-2xl max-w-md w-full z-10 relative flex flex-col items-center">
  
- <div className="w-16 h-16 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-xl flex items-center justify-center mb-6">
+ <div className="w-16 h-16 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-xl flex items-center justify-center mb-6">
  <GithubIcon className="w-8 h-8 text-neutral-700 dark:text-neutral-300" />
  </div>
 
