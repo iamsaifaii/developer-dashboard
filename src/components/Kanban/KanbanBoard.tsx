@@ -31,9 +31,12 @@ export const KanbanBoard: React.FC = () => {
  const [searchQuery, setSearchQuery] = useState('');
  const [priorityFilter, setPriorityFilter] = useState<string>('all');
  const [isModalOpen, setIsModalOpen] = useState(false);
- const [editingTask, setEditingTask] = useState<Task | null>(null);
+ const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
  const [activeColumnForNewTask, setActiveColumnForNewTask] = useState<string>('todo');
  
+ // Resolve current editing task dynamically from store tasks array
+ const editingTask = tasks.find(t => t.id === editingTaskId) || null;
+
  // Drag states
  const [isDragOverCol, setIsDragOverCol] = useState<string | null>(null);
 
@@ -57,13 +60,13 @@ export const KanbanBoard: React.FC = () => {
  // Triggered when adding task specifically to a column
  const handleAddNewTaskToColumn = (colId: string) => {
  setActiveColumnForNewTask(colId);
- setEditingTask(null);
+ setEditingTaskId(null);
  setIsModalOpen(true);
  };
 
  // Triggered when clicking Edit on a card
  const handleEditTask = (task: Task) => {
- setEditingTask(task);
+ setEditingTaskId(task.id);
  setIsModalOpen(true);
  };
 

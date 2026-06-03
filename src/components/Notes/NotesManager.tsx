@@ -58,15 +58,24 @@ const parseMarkdown = (text: string): string => {
 
 export const NotesManager: React.FC = () => {
  const { notes, folders, addNote, updateNote, deleteNote, addFolder } = useStore();
- 
- const [activeFolder, setActiveFolder] = useState<string>('All');
- const [selectedNoteId, setSelectedNoteId] = useState<string | null>(
- notes.length > 0 ? notes[0].id : null
- );
- const [searchQuery, setSearchQuery] = useState('');
- const [newFolderName, setNewFolderName] = useState('');
- const [isAddingFolder, setIsAddingFolder] = useState(false);
- const [editorTab, setEditorTab] = useState<'write' | 'preview'>('write');
+  const [activeFolder, setActiveFolder] = useState<string>('All');
+  const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [newFolderName, setNewFolderName] = useState('');
+  const [isAddingFolder, setIsAddingFolder] = useState(false);
+  const [editorTab, setEditorTab] = useState<'write' | 'preview'>('write');
+
+  // Auto-select first note on initial cloud load, or when selected note is deleted by another device
+  React.useEffect(() => {
+    if (notes.length > 0) {
+      const exists = notes.some(n => n.id === selectedNoteId);
+      if (!exists) {
+        setSelectedNoteId(notes[0].id);
+      }
+    } else {
+      setSelectedNoteId(null);
+    }
+  }, [notes, selectedNoteId]);
 
  // Retrieve current active note object
  const activeNote = notes.find(n => n.id === selectedNoteId) || null;
