@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './lib/firebase';
 import { useStore } from './store/useStore';
@@ -26,7 +26,6 @@ function App() {
     addTask,
     settings,
     githubToken,
-    githubConnected,
     fetchRealGithubData,
     setCurrentUser,
     isHydratingFromCloud,
@@ -63,12 +62,19 @@ function App() {
    }
  }, [settings.colorScheme]);
 
- // Auto fetch GitHub Data
- useEffect(() => {
-   if (currentUser && githubToken && !githubConnected) {
-     fetchRealGithubData();
-   }
- }, [currentUser, githubToken, githubConnected, fetchRealGithubData]);
+  // Auto fetch GitHub Data — runs once per session when user+token are ready
+  // We use a ref instead of githubConnected to avoid the bug where cloud snapshot
+  // restores githubConnected:true and blocks re-fetch on page reload/cross-device login
+  const githubFetchedRef = useRef(false);
+  useEffect(() => {
+    if (currentUser && githubToken && !githubFetchedRef.current) {
+      githubFetchedRef.current = true;
+      fetchRealGithubData();
+    }
+    if (!currentUser || !githubToken) {
+      githubFetchedRef.current = false;
+    }
+  }, [currentUser, githubToken, fetchRealGithubData]);
 
  // 1. Global Pomodoro Clock Loop
  useEffect(() => {

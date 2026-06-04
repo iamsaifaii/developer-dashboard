@@ -113,6 +113,7 @@ export const useStore = create<State>()((set, get) => {
           const cloudState = docSnap.data().state;
           if (cloudState) {
             const currentToken = get().githubToken;
+            const resolvedToken = currentToken || cloudState.githubToken || null;
             set({ 
               ...cloudState, 
               tasks: cloudState.tasks || [],
@@ -124,7 +125,11 @@ export const useStore = create<State>()((set, get) => {
               githubPRs: cloudState.githubPRs || [],
               githubCommits: cloudState.githubCommits || [],
               currentUser: user,
-              githubToken: currentToken || cloudState.githubToken,
+              githubToken: resolvedToken,
+              // Reset githubConnected so App.tsx re-fetches fresh GitHub data
+              // This is critical for cross-device sync — without this, the
+              // auto-fetch effect is blocked by !githubConnected being false
+              githubConnected: false,
               isHydratingFromCloud: false,
               isReceivingSnapshot: true,
               cloudSyncStatus: 'synced',
