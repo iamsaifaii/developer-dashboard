@@ -12,6 +12,7 @@ import { PomodoroTimer } from './components/Pomodoro/PomodoroTimer';
 import { GithubDashboard } from './components/Github/GithubDashboard';
 import { SettingsPanel } from './components/Settings/SettingsPanel';
 import { TaskModal } from './components/Kanban/TaskModal';
+import { WhiteboardCanvas } from './components/Whiteboard/WhiteboardCanvas';
 import { LoginScreen } from './components/Auth/LoginScreen';
 import { playChime } from './components/Pomodoro/SoundPlayer';
 
@@ -142,6 +143,8 @@ function App() {
  return <GithubDashboard />;
  case 'settings':
  return <SettingsPanel />;
+ case 'whiteboard':
+ return <WhiteboardCanvas />;
  default:
  return <DashboardHome onNavigate={(tab) => useStore.getState().setActiveTab(tab)} />;
  }
@@ -200,7 +203,7 @@ function App() {
  />
 
  {/* Workspace Views Wrapper */}
- <main className="flex-1 overflow-y-auto p-4 md:p-8 relative">
+ <main className={`flex-1 relative ${activeTab === 'whiteboard' ? 'overflow-hidden' : 'overflow-y-auto p-4 md:p-8'}`}>
  <>
  <div
  key={activeTab}
