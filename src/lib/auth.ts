@@ -29,7 +29,7 @@ export interface AuthFailure {
   code: string;
   message: string;
   /** Set when Firebase can recover by linking providers */
-  pendingCredential?: any;
+  pendingCredential?: import('firebase/auth').AuthCredential | null;
   existingEmail?: string;
 }
 

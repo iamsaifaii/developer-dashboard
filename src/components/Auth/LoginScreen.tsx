@@ -24,7 +24,7 @@ type LoadingProvider = 'github' | 'google' | null;
 
 interface LinkingState {
   message: string;
-  pendingCredential: any;
+  pendingCredential: import('firebase/auth').AuthCredential | null | undefined;
   existingEmail: string;
 }
 
