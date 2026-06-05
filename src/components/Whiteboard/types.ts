@@ -1,14 +1,17 @@
+export type PenStyle = 'solid' | 'dashed' | 'dotted';
+
 export type ToolType =
-  | 'select' | 'hand' | 'pen' | 'rect' | 'ellipse'
+  | 'select' | 'hand' | 'pen' | 'highlighter' | 'rect' | 'ellipse'
   | 'arrow' | 'line' | 'sticky' | 'text' | 'eraser' | 'frame';
 
 interface Base { id: string }
 
 export interface PenEl extends Base {
-  type: 'pen';
+  type: 'pen' | 'highlighter';
   points: number[]; // flat [x1,y1,x2,y2,...]
   color: string;
   strokeWidth: number;
+  penStyle?: PenStyle;
 }
 
 export interface RectEl extends Base {
@@ -18,6 +21,7 @@ export interface RectEl extends Base {
   color: string;
   fillColor: string;
   strokeWidth: number;
+  penStyle?: PenStyle;
 }
 
 export interface EllipseEl extends Base {
@@ -27,6 +31,7 @@ export interface EllipseEl extends Base {
   color: string;
   fillColor: string;
   strokeWidth: number;
+  penStyle?: PenStyle;
 }
 
 export interface ArrowEl extends Base {
@@ -35,6 +40,7 @@ export interface ArrowEl extends Base {
   x2: number; y2: number;
   color: string;
   strokeWidth: number;
+  penStyle?: PenStyle;
 }
 
 export interface LineEl extends Base {
@@ -43,6 +49,7 @@ export interface LineEl extends Base {
   x2: number; y2: number;
   color: string;
   strokeWidth: number;
+  penStyle?: PenStyle;
 }
 
 export interface StickyEl extends Base {

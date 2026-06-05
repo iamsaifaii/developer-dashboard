@@ -4,7 +4,7 @@
 
 @theme {
   --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --color-neutral-900: #1a1a1a;
+  --color-neutral-900: #000000;
 }
 
 /* Custom Scrollbar */
@@ -37,19 +37,19 @@ body,
   min-height: 100vh;
   overflow-x: hidden;
   font-family: var(--font-sans);
-  background-color: #1f1f1f;
+  background-color: #000000;
   color: #f4f4f5;
 }
 
 /* Flat solid panel utilities (SaaS clickup/linear style) */
 .glass-panel {
-  background-color: #1f1f1f;
+  background-color: #000000;
   border: 1px solid #27272a;
   border-radius: 12px;
 }
 
 .glass-panel-interactive {
-  background-color: #1f1f1f;
+  background-color: #000000;
   border: 1px solid #27272a;
   border-radius: 12px;
   transition: border-color 150ms ease, background-color 150ms ease;

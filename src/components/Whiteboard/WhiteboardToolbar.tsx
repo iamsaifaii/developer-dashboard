@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  FiMousePointer, FiMove, FiEdit3, FiSquare, FiCircle,
+  FiMousePointer, FiMove, FiEdit3, FiEdit2, FiSquare, FiCircle,
   FiArrowUpRight, FiMinus, FiFileText, FiType, FiLayout,
   FiRotateCcw, FiRotateCw, FiZoomIn, FiZoomOut, FiMaximize2,
   FiTrash2, FiCopy, FiSlash, FiDelete,
 } from 'react-icons/fi';
-import type { ToolType } from './types';
+import type { ToolType, PenStyle } from './types';
 
 // ─── Color palettes ──────────────────────────────────────────────────────────
 const STROKE_PALETTE = [
@@ -38,6 +38,7 @@ const NAV_TOOLS: ToolDef[] = [
 ];
 const DRAW_TOOLS: ToolDef[] = [
   { id: 'pen', icon: FiEdit3, label: 'Pen', shortcut: 'P' },
+  { id: 'highlighter', icon: FiEdit2, label: 'Highlighter', shortcut: 'W' },
   { id: 'eraser', icon: FiDelete, label: 'Eraser', shortcut: 'E' },
 ];
 const SHAPE_TOOLS: ToolDef[] = [
@@ -63,6 +64,8 @@ interface Props {
   onFillColorChange: (c: string) => void;
   strokeWidth: number;
   onStrokeWidthChange: (w: number) => void;
+  penStyle?: PenStyle;
+  onPenStyleChange?: (ps: PenStyle) => void;
   fontSize: number;
   onFontSizeChange: (s: number) => void;
   stickyBg: string;
@@ -89,6 +92,7 @@ export const WhiteboardToolbar: React.FC<Props> = ({
   strokeColor, onStrokeColorChange,
   fillColor, onFillColorChange,
   strokeWidth, onStrokeWidthChange,
+  penStyle, onPenStyleChange,
   fontSize, onFontSizeChange,
   stickyBg, onStickyBgChange,
   zoom, onZoomIn, onZoomOut, onFitScreen,
@@ -282,6 +286,24 @@ export const WhiteboardToolbar: React.FC<Props> = ({
 
   const widthPopup = (
     <PopupPanel>
+      <SectionLabel>Stroke Style</SectionLabel>
+      <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
+        {['solid', 'dashed', 'dotted'].map(st => (
+          <button
+            key={st}
+            onClick={() => { if(onPenStyleChange) onPenStyleChange(st as PenStyle); setPopup(null); }}
+            style={{
+              flex: 1, padding: '4px 0', borderRadius: 6, cursor: 'pointer',
+              background: penStyle === st ? 'rgba(99,102,241,0.2)' : 'transparent',
+              border: penStyle === st ? '1px solid rgba(129,140,248,0.5)' : '1px solid transparent',
+              color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)',
+              fontSize: 10, fontFamily: 'Poppins', textTransform: 'capitalize'
+            }}
+          >
+            {st}
+          </button>
+        ))}
+      </div>
       <SectionLabel>Stroke Width</SectionLabel>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         {STROKE_WIDTHS.map(w => (

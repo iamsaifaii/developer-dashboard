@@ -1,6 +1,6 @@
 import React, { useReducer, useRef, useEffect, useCallback, useState } from 'react';
 import type {
-  WBElement, ToolType, StickyEl, TextEl,
+  WBElement, ToolType, StickyEl, TextEl, PenStyle
 } from './types';
 import { WhiteboardToolbar } from './WhiteboardToolbar';
 import { useTheme } from '../Theme/ThemeProvider';
@@ -13,9 +13,9 @@ const MAX_ZOOM = 8;
 const STICKY_C: Record<string, { bg: string; border: string; text: string; header: string }> = {
   yellow: { bg: '#fef9c3', border: '#d97706', text: '#78350f', header: '#f59e0b' },
   purple: { bg: '#ede9fe', border: '#7c3aed', text: '#4c1d95', header: '#8b5cf6' },
-  blue:   { bg: '#dbeafe', border: '#2563eb', text: '#1e3a8a', header: '#3b82f6' },
-  green:  { bg: '#dcfce7', border: '#16a34a', text: '#14532d', header: '#22c55e' },
-  pink:   { bg: '#fce7f3', border: '#db2777', text: '#831843', header: '#ec4899' },
+  blue: { bg: '#dbeafe', border: '#2563eb', text: '#1e3a8a', header: '#3b82f6' },
+  green: { bg: '#dcfce7', border: '#16a34a', text: '#14532d', header: '#22c55e' },
+  pink: { bg: '#fce7f3', border: '#db2777', text: '#831843', header: '#ec4899' },
   orange: { bg: '#ffedd5', border: '#ea580c', text: '#7c2d12', header: '#f97316' },
 };
 
@@ -48,7 +48,8 @@ function getBBox(el: WBElement): { x: number; y: number; w: number; h: number } 
         x: Math.min(el.x1, el.x2), y: Math.min(el.y1, el.y2),
         w: Math.abs(el.x2 - el.x1) || 2, h: Math.abs(el.y2 - el.y1) || 2,
       };
-    case 'pen': {
+    case 'pen':
+    case 'highlighter': {
       let [mnX, mnY, mxX, mxY] = [Infinity, Infinity, -Infinity, -Infinity];
       for (let i = 0; i < el.points.length; i += 2) {
         mnX = Math.min(mnX, el.points[i]); mxX = Math.max(mxX, el.points[i]);
@@ -73,7 +74,8 @@ function moveEl(el: WBElement, dx: number, dy: number): WBElement {
       return { ...el, cx: el.cx + dx, cy: el.cy + dy };
     case 'arrow': case 'line':
       return { ...el, x1: el.x1 + dx, y1: el.y1 + dy, x2: el.x2 + dx, y2: el.y2 + dy };
-    case 'pen': {
+    case 'pen':
+    case 'highlighter': {
       const pts: number[] = [];
       for (let i = 0; i < el.points.length; i += 2) pts.push(el.points[i] + dx, el.points[i + 1] + dy);
       return { ...el, points: pts };
@@ -124,6 +126,7 @@ export const WhiteboardCanvas: React.FC = () => {
   }, [isDark]);
   const [fillColor, setFillColor] = useState('none');
   const [strokeWidth, setStrokeWidth] = useState(2);
+  const [penStyle, setPenStyle] = useState<PenStyle>('solid');
   const [fontSize, setFontSize] = useState(20);
   const [stickyBg, setStickyBg] = useState('yellow');
 
@@ -135,18 +138,19 @@ export const WhiteboardCanvas: React.FC = () => {
 
   // Refs — always-current values for event handlers
   const svgRef = useRef<SVGSVGElement>(null);
-  const zoomRef = useRef(1);       zoomRef.current = zoom;
-  const panXRef = useRef(0);       panXRef.current = panX;
-  const panYRef = useRef(0);       panYRef.current = panY;
+  const zoomRef = useRef(1); zoomRef.current = zoom;
+  const panXRef = useRef(0); panXRef.current = panX;
+  const panYRef = useRef(0); panYRef.current = panY;
   const toolRef = useRef<ToolType>('select'); toolRef.current = activeTool;
-  const strokeRef = useRef('#a5b4fc');        strokeRef.current = strokeColor;
-  const fillRef = useRef('none');             fillRef.current = fillColor;
-  const swRef = useRef(2);                    swRef.current = strokeWidth;
-  const fsRef = useRef(20);                   fsRef.current = fontSize;
-  const sbgRef = useRef('yellow');            sbgRef.current = stickyBg;
+  const strokeRef = useRef('#a5b4fc'); strokeRef.current = strokeColor;
+  const fillRef = useRef('none'); fillRef.current = fillColor;
+  const swRef = useRef(2); swRef.current = strokeWidth;
+  const psRef = useRef<PenStyle>('solid'); psRef.current = penStyle;
+  const fsRef = useRef(20); fsRef.current = fontSize;
+  const sbgRef = useRef('yellow'); sbgRef.current = stickyBg;
   const selRef = useRef<string | null>(null); selRef.current = selectedId;
   const editRef = useRef<string | null>(null); editRef.current = editingId;
-  const elsRef = useRef<WBElement[]>([]);     elsRef.current = elements;
+  const elsRef = useRef<WBElement[]>([]); elsRef.current = elements;
   const curElRef = useRef<WBElement | null>(null);
 
   // Interaction refs
@@ -210,29 +214,30 @@ export const WhiteboardCanvas: React.FC = () => {
 
     switch (tool) {
       case 'pen':
+      case 'highlighter':
         isDrawing.current = true;
         drawStart.current = w;
-        setCurEl({ id, type: 'pen', points: [w.x, w.y], color: strokeRef.current, strokeWidth: swRef.current });
+        setCurEl({ id, type: tool, points: [w.x, w.y], color: strokeRef.current, strokeWidth: swRef.current, penStyle: psRef.current });
         break;
       case 'rect':
         isDrawing.current = true;
         drawStart.current = w;
-        setCurEl({ id, type: 'rect', x: w.x, y: w.y, width: 0, height: 0, color: strokeRef.current, fillColor: fillRef.current, strokeWidth: swRef.current });
+        setCurEl({ id, type: 'rect', x: w.x, y: w.y, width: 0, height: 0, color: strokeRef.current, fillColor: fillRef.current, strokeWidth: swRef.current, penStyle: psRef.current });
         break;
       case 'ellipse':
         isDrawing.current = true;
         drawStart.current = w;
-        setCurEl({ id, type: 'ellipse', cx: w.x, cy: w.y, rx: 0, ry: 0, color: strokeRef.current, fillColor: fillRef.current, strokeWidth: swRef.current });
+        setCurEl({ id, type: 'ellipse', cx: w.x, cy: w.y, rx: 0, ry: 0, color: strokeRef.current, fillColor: fillRef.current, strokeWidth: swRef.current, penStyle: psRef.current });
         break;
       case 'arrow':
         isDrawing.current = true;
         drawStart.current = w;
-        setCurEl({ id, type: 'arrow', x1: w.x, y1: w.y, x2: w.x, y2: w.y, color: strokeRef.current, strokeWidth: swRef.current });
+        setCurEl({ id, type: 'arrow', x1: w.x, y1: w.y, x2: w.x, y2: w.y, color: strokeRef.current, strokeWidth: swRef.current, penStyle: psRef.current });
         break;
       case 'line':
         isDrawing.current = true;
         drawStart.current = w;
-        setCurEl({ id, type: 'line', x1: w.x, y1: w.y, x2: w.x, y2: w.y, color: strokeRef.current, strokeWidth: swRef.current });
+        setCurEl({ id, type: 'line', x1: w.x, y1: w.y, x2: w.x, y2: w.y, color: strokeRef.current, strokeWidth: swRef.current, penStyle: psRef.current });
         break;
       case 'frame':
         isDrawing.current = true;
@@ -281,7 +286,7 @@ export const WhiteboardCanvas: React.FC = () => {
     const cur = curElRef.current;
     if (!cur) return;
 
-    if (cur.type === 'pen') {
+    if (cur.type === 'pen' || cur.type === 'highlighter') {
       const lx = cur.points[cur.points.length - 2], ly = cur.points[cur.points.length - 1];
       if (Math.hypot(w.x - lx, w.y - ly) > 1.5 / zoomRef.current) {
         const updated = { ...cur, points: [...cur.points, w.x, w.y] };
@@ -321,7 +326,7 @@ export const WhiteboardCanvas: React.FC = () => {
     if (isDrawing.current && curElRef.current) {
       const el = curElRef.current;
       let valid = true;
-      if (el.type === 'pen') valid = el.points.length >= 4;
+      if (el.type === 'pen' || el.type === 'highlighter') valid = el.points.length >= 4;
       else if (el.type === 'rect' || el.type === 'frame') valid = el.width > 5 && el.height > 5;
       else if (el.type === 'ellipse') valid = el.rx > 2 && el.ry > 2;
       else if (el.type === 'arrow' || el.type === 'line') valid = Math.hypot(el.x2 - el.x1, el.y2 - el.y1) > 10;
@@ -419,13 +424,19 @@ export const WhiteboardCanvas: React.FC = () => {
     const mc = activeTool === 'select' ? 'move' : activeTool === 'eraser' ? 'crosshair' : 'default';
 
     switch (el.type) {
-      case 'pen': {
+      case 'pen':
+      case 'highlighter': {
         const d = smoothPath(el.points);
         const bb = getBBox(el);
+        const dash = el.penStyle === 'dashed' ? `${el.strokeWidth * 3},${el.strokeWidth * 3}` : el.penStyle === 'dotted' ? `${el.strokeWidth},${el.strokeWidth * 2}` : 'none';
         return (
           <g key={el.id} {...elProps} style={{ cursor: mc }}>
             <path d={d} fill="none" stroke="transparent" strokeWidth={Math.max(14, el.strokeWidth * 2.5)} />
-            <path d={d} fill="none" stroke={el.color} strokeWidth={el.strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+            <path d={d} fill="none" stroke={el.color} strokeWidth={el.strokeWidth} strokeLinecap="round" strokeLinejoin="round"
+              strokeDasharray={dash}
+              opacity={el.type === 'highlighter' ? 0.4 : 1}
+              style={el.type === 'highlighter' ? { mixBlendMode: 'screen' } : {}}
+            />
             {isSel && selRect(bb)}
           </g>
         );
@@ -433,11 +444,12 @@ export const WhiteboardCanvas: React.FC = () => {
 
       case 'rect': {
         const bb = getBBox(el);
+        const dash = el.penStyle === 'dashed' ? `${el.strokeWidth * 3},${el.strokeWidth * 3}` : el.penStyle === 'dotted' ? `${el.strokeWidth},${el.strokeWidth * 2}` : 'none';
         return (
           <g key={el.id} {...elProps} style={{ cursor: mc }}>
             <rect x={el.x} y={el.y} width={el.width} height={el.height}
               fill={el.fillColor === 'none' ? 'transparent' : el.fillColor}
-              stroke={el.color} strokeWidth={el.strokeWidth} rx={2} />
+              stroke={el.color} strokeWidth={el.strokeWidth} strokeDasharray={dash} rx={2} />
             {isSel && selRect(bb)}
           </g>
         );
@@ -445,11 +457,12 @@ export const WhiteboardCanvas: React.FC = () => {
 
       case 'ellipse': {
         const bb = getBBox(el);
+        const dash = el.penStyle === 'dashed' ? `${el.strokeWidth * 3},${el.strokeWidth * 3}` : el.penStyle === 'dotted' ? `${el.strokeWidth},${el.strokeWidth * 2}` : 'none';
         return (
           <g key={el.id} {...elProps} style={{ cursor: mc }}>
             <ellipse cx={el.cx} cy={el.cy} rx={el.rx} ry={el.ry}
               fill={el.fillColor === 'none' ? 'transparent' : el.fillColor}
-              stroke={el.color} strokeWidth={el.strokeWidth} />
+              stroke={el.color} strokeWidth={el.strokeWidth} strokeDasharray={dash} />
             {isSel && selRect(bb)}
           </g>
         );
@@ -463,10 +476,11 @@ export const WhiteboardCanvas: React.FC = () => {
         const ax = el.x2 - ux * as, ay = el.y2 - uy * as;
         const pts = `${el.x2},${el.y2} ${ax + px * as * 0.42},${ay + py * as * 0.42} ${ax - px * as * 0.42},${ay - py * as * 0.42}`;
         const bb = getBBox(el);
+        const dash = el.penStyle === 'dashed' ? `${el.strokeWidth * 3},${el.strokeWidth * 3}` : el.penStyle === 'dotted' ? `${el.strokeWidth},${el.strokeWidth * 2}` : 'none';
         return (
           <g key={el.id} {...elProps} style={{ cursor: mc }}>
             <line x1={el.x1} y1={el.y1} x2={el.x2} y2={el.y2} stroke="transparent" strokeWidth={Math.max(14, el.strokeWidth * 2.5)} />
-            <line x1={el.x1} y1={el.y1} x2={el.x2} y2={el.y2} stroke={el.color} strokeWidth={el.strokeWidth} strokeLinecap="round" />
+            <line x1={el.x1} y1={el.y1} x2={el.x2} y2={el.y2} stroke={el.color} strokeWidth={el.strokeWidth} strokeLinecap="round" strokeDasharray={dash} />
             <polygon points={pts} fill={el.color} />
             {isSel && selRect(bb)}
           </g>
@@ -475,10 +489,11 @@ export const WhiteboardCanvas: React.FC = () => {
 
       case 'line': {
         const bb = getBBox(el);
+        const dash = el.penStyle === 'dashed' ? `${el.strokeWidth * 3},${el.strokeWidth * 3}` : el.penStyle === 'dotted' ? `${el.strokeWidth},${el.strokeWidth * 2}` : 'none';
         return (
           <g key={el.id} {...elProps} style={{ cursor: mc }}>
             <line x1={el.x1} y1={el.y1} x2={el.x2} y2={el.y2} stroke="transparent" strokeWidth={Math.max(14, el.strokeWidth * 2.5)} />
-            <line x1={el.x1} y1={el.y1} x2={el.x2} y2={el.y2} stroke={el.color} strokeWidth={el.strokeWidth} strokeLinecap="round" />
+            <line x1={el.x1} y1={el.y1} x2={el.x2} y2={el.y2} stroke={el.color} strokeWidth={el.strokeWidth} strokeLinecap="round" strokeDasharray={dash} />
             {isSel && selRect(bb)}
           </g>
         );
@@ -643,7 +658,7 @@ export const WhiteboardCanvas: React.FC = () => {
   const getCursor = () => {
     if (isPanning.current) return 'grabbing';
     if (activeTool === 'hand') return 'grab';
-    if (['pen', 'rect', 'ellipse', 'arrow', 'line', 'frame'].includes(activeTool)) return 'crosshair';
+    if (['pen', 'highlighter', 'rect', 'ellipse', 'arrow', 'line', 'frame'].includes(activeTool)) return 'crosshair';
     if (activeTool === 'sticky' || activeTool === 'text') return 'cell';
     if (activeTool === 'eraser') return 'crosshair';
     return 'default';
@@ -656,7 +671,7 @@ export const WhiteboardCanvas: React.FC = () => {
 
   const draggingId = dragData.current?.id;
 
-  const canvasBg = isDark ? '#0e0e14' : '#fafafa';
+  const canvasBg = '#000000';
   const dotColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.12)';
   const zoomPillBg = isDark ? 'rgba(18,18,26,0.88)' : 'rgba(255,255,255,0.88)';
   const zoomPillBorder = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
@@ -714,6 +729,8 @@ export const WhiteboardCanvas: React.FC = () => {
         onFillColorChange={setFillColor}
         strokeWidth={strokeWidth}
         onStrokeWidthChange={setStrokeWidth}
+        penStyle={penStyle}
+        onPenStyleChange={setPenStyle}
         fontSize={fontSize}
         onFontSizeChange={setFontSize}
         stickyBg={stickyBg}

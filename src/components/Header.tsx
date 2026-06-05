@@ -52,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar 
  };
 
  return (
-  <header className="h-16 border-b border-zinc-800 px-6 flex items-center justify-between bg-zinc-900 sticky top-0 z-20">
+  <header className="h-16 border-b border-zinc-800 px-6 flex items-center justify-between bg-neutral-900 sticky top-0 z-20">
   <div className="flex items-center gap-3">
   <button 
   onClick={onOpenSidebar}
