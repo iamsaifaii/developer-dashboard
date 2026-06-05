@@ -124,10 +124,6 @@ export const KanbanBoard: React.FC = () => {
         
         {/* Left: View Tabs */}
         <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto">
-          <button className="text-[11px] font-semibold text-zinc-400 hover:text-zinc-200 px-3 py-1.5 transition-colors whitespace-nowrap">
-            Add Channel |
-          </button>
-          
           <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-zinc-800/80 text-zinc-200 text-[11px] font-semibold transition-colors">
             <FiList className="w-3.5 h-3.5" />
             <span>List</span>
@@ -137,17 +133,10 @@ export const KanbanBoard: React.FC = () => {
             <FiLayout className="w-3.5 h-3.5" />
             <span>Board</span>
           </button>
-          
-          <button className="text-[11px] font-semibold text-zinc-400 hover:text-zinc-200 px-3 py-1.5 transition-colors whitespace-nowrap flex items-center gap-1">
-            <FiPlus className="w-3 h-3" /> View
-          </button>
         </div>
 
         {/* Right: Actions */}
         <div className="flex items-center gap-3 w-full md:w-auto justify-end mt-3 md:mt-0">
-          <button className="text-[10px] font-bold px-3 py-1.5 rounded-md border border-[#ca8a04] text-[#ca8a04] hover:bg-[#ca8a04]/10 transition-colors">
-            Save view v
-          </button>
           
           <div className="flex items-center gap-3 border-r border-zinc-700 pr-3">
             <FiFilter className="w-4 h-4 text-zinc-400 hover:text-white cursor-pointer" />
@@ -205,8 +194,8 @@ export const KanbanBoard: React.FC = () => {
                 {!isCollapsed && (
                   <div className="mt-2 flex flex-col border border-zinc-800 rounded-lg overflow-hidden bg-zinc-950/50">
                     
-                    {/* Grid Header */}
-                    <div className="grid grid-cols-[minmax(250px,1fr)_120px_120px_100px_40px] text-[10px] text-zinc-400 font-medium px-4 py-2 border-b border-zinc-800 bg-[#1e1e1e]">
+                    {/* Grid Header (Hidden on Mobile) */}
+                    <div className="hidden md:grid grid-cols-[minmax(250px,1fr)_120px_120px_100px_40px] text-[10px] text-zinc-400 font-medium px-4 py-2 border-b border-zinc-800 bg-[#1e1e1e]">
                       <div className="border-r border-zinc-800/50">Name</div>
                       <div className="px-4 border-r border-zinc-800/50">Assignee</div>
                       <div className="px-4 border-r border-zinc-800/50">Due date</div>
