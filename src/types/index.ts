@@ -66,38 +66,75 @@ export interface PomodoroSession {
 }
 
 export interface GithubRepo {
- name: string;
- description: string;
- stars: number;
- forks: number;
- openIssues: number;
+  name: string;
+  description: string;
+  stars: number;
+  forks: number;
+  openIssues: number;
+  language?: string;
+  updatedAt?: string;
+  isPrivate?: boolean;
+  url?: string;
 }
 
 export interface GithubIssue {
- id: string;
- number: number;
- title: string;
- state: 'open' | 'closed';
- url: string;
- repoName: string;
+  id: string;
+  number: number;
+  title: string;
+  state: 'open' | 'closed';
+  url: string;
+  repoName: string;
+  labels?: string[];
+  createdAt?: string;
+  closedAt?: string | null;
+  assignee?: string | null;
 }
 
 export interface GithubPR {
- id: string;
- number: number;
- title: string;
- state: 'open' | 'closed';
- url: string;
- repoName: string;
- merged: boolean;
+  id: string;
+  number: number;
+  title: string;
+  state: 'open' | 'closed';
+  url: string;
+  repoName: string;
+  merged: boolean;
+  createdAt?: string;
+  closedAt?: string | null;
+  mergedAt?: string | null;
 }
 
 export interface GithubCommit {
- id: string;
- message: string;
- date: string; // YYYY-MM-DD
- repoName: string;
- author: string;
+  id: string;
+  message: string;
+  date: string; // YYYY-MM-DD
+  repoName: string;
+  author: string;
+  sha?: string;
+}
+
+export interface GithubContributionDay {
+  date: string;
+  count: number;
+}
+
+export interface GithubWeeklyActivity {
+  weekStart: string; // YYYY-MM-DD of Sunday
+  total: number;
+}
+
+export interface GithubAnalytics {
+  totalStars: number;
+  totalForks: number;
+  totalCommits: number;
+  totalOpenPRs: number;
+  totalClosedPRs: number;
+  totalMergedPRs: number;
+  totalOpenIssues: number;
+  totalClosedIssues: number;
+  weeklyActivity: GithubWeeklyActivity[];
+  languageBreakdown: Record<string, number>;
+  currentStreak: number;
+  longestStreak: number;
 }
 
 export interface DeveloperSettings {
