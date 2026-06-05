@@ -55,21 +55,21 @@ export const CommitActivityChart: React.FC<Props> = ({ weeklyActivity }) => {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
+        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
           <FiActivity className="w-3.5 h-3.5" />
           <span>Weekly Commit Activity · Last 12 Weeks</span>
         </span>
         <div className="flex items-center gap-3 text-[10px]">
-          <span className="text-neutral-400 dark:text-neutral-500">
-            This week: <span className="font-bold text-neutral-700 dark:text-neutral-300">{thisWeek}</span>
+          <span className="text-zinc-500">
+            This week: <span className="font-bold text-zinc-300">{thisWeek}</span>
           </span>
-          <span className="text-neutral-400 dark:text-neutral-500">
-            Total: <span className="font-bold text-neutral-700 dark:text-neutral-300">{totalCommits}</span>
+          <span className="text-zinc-500">
+            Total: <span className="font-bold text-zinc-300">{totalCommits}</span>
           </span>
         </div>
       </div>
 
-      <div className="p-4 bg-white dark:bg-black/40 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-x-auto">
+      <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-xl overflow-x-auto">
         <svg
           width={totalSvgW}
           height={totalSvgH}
@@ -89,7 +89,7 @@ export const CommitActivityChart: React.FC<Props> = ({ weeklyActivity }) => {
                   strokeOpacity={0.06}
                   strokeWidth={1}
                   strokeDasharray="3 3"
-                  className="text-neutral-900 dark:text-white"
+                  className="text-zinc-700"
                 />
                 <text
                   x={YAXIS_W - 4}
@@ -97,7 +97,7 @@ export const CommitActivityChart: React.FC<Props> = ({ weeklyActivity }) => {
                   textAnchor="end"
                   fontSize={8}
                   fontFamily="inherit"
-                  className="fill-neutral-400 dark:fill-neutral-600"
+                  className="fill-zinc-500"
                   fill="currentColor"
                 >
                   {tick}
@@ -137,7 +137,7 @@ export const CommitActivityChart: React.FC<Props> = ({ weeklyActivity }) => {
                       textAnchor="middle"
                       fontSize={8}
                       fontFamily="inherit"
-                      className="fill-neutral-400 dark:fill-neutral-600"
+                      className="fill-zinc-500"
                       fill="currentColor"
                     >
                       {formatWeekLabel(week.weekStart)}
@@ -157,7 +157,7 @@ export const CommitActivityChart: React.FC<Props> = ({ weeklyActivity }) => {
             stroke="currentColor"
             strokeOpacity={0.1}
             strokeWidth={1}
-            className="text-neutral-900 dark:text-white"
+            className="text-zinc-700"
           />
         </svg>
       </div>

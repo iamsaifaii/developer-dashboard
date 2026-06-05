@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { FiCalendar } from 'react-icons/fi';
-import { useTheme } from '../Theme/ThemeProvider';
 
 interface ContributionDay {
   date: string;
@@ -15,14 +14,6 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
 
 function getContributionColor(count: number): string {
-  if (count === 0) return '#ebedf0';
-  if (count <= 1) return '#9be9a8';
-  if (count <= 3) return '#40c463';
-  if (count <= 6) return '#30a14e';
-  return '#216e39';
-}
-
-function getContributionColorDark(count: number): string {
   if (count === 0) return '#161b22';
   if (count <= 1) return '#0e4429';
   if (count <= 3) return '#006d32';
@@ -32,7 +23,6 @@ function getContributionColorDark(count: number): string {
 
 export const ContributionHeatmap: React.FC<Props> = ({ commits }) => {
   const [tooltip, setTooltip] = useState<{ date: string; count: number; x: number; y: number } | null>(null);
-  const { isDark } = useTheme();
 
   // Build commit counts map
   const commitCounts: Record<string, number> = {};
@@ -45,7 +35,7 @@ export const ContributionHeatmap: React.FC<Props> = ({ commits }) => {
   const startDate = new Date(today);
   startDate.setDate(today.getDate() - 364);
   const startDay = startDate.getDay();
-  startDate.setDate(startDate.getDate() - startDay); // align to Sunday
+  startDate.setDate(startDate.getDate() - startDay);
 
   const days: ContributionDay[] = [];
   const cur = new Date(startDate);
@@ -57,13 +47,11 @@ export const ContributionHeatmap: React.FC<Props> = ({ commits }) => {
 
   const totalContributions = days.reduce((s, d) => s + d.count, 0);
 
-  // Build column structure (each column = 1 week of 7 days)
   const weeks: ContributionDay[][] = [];
   for (let i = 0; i < days.length; i += 7) {
     weeks.push(days.slice(i, i + 7));
   }
 
-  // Month label positions: find the first week in each month
   const monthLabels: { label: string; col: number }[] = [];
   let lastMonth = -1;
   weeks.forEach((week, colIdx) => {
@@ -87,17 +75,17 @@ export const ContributionHeatmap: React.FC<Props> = ({ commits }) => {
   return (
     <div className="text-left space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
+        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
           <FiCalendar className="w-3.5 h-3.5" />
           <span>Contribution Graph · Past 365 Days</span>
         </span>
-        <span className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500">
+        <span className="text-[10px] font-semibold text-zinc-500">
           {totalContributions.toLocaleString()} contributions
         </span>
       </div>
 
       {/* SVG Heatmap */}
-      <div className="p-3 bg-white dark:bg-black/40 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-x-auto select-none relative">
+      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl overflow-x-auto select-none relative">
         <svg
           width={totalW}
           height={totalH}
@@ -110,8 +98,7 @@ export const ContributionHeatmap: React.FC<Props> = ({ commits }) => {
               x={LEFT_LABELS_W + col * CELL_STEP}
               y={12}
               fontSize={9}
-              fill="currentColor"
-              className="fill-neutral-400 dark:fill-neutral-500"
+              fill="#52525b"
               fontFamily="inherit"
             >
               {label}
@@ -126,8 +113,7 @@ export const ContributionHeatmap: React.FC<Props> = ({ commits }) => {
                 x={0}
                 y={TOP_LABELS_H + row * CELL_STEP + CELL - 1}
                 fontSize={8}
-                fill="currentColor"
-                className="fill-neutral-400 dark:fill-neutral-500"
+                fill="#3f3f46"
                 fontFamily="inherit"
               >
                 {label}
@@ -140,7 +126,7 @@ export const ContributionHeatmap: React.FC<Props> = ({ commits }) => {
             week.map((day, rowIdx) => {
               const x = LEFT_LABELS_W + colIdx * CELL_STEP;
               const y = TOP_LABELS_H + rowIdx * CELL_STEP;
-              const color = isDark ? getContributionColorDark(day.count) : getContributionColor(day.count);
+              const color = getContributionColor(day.count);
               return (
                 <rect
                   key={`${colIdx}-${rowIdx}`}
@@ -166,7 +152,7 @@ export const ContributionHeatmap: React.FC<Props> = ({ commits }) => {
         {/* Tooltip */}
         {tooltip && (
           <div
-            className="fixed z-50 px-2.5 py-1.5 rounded-lg text-[10px] font-medium text-white bg-neutral-900 dark:bg-white dark:text-black shadow-xl pointer-events-none border border-neutral-700 dark:border-neutral-200"
+            className="fixed z-50 px-2.5 py-1.5 rounded-lg text-[10px] font-medium text-zinc-100 bg-zinc-800 shadow-xl pointer-events-none border border-zinc-700"
             style={{ left: tooltip.x - 40, top: tooltip.y - 42 }}
           >
             <span className="font-bold">{tooltip.count} commit{tooltip.count !== 1 ? 's' : ''}</span>
@@ -177,15 +163,15 @@ export const ContributionHeatmap: React.FC<Props> = ({ commits }) => {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-between text-[10px] text-neutral-400 dark:text-neutral-500">
+      <div className="flex items-center justify-between text-[10px] text-zinc-600">
         <span>365-day contribution summary</span>
         <div className="flex items-center gap-1.5">
           <span>Less</span>
           {[0, 1, 3, 6, 10].map((v, i) => (
             <div
               key={i}
-              className="w-2.5 h-2.5 rounded-[2px] border border-black/5 dark:border-white/5"
-              style={{ backgroundColor: isDark ? getContributionColorDark(v) : getContributionColor(v) }}
+              className="w-2.5 h-2.5 rounded-[2px]"
+              style={{ backgroundColor: getContributionColor(v) }}
             />
           ))}
           <span>More</span>

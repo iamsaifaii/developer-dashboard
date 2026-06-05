@@ -60,7 +60,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
 
  {/* Highlight Score Widget */}
  <div className="glass-panel border border-zinc-800 rounded-xl p-5 w-full md:w-52 flex flex-col items-center justify-center gap-1 z-10 shrink-0 text-center bg-zinc-900/60 shadow-sm">
- <span className="text-[10px] font-bold text-zinc-450 uppercase tracking-wider block">Productivity Index</span>
+ <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Productivity Index</span>
  <div className="text-3xl font-extrabold text-white my-1 flex items-baseline gap-0.5">
  <span>{calculateScore()}%</span>
  <span className="text-[9px] text-zinc-500 font-bold">Z-INDEX</span>
@@ -77,7 +77,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
  
  {/* Card 1: Active Pomodoro Timer panel */}
  <div className="glass-panel rounded-xl p-5 shadow-sm flex flex-col justify-between gap-4">
- <div className="flex items-center justify-between border-b border-zinc-850 pb-3">
+ <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
  <div className="flex items-center gap-2">
  <FiClock className="w-4 h-4 text-zinc-400" />
  <h3 className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">Pomodoro Clock</h3>
@@ -102,7 +102,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
 
  <button
  onClick={() => onNavigate('pomodoro')}
- className="w-full py-1.5 bg-zinc-800 hover:bg-zinc-750 border border-zinc-700 text-xxs font-bold rounded-lg text-zinc-200 cursor-pointer text-center transition-colors"
+ className="w-full py-1.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xxs font-bold rounded-lg text-zinc-200 cursor-pointer text-center transition-colors"
  >
  Start Focus Session
  </button>
@@ -110,7 +110,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
 
  {/* Card 2: In-Progress Kanban Cards */}
  <div className="glass-panel rounded-xl p-5 shadow-sm flex flex-col justify-between gap-4">
- <div className="flex items-center justify-between border-b border-zinc-850 pb-3">
+ <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
  <div className="flex items-center gap-2">
  <TrelloIcon className="w-4 h-4 text-zinc-400" />
  <h3 className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">Active Sprints</h3>
@@ -128,11 +128,11 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
  <div 
  key={task.id} 
  onClick={() => onNavigate('kanban')}
- className="p-2.5 bg-zinc-950 hover:bg-zinc-900 border border-zinc-850 rounded-lg cursor-pointer flex flex-col gap-1 text-left transition-colors"
+ className="p-2.5 bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 rounded-lg cursor-pointer flex flex-col gap-1 text-left transition-colors"
  >
  <h4 className="text-xs font-semibold text-zinc-200 truncate">{task.title}</h4>
  <div className="flex justify-between items-center text-[9px] text-zinc-500">
- <span className={`uppercase font-bold ${task.priority === 'high' ? 'text-zinc-350' : 'text-zinc-500'}`}>
+ <span className={`uppercase font-bold ${task.priority === 'high' ? 'text-zinc-300' : 'text-zinc-500'}`}>
  {task.priority}
  </span>
  {task.dueDate && <span>Due: {task.dueDate}</span>}
@@ -152,7 +152,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
 
  {/* Card 3: Scheduled Calendar Events */}
  <div className="glass-panel rounded-xl p-5 shadow-sm flex flex-col justify-between gap-4">
- <div className="flex items-center justify-between border-b border-zinc-850 pb-3">
+ <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
  <div className="flex items-center gap-2">
  <FiCalendar className="w-4 h-4 text-zinc-400" />
  <h3 className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">Daily Schedule</h3>
@@ -174,11 +174,11 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
  <div 
  key={e.id}
  onClick={() => onNavigate('calendar')}
- className="p-2 border border-zinc-850 bg-zinc-950 hover:bg-zinc-900 rounded-lg flex items-center gap-2 text-left cursor-pointer transition-colors"
+ className="p-2 border border-zinc-800 bg-zinc-950 hover:bg-zinc-900 rounded-lg flex items-center gap-2 text-left cursor-pointer transition-colors"
  >
  <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: e.color || '#64748b' }} />
  <div className="truncate space-y-0.5">
- <h4 className="text-xs font-semibold text-zinc-250 truncate">{e.title}</h4>
+ <h4 className="text-xs font-semibold text-zinc-300 truncate">{e.title}</h4>
  <p className="text-[8px] text-zinc-500">{e.start}</p>
  </div>
  </div>
@@ -188,7 +188,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
 
  <button
  onClick={() => onNavigate('calendar')}
- className="w-full py-1.5 bg-zinc-800 hover:bg-zinc-750 border border-zinc-700 text-xxs font-bold rounded-lg text-zinc-200 cursor-pointer text-center transition-colors"
+ className="w-full py-1.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xxs font-bold rounded-lg text-zinc-200 cursor-pointer text-center transition-colors"
  >
  Open Scheduler
  </button>
@@ -196,7 +196,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
 
  {/* Card 4: Recent Git Commit activity */}
  <div className="glass-panel rounded-xl p-5 shadow-sm lg:col-span-2 text-left space-y-4">
- <div className="flex items-center justify-between border-b border-zinc-850 pb-3">
+ <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
  <div className="flex items-center gap-2">
  <GithubIcon className="w-4 h-4 text-zinc-400" />
  <h3 className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">Recent Commits</h3>
@@ -214,7 +214,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
  {(githubCommits || []).slice(0, 3).map(commit => (
  <div 
  key={commit.id} 
- className="p-2.5 bg-zinc-950 border border-zinc-850 rounded-lg flex items-center justify-between gap-3 text-xxs"
+ className="p-2.5 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center justify-between gap-3 text-xxs"
  >
  <div className="truncate space-y-0.5">
  <h5 className="font-semibold text-zinc-200 truncate">{commit.message}</h5>
@@ -239,8 +239,8 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
  This platform demonstrates advanced client-side frontend engineering capabilities. Centralized Zustand store handles data caching, local storage ensures persistence, and Web Audio API synthesizes real-time cues. Switch between tabs to see active clocks and checklists update!
  </p>
  </div>
- <div className="h-px bg-zinc-850 my-1" />
- <div className="text-[9px] text-zinc-550 flex items-center gap-1.5 justify-between">
+ <div className="h-px bg-zinc-800 my-1" />
+ <div className="text-[9px] text-zinc-500 flex items-center gap-1.5 justify-between">
  <span>React Ecosystem 2026</span>
  <span className="text-white font-bold">100% Client-Side</span>
  </div>

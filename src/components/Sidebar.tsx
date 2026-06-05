@@ -92,7 +92,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  }`}
  >
  <Icon className={`w-4 h-4 ${
- isActive ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-350'
+ isActive ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-300'
  }`} />
  <span className="text-xs tracking-wide">{item.label}</span>
  {item.id === 'pomodoro' && timerStatus === 'running' && (
