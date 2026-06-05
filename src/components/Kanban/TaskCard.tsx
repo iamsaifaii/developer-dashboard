@@ -7,7 +7,9 @@ import {
   FiFlag,
   FiTrash2,
   FiUser,
-  FiChevronDown
+  FiChevronDown,
+  FiCircle,
+  FiCheck
 } from 'react-icons/fi';
 
 interface TaskCardProps {
@@ -15,17 +17,35 @@ interface TaskCardProps {
   onEdit: (task: Task) => void;
 }
 
-const COLUMNS = [
-  { id: 'backlog', label: 'Backlog', color: 'bg-zinc-800 text-zinc-300' },
-  { id: 'todo', label: 'To Do', color: 'bg-zinc-700 text-white' },
-  { id: 'in-progress', label: 'In Progress', color: 'bg-[#5b21b6] text-white' },
-  { id: 'review', label: 'Review', color: 'bg-[#ca8a04] text-white' },
-  { id: 'done', label: 'Done', color: 'bg-[#16a34a] text-white' }
+const STATUS_GROUPS = [
+  {
+    label: 'Not started',
+    items: [
+      { id: 'backlog', label: 'BACKLOG', color: 'text-zinc-500', bg: 'bg-zinc-800 text-zinc-300' },
+      { id: 'todo', label: 'TO DO', color: 'text-zinc-400', bg: 'bg-zinc-700 text-white' }
+    ]
+  },
+  {
+    label: 'Active',
+    items: [
+      { id: 'in-progress', label: 'IN PROGRESS', color: 'text-[#7B61FF]', bg: 'bg-[#5b21b6] text-white' },
+      { id: 'review', label: 'RVIEW', color: 'text-[#ca8a04]', bg: 'bg-[#ca8a04] text-white' }
+    ]
+  },
+  {
+    label: 'Closed',
+    items: [
+      { id: 'done', label: 'COMPLETE', color: 'text-[#16a34a]', bg: 'bg-[#16a34a] text-white' }
+    ]
+  }
 ];
+
+const getFlatColumns = () => STATUS_GROUPS.flatMap(g => g.items);
 
 export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
   const { deleteTask, moveTask, currentUser, settings } = useStore();
   const [showStatusMenu, setShowStatusMenu] = useState(false);
+  const [statusSearch, setStatusSearch] = useState('');
 
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return '-';
@@ -68,7 +88,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
     );
   };
 
-  const currentColumn = COLUMNS.find(c => c.id === task.columnId) || COLUMNS[1];
+  const flatCols = getFlatColumns();
+  const currentColumn = flatCols.find(c => c.id === task.columnId) || flatCols[1];
   const avatarUrl = settings.avatarUrl || currentUser?.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(settings.userName || currentUser?.displayName || 'Developer')}`;
 
   return (
@@ -106,7 +127,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
         <div className="mt-2 md:mt-0 md:ml-auto relative" onClick={e => e.stopPropagation()}>
           <button 
             onClick={() => setShowStatusMenu(!showStatusMenu)}
-            className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${currentColumn.color} shadow-sm border border-transparent hover:brightness-110`}
+            className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${currentColumn.bg} shadow-sm border border-transparent hover:brightness-110`}
           >
             {currentColumn.label}
             <FiChevronDown className="w-3 h-3 opacity-70" />
@@ -115,20 +136,75 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
           {showStatusMenu && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowStatusMenu(false)} />
-              <div className="absolute top-full left-0 md:right-0 md:left-auto mt-1 w-32 bg-zinc-800 border border-zinc-700 rounded-lg shadow-xl z-50 overflow-hidden py-1">
-                {COLUMNS.map(col => (
-                  <button
-                    key={col.id}
-                    className="w-full text-left px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-zinc-300 hover:bg-zinc-700 hover:text-white flex items-center gap-2"
-                    onClick={() => {
-                      moveTask(task.id, col.id);
-                      setShowStatusMenu(false);
-                    }}
-                  >
-                    <span className={`w-2 h-2 rounded-full ${col.color.split(' ')[0]}`} />
-                    {col.label}
+              <div className="absolute top-full left-0 md:right-0 md:left-auto mt-2 w-64 bg-[#1e1e1e] border border-zinc-800 rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col">
+                
+                {/* Tabs */}
+                <div className="flex items-center p-2 gap-1 border-b border-zinc-800/50">
+                  <button className="flex-1 py-1.5 bg-zinc-800 text-zinc-200 text-xs font-semibold rounded-md transition-colors">
+                    Status
                   </button>
-                ))}
+                  <button className="flex-1 py-1.5 text-zinc-500 hover:text-zinc-300 text-xs font-semibold rounded-md transition-colors">
+                    Task Type
+                  </button>
+                </div>
+
+                {/* Search */}
+                <div className="p-2 border-b border-zinc-800/50">
+                  <div className="relative">
+                    <input 
+                      type="text" 
+                      placeholder="Search..." 
+                      value={statusSearch}
+                      onChange={e => setStatusSearch(e.target.value)}
+                      className="w-full bg-[#1a1a1a] border border-zinc-700 rounded-md py-1.5 px-3 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-[#7B61FF] focus:ring-1 focus:ring-[#7B61FF] transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Status List */}
+                <div className="max-h-60 overflow-y-auto py-1 custom-scrollbar">
+                  {STATUS_GROUPS.map(group => {
+                    const filteredItems = group.items.filter(item => item.label.toLowerCase().includes(statusSearch.toLowerCase()));
+                    if (filteredItems.length === 0) return null;
+
+                    return (
+                      <div key={group.label} className="mb-2">
+                        <div className="px-3 py-1 flex items-center justify-between text-xs font-semibold text-zinc-400">
+                          <span>{group.label}</span>
+                          <span className="text-zinc-600 tracking-widest leading-none mt-1">...</span>
+                        </div>
+                        <div className="flex flex-col">
+                          {filteredItems.map(item => {
+                            const isSelected = item.id === task.columnId;
+                            return (
+                              <button
+                                key={item.id}
+                                className={`w-full text-left px-3 py-1.5 flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-wide transition-colors ${
+                                  isSelected ? 'bg-zinc-800/80 text-zinc-200' : 'text-zinc-300 hover:bg-zinc-800/50'
+                                }`}
+                                onClick={() => {
+                                  moveTask(task.id, item.id);
+                                  setShowStatusMenu(false);
+                                  setStatusSearch('');
+                                }}
+                              >
+                                {item.id === 'todo' || item.id === 'backlog' ? (
+                                  <FiCircle className={`w-3.5 h-3.5 ${item.color}`} style={item.id === 'todo' ? { strokeDasharray: '2,2' } : {}} />
+                                ) : item.id === 'done' ? (
+                                  <FiCheckCircle className={`w-3.5 h-3.5 ${item.color}`} />
+                                ) : (
+                                  <div className={`w-3.5 h-3.5 rounded-full border-[3px] flex items-center justify-center`} style={{ borderColor: item.color.match(/\[(.*?)\]/)?.[1] || 'currentColor' }} />
+                                )}
+                                <span className="flex-1">{item.label}</span>
+                                {isSelected && <FiCheck className="w-3.5 h-3.5 text-zinc-300" />}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </>
           )}
