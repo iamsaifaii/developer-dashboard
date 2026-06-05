@@ -155,7 +155,7 @@ function App() {
 
   if (isAuthLoading || (currentUser && isHydratingFromCloud)) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#171717] flex flex-col items-center justify-center p-6 text-neutral-800 dark:text-neutral-200">
+      <div className="min-h-screen bg-white dark:bg-neutral-900 flex flex-col items-center justify-center p-6 text-neutral-800 dark:text-neutral-200">
         <div className="flex flex-col items-center gap-4 max-w-sm text-center">
           {cloudSyncStatus === 'error' ? (
             <>

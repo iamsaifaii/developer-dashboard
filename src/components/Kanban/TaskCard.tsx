@@ -96,7 +96,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
       draggable="true"
       onDragStart={handleDragStart as any}
       onClick={() => onEdit(task)}
-      className="group rounded-xl border border-neutral-800 bg-[#161618] hover:border-neutral-700 transition-all duration-200 shadow-lg cursor-grab active:cursor-grabbing text-left select-none relative overflow-hidden flex flex-col w-full"
+      className="group rounded-xl border border-neutral-800 bg-neutral-900 hover:border-neutral-700 transition-all duration-200 shadow-lg cursor-grab active:cursor-grabbing text-left select-none relative overflow-hidden flex flex-col w-full"
     >
       {/* Cover Image */}
       {coverImageSrc && (

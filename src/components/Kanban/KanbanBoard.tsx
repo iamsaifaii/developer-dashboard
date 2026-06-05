@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useStore } from '../../store/useStore';
 import type { Task, Priority } from '../../types';
 import { TaskCard } from './TaskCard';
@@ -242,8 +242,8 @@ export const KanbanBoard: React.FC = () => {
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, col.id)}
               className={`w-72 flex-shrink-0 flex flex-col max-h-full rounded-2xl border ${isOver
-                  ? 'bg-[#121214] border-neutral-600 shadow-xl'
-                  : 'bg-[#0f0f11]/60 border-neutral-800/80'
+                  ? 'bg-neutral-900 border-neutral-600 shadow-xl'
+                  : 'bg-neutral-900/60 border-neutral-800/80'
                 }`}
             >
               {/* Column Header */}

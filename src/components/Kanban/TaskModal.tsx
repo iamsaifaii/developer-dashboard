@@ -551,7 +551,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
                   return (
                     <div
                       key={idx}
-                      className="p-2.5 rounded-lg border border-neutral-800 bg-[#161618] hover:border-neutral-700 transition-colors flex flex-col gap-2 relative group/file"
+                      className="p-2.5 rounded-lg border border-neutral-800 bg-neutral-900 hover:border-neutral-700 transition-colors flex flex-col gap-2 relative group/file"
                     >
                       {/* Media Preview */}
                       {isImage && (
