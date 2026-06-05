@@ -46,12 +46,6 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  return `${m}:${s}`;
  };
 
- const getTimerColorClass = () => {
- if (timerMode === 'work') return 'text-neutral-700 dark:text-neutral-300 bg-white dark:bg-black/40 border-neutral-300 dark:border-neutral-700/40';
- if (timerMode === 'shortBreak') return 'text-neutral-700 dark:text-neutral-300 bg-white dark:bg-black/40 border-neutral-300 dark:border-neutral-700/40';
- return 'text-neutral-700 dark:text-neutral-300 bg-white dark:bg-black/40 border-neutral-300 dark:border-neutral-700/40';
- };
-
  const getTimerLabel = () => {
  if (timerMode === 'work') return 'Focus';
  if (timerMode === 'shortBreak') return 'Short Break';
@@ -62,28 +56,28 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  <>
  {isOpen && (
  <div 
- className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity" 
+ className="fixed inset-0 bg-black/60 z-40 lg:hidden transition-opacity" 
  onClick={onClose} 
  />
  )}
- <aside className={`w-64 h-screen fixed left-0 top-0 glass-panel border-r border-neutral-200 dark:border-neutral-800 flex flex-col justify-between z-50 transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+ <aside className={`w-64 h-screen fixed left-0 top-0 bg-zinc-950 border-r border-zinc-800 flex flex-col justify-between z-50 transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
  {/* Brand Header */}
- <div className="p-6">
- <div className="flex items-center gap-3">
- <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 shadow-lg shadow-neutral-900/20">
- <FiTerminal className="w-5 h-5 text-neutral-700 dark:text-neutral-300" />
+ <div className="p-5 border-b border-zinc-900">
+ <div className="flex items-center gap-2.5">
+ <div className="p-2 rounded-lg bg-zinc-900 border border-zinc-800">
+ <FiTerminal className="w-4 h-4 text-white" />
  </div>
  <div>
- <h1 className="text-xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">
+ <h1 className="text-sm font-bold tracking-tight text-white">
  DevFlow
  </h1>
- <p className="text-xxs text-neutral-500">v1.0.0 (2026)</p>
+ <p className="text-[9px] text-zinc-500 font-mono">v1.0.0 (2026)</p>
  </div>
  </div>
  </div>
 
  {/* Navigation List */}
- <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto py-2">
+ <nav className="flex-1 px-3 space-y-1 overflow-y-auto py-3">
  {menuItems.map((item) => {
  const Icon = item.icon;
  const isActive = activeTab === item.id;
@@ -91,18 +85,18 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  <button
  key={item.id}
  onClick={() => { setActiveTab(item.id); onClose(); }}
- className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl  group cursor-pointer ${
+ className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg group cursor-pointer transition-all border ${
  isActive
- ? 'bg-neutral-100 dark:bg-neutral-800 border-l-2 border-neutral-500 text-neutral-800 dark:text-neutral-200 font-medium'
- : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:bg-neutral-800/40 border-l-2 border-transparent'
+ ? 'bg-zinc-900 border-zinc-800 text-white font-medium shadow-sm'
+ : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/40 border-transparent'
  }`}
  >
- <Icon className={`w-5 h-5  group- ${
- isActive ? 'text-neutral-800 dark:text-neutral-200' : 'text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-700 dark:text-neutral-300'
+ <Icon className={`w-4 h-4 ${
+ isActive ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-350'
  }`} />
- <span className="text-sm tracking-wide">{item.label}</span>
+ <span className="text-xs tracking-wide">{item.label}</span>
  {item.id === 'pomodoro' && timerStatus === 'running' && (
- <span className="ml-auto w-2 h-2 rounded-full bg-neutral-400" />
+ <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
  )}
  </button>
  );
@@ -110,21 +104,21 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  </nav>
 
  {/* Footer Pomodoro Mini-Widget */}
- <div className="p-4 border-t border-neutral-200 dark:border-neutral-800/60 bg-white dark:bg-black/20">
- <div className={`p-3 rounded-xl border ${getTimerColorClass()} flex flex-col gap-2 `}>
+ <div className="p-3 border-t border-zinc-900 bg-zinc-950">
+ <div className={`p-3 rounded-xl border border-zinc-800 bg-zinc-900/50 flex flex-col gap-2.5`}>
  <div className="flex items-center justify-between">
- <span className="text-xs font-semibold tracking-wide uppercase">
+ <span className="text-[9px] font-bold tracking-wider uppercase text-zinc-400">
  {getTimerLabel()}
  </span>
- <span className="text-xs font-bold">
+ <span className="text-xxs font-bold font-mono text-zinc-200">
  {formatTime(secondsLeft)}
  </span>
  </div>
 
  {/* Progress Bar */}
- <div className="w-full h-1 bg-white dark:bg-black rounded-full overflow-hidden">
+ <div className="w-full h-1 bg-zinc-950 rounded-full overflow-hidden">
  <div 
- className={`h-full  bg-neutral-500`}
+ className="h-full bg-white"
  style={{ 
  width: `${(secondsLeft / ((timerMode === 'work' ? settings.pomodoroWorkTime : timerMode === 'shortBreak' ? settings.pomodoroShortBreak : settings.pomodoroLongBreak) * 60)) * 100}%` 
  }}
@@ -132,11 +126,11 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  </div>
 
  {/* Mini controls */}
- <div className="flex items-center justify-center gap-4 mt-1">
+ <div className="flex items-center justify-center gap-3 mt-0.5">
  {timerStatus === 'running' ? (
  <button 
  onClick={() => setTimerStatus('paused')}
- className="p-1 hover:bg-neutral-100 dark:bg-neutral-800/80 rounded text-neutral-700 dark:text-neutral-300 cursor-pointer"
+ className="p-1 hover:bg-zinc-800 rounded text-zinc-400 hover:text-white cursor-pointer"
  title="Pause"
  >
  <FiPause className="w-3.5 h-3.5" />
@@ -144,7 +138,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  ) : (
  <button 
  onClick={() => setTimerStatus('running')}
- className="p-1 hover:bg-neutral-100 dark:bg-neutral-800/80 rounded text-neutral-700 dark:text-neutral-300 cursor-pointer"
+ className="p-1 hover:bg-zinc-800 rounded text-zinc-400 hover:text-white cursor-pointer"
  title="Start"
  >
  <FiPlay className="w-3.5 h-3.5" />
@@ -152,7 +146,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  )}
  <button 
  onClick={resetTimer}
- className="p-1 hover:bg-neutral-100 dark:bg-neutral-800/80 rounded text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:text-neutral-300 cursor-pointer"
+ className="p-1 hover:bg-zinc-800 rounded text-zinc-500 hover:text-zinc-300 cursor-pointer"
  title="Reset"
  >
  <FiRotateCcw className="w-3.5 h-3.5" />
