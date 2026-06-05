@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../../store/useStore';
-import { signInWithGitHub, signInWithGoogle, setAuthPersistence } from '../../lib/auth';
+import { signInWithGitHub, signInWithGoogle, setAuthPersistence, type AuthFailure } from '../../lib/auth';
 import { FiGithub, FiAlertCircle, FiX, FiShield, FiZap, FiGitBranch, FiClock } from 'react-icons/fi';
 
 // Inline Google "G" SVG — zero deps
@@ -55,10 +55,11 @@ export const LoginScreen: React.FC = () => {
       });
     } else {
       if (result.code === 'auth/account-exists-with-different-credential') {
+        const failureResult = result as AuthFailure;
         setLinkingState({
-          message: result.message,
-          pendingCredential: result.pendingCredential,
-          existingEmail: result.existingEmail || '',
+          message: failureResult.message,
+          pendingCredential: failureResult.pendingCredential,
+          existingEmail: failureResult.existingEmail || '',
         });
       } else {
         setError(result.message);
@@ -85,10 +86,11 @@ export const LoginScreen: React.FC = () => {
       });
     } else {
       if (result.code === 'auth/account-exists-with-different-credential') {
+        const failureResult = result as AuthFailure;
         setLinkingState({
-          message: result.message,
-          pendingCredential: result.pendingCredential,
-          existingEmail: result.existingEmail || '',
+          message: failureResult.message,
+          pendingCredential: failureResult.pendingCredential,
+          existingEmail: failureResult.existingEmail || '',
         });
       } else {
         setError(result.message);
