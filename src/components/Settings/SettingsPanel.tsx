@@ -130,7 +130,7 @@ export const SettingsPanel: React.FC = () => {
             <div className="p-4 bg-neutral-900 border border-neutral-850 rounded-xl space-y-2">
               <p className="text-xs font-bold text-neutral-200">Exclusive Flat Dark Theme Active</p>
               <p className="text-[10px] text-neutral-500 leading-normal">
-                DevSpace is configured to run exclusively in high-contrast monochromatic dark mode. Color scheme controls have been disabled to ensure design consistency and eliminate visual fatigue.
+                DevFlow is configured to run exclusively in high-contrast monochromatic dark mode. Color scheme controls have been disabled to ensure design consistency and eliminate visual fatigue.
               </p>
             </div>
           </div>

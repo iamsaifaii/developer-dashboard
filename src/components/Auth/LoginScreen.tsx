@@ -148,7 +148,7 @@ export const LoginScreen: React.FC = () => {
 
         {/* Footer */}
         <p className="relative z-10 text-[10px] text-zinc-500">
-          © 2026 DevSpace · Secure · Synced · Private
+          © 2026 DevFlow · Secure · Synced · Private
         </p>
       </div>
 
@@ -161,7 +161,7 @@ export const LoginScreen: React.FC = () => {
             <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-zinc-800 flex items-center justify-center">
               <FiGitBranch className="w-4 h-4 text-zinc-300" />
             </div>
-            <span className="font-black text-white text-base">DevSpace</span>
+            <span className="font-black text-white text-base">DevFlow</span>
           </div>
 
           {/* Heading */}
