@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Task, Priority, Subtask, TaskAttachment } from '../../types';
 import { useStore } from '../../store/useStore';
-import { 
-  FiX, FiTrash2, FiCalendar, FiTag, FiFlag, 
+import {
+  FiX, FiTrash2, FiCalendar, FiTag, FiFlag,
   FiCheckSquare, FiPlus, FiChevronDown, FiChevronRight,
   FiTarget, FiLink, FiList, FiPaperclip, FiImage, FiFileText, FiEye
 } from 'react-icons/fi';
@@ -55,7 +55,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
   const [attachmentCount, setAttachmentCount] = useState<number>(0);
   const [attachments, setAttachments] = useState<TaskAttachment[]>([]);
   const [dependencies, setDependencies] = useState<string[]>([]);
-  
+
   const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
   const [showSubtasks, setShowSubtasks] = useState(true);
   const [showPriorityDropdown, setShowPriorityDropdown] = useState(false);
@@ -155,7 +155,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
             size: file.size,
             url: base64Url
           };
-          
+
           setAttachments(prev => {
             const next = [...prev, newAttach];
             // Auto update attachment count
@@ -206,7 +206,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
       attachments,
       dependencies
     });
-    
+
     onClose();
   };
 
@@ -225,26 +225,26 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/75 backdrop-blur-md" 
-        onClick={onClose} 
+      <div
+        className="absolute inset-0 bg-black/75 backdrop-blur-md"
+        onClick={onClose}
       />
 
       {/* Hidden file input for uploads */}
-      <input 
-        type="file" 
-        ref={fileInputRef} 
+      <input
+        type="file"
+        ref={fileInputRef}
         onChange={handleFileChange}
-        className="hidden" 
+        className="hidden"
         multiple
         accept="image/*,video/*,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
       />
 
       {/* Modal Box */}
       <div className="w-[calc(100%-2rem)] max-w-2xl mx-4 bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl relative z-10 overflow-hidden flex flex-col max-h-[92vh]">
-        
+
         {/* Close button */}
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-4 right-4 p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-neutral-800 cursor-pointer z-20 transition-colors"
         >
@@ -400,7 +400,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
                 {dependencies.map((depId) => {
                   const depTask = tasks.find(t => t.id === depId);
                   return (
-                    <div 
+                    <div
                       key={depId}
                       className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-neutral-800 border border-neutral-750 text-xxs text-neutral-300 shadow-sm"
                     >
@@ -408,8 +408,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
                       <span className="truncate max-w-[140px] font-medium">
                         {depTask ? depTask.title : 'Deleted Task'}
                       </span>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => handleToggleDependency(depId)}
                         className="text-neutral-500 hover:text-red-400 cursor-pointer p-0.5"
                       >
@@ -432,7 +432,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
                 </span>
                 <div className="flex-1 flex items-center gap-3">
                   <div className="flex-1 h-2 bg-neutral-800 rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-green-400 transition-all duration-500"
                       style={{ width: `${subPct}%` }}
                     />
@@ -473,19 +473,18 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
               <div className="space-y-1.5 ml-5">
                 {/* Existing subtasks */}
                 {subtasks.map(sub => (
-                  <div 
-                    key={sub.id} 
+                  <div
+                    key={sub.id}
                     className="flex items-center justify-between group/item py-1.5 px-2 -mx-2 rounded-lg hover:bg-neutral-800/50"
                   >
                     <div className="flex items-center gap-2.5">
                       <button
                         type="button"
                         onClick={() => handleToggleSubtask(sub.id)}
-                        className={`w-4 h-4 rounded border flex items-center justify-center cursor-pointer transition-all ${
-                          sub.isCompleted 
-                            ? 'bg-green-600 border-green-600 text-white' 
+                        className={`w-4 h-4 rounded border flex items-center justify-center cursor-pointer transition-all ${sub.isCompleted
+                            ? 'bg-green-600 border-green-600 text-white'
                             : 'border-neutral-700 hover:border-neutral-500'
-                        }`}
+                          }`}
                       >
                         {sub.isCompleted && (
                           <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
@@ -542,24 +541,24 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
                 <FiPaperclip className="w-4 h-4 text-neutral-400" />
                 Attached Files ({attachments.length})
               </h4>
-              
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {attachments.map((file, idx) => {
                   const isImage = file.type.startsWith('image/');
                   const isVideo = file.type.startsWith('video/');
                   const sizeMB = (file.size / 1024 / 1024).toFixed(2);
-                  
+
                   return (
-                    <div 
+                    <div
                       key={idx}
                       className="p-2.5 rounded-lg border border-neutral-800 bg-[#161618] hover:border-neutral-700 transition-colors flex flex-col gap-2 relative group/file"
                     >
                       {/* Media Preview */}
                       {isImage && (
                         <div className="w-full h-24 rounded overflow-hidden bg-neutral-950 border border-neutral-800 relative">
-                          <img 
-                            src={file.url} 
-                            className="w-full h-full object-cover" 
+                          <img
+                            src={file.url}
+                            className="w-full h-full object-cover"
                             alt={file.name}
                           />
                         </div>
@@ -567,9 +566,9 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
 
                       {isVideo && (
                         <div className="w-full h-24 rounded overflow-hidden bg-neutral-950 border border-neutral-800 relative">
-                          <video 
-                            src={file.url} 
-                            className="w-full h-full object-cover" 
+                          <video
+                            src={file.url}
+                            className="w-full h-full object-cover"
                             controls
                           />
                         </div>
@@ -593,8 +592,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
 
                       {/* Overlay Controls */}
                       <div className="absolute top-1.5 right-1.5 flex gap-1 opacity-0 group-hover/file:opacity-100 transition-opacity">
-                        <a 
-                          href={file.url} 
+                        <a
+                          href={file.url}
                           download={file.name}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -603,8 +602,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
                         >
                           <FiEye className="w-3.5 h-3.5" />
                         </a>
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           onClick={() => handleDeleteAttachment(idx)}
                           className="p-1 rounded bg-neutral-900/80 hover:bg-red-900/80 text-neutral-400 hover:text-red-400 cursor-pointer"
                           title="Remove Attachment"
