@@ -1,17 +1,24 @@
 import { create } from 'zustand';
 import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { signOut as firebaseSignOut } from 'firebase/auth';
+import { auth } from '../lib/firebase';
 import type { 
- Task, Column, Note, CalendarEvent, PomodoroSession, TimerMode, DeveloperSettings,
- GithubRepo, GithubIssue, GithubPR, GithubCommit, GithubAnalytics, GithubWeeklyActivity
+  Task, Column, Note, CalendarEvent, PomodoroSession, TimerMode, DeveloperSettings,
+  GithubRepo, GithubIssue, GithubPR, GithubCommit, GithubAnalytics, GithubWeeklyActivity
 } from '../types';
 
 interface State {
- // Auth
- currentUser: { uid: string; displayName: string | null; email: string | null; photoURL: string | null } | null;
- isHydratingFromCloud: boolean;
- isReceivingSnapshot: boolean;
- setCurrentUser: (user: any) => void;
+  // Auth
+  currentUser: { uid: string; displayName: string | null; email: string | null; photoURL: string | null } | null;
+  isHydratingFromCloud: boolean;
+  isReceivingSnapshot: boolean;
+  authError: string | null;
+  linkedProviders: string[];
+  setCurrentUser: (user: any) => void;
+  setAuthError: (error: string | null) => void;
+  setLinkedProviders: (providers: string[]) => void;
+  signOut: () => Promise<void>;
 
  // Navigation
  activeTab: string;
@@ -93,13 +100,47 @@ export const useStore = create<State>()((set, get) => {
     bio: ''
   };
 
- return {
-  // Auth state
-  currentUser: null,
-  isHydratingFromCloud: false,
-  isReceivingSnapshot: false,
-  cloudSyncStatus: null,
-  cloudSyncError: null,
+  return {
+   // Auth state
+   currentUser: null,
+   isHydratingFromCloud: false,
+   isReceivingSnapshot: false,
+   authError: null,
+   linkedProviders: [],
+   cloudSyncStatus: null,
+   cloudSyncError: null,
+   setAuthError: (error) => set({ authError: error }),
+   setLinkedProviders: (providers) => set({ linkedProviders: providers }),
+   signOut: async () => {
+    try {
+      await firebaseSignOut(auth);
+    } catch (e) {
+      console.error('Sign out error:', e);
+    }
+    if ((window as any)._unsubscribeSnapshot) {
+      (window as any)._unsubscribeSnapshot();
+      (window as any)._unsubscribeSnapshot = null;
+    }
+    set({
+      currentUser: null,
+      tasks: [],
+      notes: [],
+      events: [],
+      pomodoroHistory: [],
+      githubRepos: [],
+      githubIssues: [],
+      githubPRs: [],
+      githubCommits: [],
+      githubConnected: false,
+      githubUsername: '',
+      githubToken: null,
+      githubAnalytics: null,
+      linkedProviders: [],
+      authError: null,
+      cloudSyncStatus: null,
+      cloudSyncError: null,
+    });
+  },
   setCurrentUser: (user) => {
     if (user) {
       set({ currentUser: user, isHydratingFromCloud: true, cloudSyncStatus: 'syncing', cloudSyncError: null });

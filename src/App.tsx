@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './lib/firebase';
+import { getProviderIds, validateGithubToken } from './lib/auth';
 import { useStore } from './store/useStore';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
@@ -29,6 +30,8 @@ function App() {
     githubToken,
     fetchRealGithubData,
     setCurrentUser,
+    setLinkedProviders,
+    setGithubToken,
     isHydratingFromCloud,
     cloudSyncStatus,
     cloudSyncError
@@ -38,7 +41,7 @@ function App() {
 
   // Auth persistence listener
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setCurrentUser({
           uid: user.uid,
@@ -46,13 +49,16 @@ function App() {
           email: user.email,
           photoURL: user.photoURL,
         });
+        // Populate linked providers from Firebase user data
+        setLinkedProviders(getProviderIds(user));
       } else {
         setCurrentUser(null);
+        setLinkedProviders([]);
       }
       setIsAuthLoading(false);
     });
     return () => unsubscribe();
-  }, [setCurrentUser]);
+  }, [setCurrentUser, setLinkedProviders]);
 
  // 0. Sync Theme
  useEffect(() => {
@@ -64,18 +70,24 @@ function App() {
  }, [settings.colorScheme]);
 
   // Auto fetch GitHub Data — runs once per session when user+token are ready
-  // We use a ref instead of githubConnected to avoid the bug where cloud snapshot
-  // restores githubConnected:true and blocks re-fetch on page reload/cross-device login
   const githubFetchedRef = useRef(false);
   useEffect(() => {
     if (currentUser && githubToken && !githubFetchedRef.current) {
       githubFetchedRef.current = true;
-      fetchRealGithubData();
+      // Validate token first — clear if stale (401)
+      validateGithubToken(githubToken).then(valid => {
+        if (valid) {
+          fetchRealGithubData();
+        } else {
+          console.warn('GitHub token is stale — clearing.');
+          setGithubToken(null);
+        }
+      });
     }
     if (!currentUser || !githubToken) {
       githubFetchedRef.current = false;
     }
-  }, [currentUser, githubToken, fetchRealGithubData]);
+  }, [currentUser, githubToken, fetchRealGithubData, setGithubToken]);
 
  // 1. Global Pomodoro Clock Loop
  useEffect(() => {
