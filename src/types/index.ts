@@ -58,6 +58,19 @@ export interface CalendarEvent {
 
 export type TimerMode = 'work' | 'shortBreak' | 'longBreak';
 
+export type NotificationCategory = 'task' | 'productivity' | 'github' | 'system';
+
+export interface AppNotification {
+ id: string;
+ title: string;
+ message: string;
+ category: NotificationCategory;
+ isRead: boolean;
+ createdAt: string;
+ link?: string; // Optional link to task, issue, etc.
+}
+
+
 export interface PomodoroSession {
  id: string;
  mode: TimerMode;
@@ -137,6 +150,16 @@ export interface GithubAnalytics {
   longestStreak: number;
 }
 
+export interface NotificationPreferences {
+ taskDue: boolean;
+ taskOverdue: boolean;
+ pomodoroComplete: boolean;
+ focusReminder: boolean;
+ githubCommits: boolean;
+ githubPRs: boolean;
+ systemUpdates: boolean;
+}
+
 export interface DeveloperSettings {
  userName: string;
  githubUsername: string;
@@ -147,4 +170,5 @@ export interface DeveloperSettings {
  colorScheme: 'dark' | 'light' | 'system';
  avatarUrl?: string;
  bio?: string;
+ notificationPreferences: NotificationPreferences;
 }

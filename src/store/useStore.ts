@@ -5,7 +5,8 @@ import { signOut as firebaseSignOut } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import type { 
   Task, Column, Note, CalendarEvent, PomodoroSession, TimerMode, DeveloperSettings,
-  GithubRepo, GithubIssue, GithubPR, GithubCommit, GithubAnalytics, GithubWeeklyActivity
+  GithubRepo, GithubIssue, GithubPR, GithubCommit, GithubAnalytics, GithubWeeklyActivity,
+  AppNotification
 } from '../types';
 
 interface State {
@@ -19,6 +20,13 @@ interface State {
   setAuthError: (error: string | null) => void;
   setLinkedProviders: (providers: string[]) => void;
   signOut: () => Promise<void>;
+
+ // Notifications
+ notifications: AppNotification[];
+ addNotification: (notification: Omit<AppNotification, 'id' | 'createdAt' | 'isRead'>) => void;
+ markNotificationRead: (id: string) => void;
+ markAllNotificationsRead: () => void;
+ clearNotification: (id: string) => void;
 
  // Navigation
  activeTab: string;
@@ -97,7 +105,16 @@ export const useStore = create<State>()((set, get) => {
     themeMode: 'glass',
     colorScheme: 'system',
     avatarUrl: '',
-    bio: ''
+    bio: '',
+    notificationPreferences: {
+      taskDue: true,
+      taskOverdue: true,
+      pomodoroComplete: true,
+      focusReminder: true,
+      githubCommits: true,
+      githubPRs: true,
+      systemUpdates: true
+    }
   };
 
   return {
@@ -109,6 +126,25 @@ export const useStore = create<State>()((set, get) => {
    linkedProviders: [],
    cloudSyncStatus: null,
    cloudSyncError: null,
+   notifications: [],
+   addNotification: (notif) => set((state) => {
+     const newNotif: AppNotification = {
+       ...notif,
+       id: `notif-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+       isRead: false,
+       createdAt: new Date().toISOString()
+     };
+     return { notifications: [newNotif, ...(state.notifications || [])] };
+   }),
+   markNotificationRead: (id) => set((state) => ({
+     notifications: (state.notifications || []).map(n => n.id === id ? { ...n, isRead: true } : n)
+   })),
+   markAllNotificationsRead: () => set((state) => ({
+     notifications: (state.notifications || []).map(n => ({ ...n, isRead: true }))
+   })),
+   clearNotification: (id) => set((state) => ({
+     notifications: (state.notifications || []).filter(n => n.id !== id)
+   })),
    setAuthError: (error) => set({ authError: error }),
    setLinkedProviders: (providers) => set({ linkedProviders: providers }),
    signOut: async () => {
@@ -350,10 +386,21 @@ export const useStore = create<State>()((set, get) => {
  newCommits = [newCommit, ...state.githubCommits];
  }
 
- // Calculate next timer duration
  let nextMins = state.settings.pomodoroWorkTime;
  if (nextMode === 'shortBreak') nextMins = state.settings.pomodoroShortBreak;
  if (nextMode === 'longBreak') nextMins = state.settings.pomodoroLongBreak;
+
+ let newNotifications = state.notifications || [];
+ if (state.settings.notificationPreferences.pomodoroComplete) {
+   newNotifications = [{
+     id: `notif-${Date.now()}`,
+     title: mode === 'work' ? 'Focus Session Completed' : 'Break Completed',
+     message: mode === 'work' ? 'Great job! Time for a break.' : 'Ready to get back to work?',
+     category: 'productivity',
+     isRead: false,
+     createdAt: new Date().toISOString()
+   }, ...newNotifications];
+ }
 
  return {
  timerStatus: nextStatus,
@@ -361,7 +408,8 @@ export const useStore = create<State>()((set, get) => {
  secondsLeft: nextMins * 60,
  totalSessionsCompleted: totalSess,
  pomodoroHistory: [...state.pomodoroHistory, newSession],
- githubCommits: newCommits
+ githubCommits: newCommits,
+ notifications: newNotifications
  };
  }
  return { secondsLeft: state.secondsLeft - 1 };
@@ -409,7 +457,20 @@ export const useStore = create<State>()((set, get) => {
  repoName,
  author: state.githubUsername
  };
- return { githubCommits: [newCommit, ...state.githubCommits] };
+ 
+ let newNotifications = state.notifications || [];
+ if (state.settings.notificationPreferences.githubCommits) {
+   newNotifications = [{
+     id: `notif-${Date.now()}`,
+     title: 'New Mock Commit',
+     message: `Commit to ${repoName}: ${message}`,
+     category: 'github',
+     isRead: false,
+     createdAt: new Date().toISOString()
+   }, ...newNotifications];
+ }
+
+ return { githubCommits: [newCommit, ...state.githubCommits], notifications: newNotifications };
  }),
  importGithubIssue: (issueId, targetColumnId) => set((state) => {
  const issue = state.githubIssues.find((i) => i.id === issueId);
@@ -706,7 +767,8 @@ useStore.subscribe((state, prevState) => {
       githubIssues: state.githubIssues,
       githubPRs: state.githubPRs,
       githubCommits: state.githubCommits,
-      githubToken: state.githubToken
+      githubToken: state.githubToken,
+      notifications: state.notifications
     };
     
     const prevStateToSave = {
@@ -724,7 +786,8 @@ useStore.subscribe((state, prevState) => {
       githubIssues: prevState.githubIssues,
       githubPRs: prevState.githubPRs,
       githubCommits: prevState.githubCommits,
-      githubToken: prevState.githubToken
+      githubToken: prevState.githubToken,
+      notifications: prevState.notifications
     };
 
     // Only sync if the actual persistent data changed

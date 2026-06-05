@@ -10,6 +10,7 @@ import {
   FiMenu
 } from 'react-icons/fi';
 import { GithubIcon } from './BrandIcons';
+import { NotificationCenter } from './Notifications/NotificationCenter';
 
 
 interface HeaderProps {
@@ -109,12 +110,9 @@ export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar 
   <span className={`w-1.5 h-1.5 rounded-full ${githubConnected ? 'bg-green-500 animate-pulse' : 'bg-zinc-650'}`} />
   </div>
  
-  {/* Profile / Notification placeholder */}
+  {/* Profile / Notification center */}
   <div className="flex items-center gap-2.5">
-  <button className="p-2 text-zinc-400 hover:text-white bg-zinc-950 border border-zinc-800 rounded-lg cursor-pointer relative transition-colors">
-  <FiBell className="w-4 h-4" />
-  <span className="w-1.5 h-1.5 bg-zinc-400 rounded-full absolute top-1.5 right-1.5" />
-  </button>
+  <NotificationCenter />
   <button 
   onClick={handleLogout}
   title="Log Out"

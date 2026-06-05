@@ -6,7 +6,8 @@ import {
   FiRotateCcw, 
   FiSave, 
   FiCheckCircle,
-  FiUser
+  FiUser,
+  FiBell
 } from 'react-icons/fi';
 import { UserProfilePanel } from '../Auth/UserProfilePanel';
 
@@ -17,6 +18,11 @@ export const SettingsPanel: React.FC = () => {
   const [workTime, setWorkTime] = useState(settings.pomodoroWorkTime);
   const [shortBreak, setShortBreak] = useState(settings.pomodoroShortBreak);
   const [longBreak, setLongBreak] = useState(settings.pomodoroLongBreak);
+  const [notificationPreferences, setNotificationPreferences] = useState(
+    settings.notificationPreferences || {
+      taskDue: true, taskOverdue: true, pomodoroComplete: true, focusReminder: true, githubCommits: true, githubPRs: true, systemUpdates: true
+    }
+  );
   const [showSaveAlert, setShowSaveAlert] = useState(false);
 
   const handleSave = (e: React.FormEvent) => {
@@ -27,6 +33,7 @@ export const SettingsPanel: React.FC = () => {
       pomodoroLongBreak: Number(longBreak),
       themeMode: 'dark',
       colorScheme: 'dark',
+      notificationPreferences
     });
     setShowSaveAlert(true);
     setTimeout(() => setShowSaveAlert(false), 2500);
@@ -128,8 +135,44 @@ export const SettingsPanel: React.FC = () => {
             </div>
           </div>
 
-          {/* Card 4: Destructive */}
-          <div className="glass-panel rounded-2xl p-6 shadow-xl flex flex-col justify-between gap-4">
+          {/* Card 4: Notifications */}
+          <div className="glass-panel rounded-2xl p-6 shadow-xl space-y-4 md:col-span-2">
+            <div className="flex items-center gap-2.5 text-xs font-bold text-neutral-350 uppercase tracking-wider mb-2">
+              <FiBell className="w-4 h-4" />
+              <span>Notification Preferences</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {Object.entries({
+                taskDue: 'Task Due Reminders',
+                taskOverdue: 'Task Overdue Alerts',
+                pomodoroComplete: 'Pomodoro Completion',
+                focusReminder: 'Focus Reminders',
+                githubCommits: 'GitHub Commits',
+                githubPRs: 'GitHub PR Updates',
+                systemUpdates: 'System Updates'
+              }).map(([key, label]) => (
+                <label key={key} className="flex items-center gap-3 cursor-pointer">
+                  <div className="relative">
+                    <input 
+                      type="checkbox" 
+                      className="sr-only" 
+                      checked={notificationPreferences[key as keyof typeof notificationPreferences]}
+                      onChange={(e) => setNotificationPreferences(prev => ({
+                        ...prev, [key]: e.target.checked
+                      }))}
+                    />
+                    <div className={`block w-10 h-6 rounded-full transition-colors ${notificationPreferences[key as keyof typeof notificationPreferences] ? 'bg-white' : 'bg-neutral-800'}`}></div>
+                    <div className={`dot absolute left-1 top-1 bg-neutral-900 w-4 h-4 rounded-full transition-transform ${notificationPreferences[key as keyof typeof notificationPreferences] ? 'transform translate-x-4' : ''}`}></div>
+                  </div>
+                  <span className="text-xs text-neutral-300 font-medium">{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Card 5: Destructive */}
+          <div className="glass-panel rounded-2xl p-6 shadow-xl flex flex-col justify-between gap-4 md:col-span-2">
             <div className="text-left">
               <div className="flex items-center gap-2.5 text-xs font-bold text-neutral-350 uppercase tracking-wider mb-2">
                 <FiRotateCcw className="w-4 h-4" />

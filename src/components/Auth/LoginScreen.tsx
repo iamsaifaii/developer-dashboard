@@ -120,7 +120,7 @@ export const LoginScreen: React.FC = () => {
             <div className="w-10 h-10 rounded-xl bg-neutral-900 border border-zinc-800 flex items-center justify-center">
               <FiGitBranch className="w-5 h-5 text-white" />
             </div>
-            <span className="text-white font-black text-lg tracking-tight">DevSpace</span>
+            <span className="text-white font-black text-lg tracking-tight">DevFlow</span>
           </div>
           <p className="text-zinc-500 text-xs">Your developer productivity platform</p>
         </div>
