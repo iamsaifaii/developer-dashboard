@@ -60,18 +60,18 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  onClick={onClose} 
  />
  )}
- <aside className={`w-64 h-screen fixed left-0 top-0 bg-zinc-950 border-r border-zinc-800 flex flex-col justify-between z-50 transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+ <aside className={`w-64 h-screen fixed left-0 top-0 bg-neutral-900 border-r border-neutral-800 flex flex-col justify-between z-50 transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
  {/* Brand Header */}
- <div className="p-5 border-b border-zinc-900">
+ <div className="p-5 border-b border-neutral-900">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-lg bg-zinc-900 border border-zinc-800">
+ <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
  <FiTerminal className="w-4 h-4 text-white" />
  </div>
  <div>
  <h1 className="text-sm font-bold tracking-tight text-white">
  DevFlow
  </h1>
- <p className="text-[9px] text-zinc-500 font-mono">v1.0.0 (2026)</p>
+ <p className="text-[9px] text-neutral-500 font-mono">v1.0.0 (2026)</p>
  </div>
  </div>
  </div>
@@ -87,12 +87,12 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  onClick={() => { setActiveTab(item.id); onClose(); }}
  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg group cursor-pointer transition-all border ${
  isActive
- ? 'bg-zinc-900 border-zinc-800 text-white font-medium shadow-sm'
- : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/40 border-transparent'
+ ? 'bg-neutral-900 border-neutral-800 text-white font-medium shadow-sm'
+ : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-900/40 border-transparent'
  }`}
  >
  <Icon className={`w-4 h-4 ${
- isActive ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-300'
+ isActive ? 'text-white' : 'text-neutral-400 group-hover:text-neutral-300'
  }`} />
  <span className="text-xs tracking-wide">{item.label}</span>
  {item.id === 'pomodoro' && timerStatus === 'running' && (
@@ -104,19 +104,19 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  </nav>
 
  {/* Footer Pomodoro Mini-Widget */}
- <div className="p-3 border-t border-zinc-900 bg-zinc-950">
- <div className={`p-3 rounded-xl border border-zinc-800 bg-zinc-900/50 flex flex-col gap-2.5`}>
+ <div className="p-3 border-t border-neutral-900 bg-neutral-900">
+ <div className={`p-3 rounded-xl border border-neutral-800 bg-neutral-900/50 flex flex-col gap-2.5`}>
  <div className="flex items-center justify-between">
- <span className="text-[9px] font-bold tracking-wider uppercase text-zinc-400">
+ <span className="text-[9px] font-bold tracking-wider uppercase text-neutral-400">
  {getTimerLabel()}
  </span>
- <span className="text-xxs font-bold font-mono text-zinc-200">
+ <span className="text-xxs font-bold font-mono text-neutral-200">
  {formatTime(secondsLeft)}
  </span>
  </div>
 
  {/* Progress Bar */}
- <div className="w-full h-1 bg-zinc-950 rounded-full overflow-hidden">
+ <div className="w-full h-1 bg-neutral-900 rounded-full overflow-hidden">
  <div 
  className="h-full bg-white"
  style={{ 
@@ -130,7 +130,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  {timerStatus === 'running' ? (
  <button 
  onClick={() => setTimerStatus('paused')}
- className="p-1 hover:bg-zinc-800 rounded text-zinc-400 hover:text-white cursor-pointer"
+ className="p-1 hover:bg-neutral-800 rounded text-neutral-400 hover:text-white cursor-pointer"
  title="Pause"
  >
  <FiPause className="w-3.5 h-3.5" />
@@ -138,7 +138,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  ) : (
  <button 
  onClick={() => setTimerStatus('running')}
- className="p-1 hover:bg-zinc-800 rounded text-zinc-400 hover:text-white cursor-pointer"
+ className="p-1 hover:bg-neutral-800 rounded text-neutral-400 hover:text-white cursor-pointer"
  title="Start"
  >
  <FiPlay className="w-3.5 h-3.5" />
@@ -146,7 +146,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  )}
  <button 
  onClick={resetTimer}
- className="p-1 hover:bg-zinc-800 rounded text-zinc-500 hover:text-zinc-300 cursor-pointer"
+ className="p-1 hover:bg-neutral-800 rounded text-neutral-500 hover:text-neutral-300 cursor-pointer"
  title="Reset"
  >
  <FiRotateCcw className="w-3.5 h-3.5" />

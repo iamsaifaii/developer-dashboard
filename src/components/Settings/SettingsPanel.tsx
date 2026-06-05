@@ -42,7 +42,7 @@ export const SettingsPanel: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto relative text-left">
       {showSaveAlert && (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-zinc-900 border border-zinc-800 text-zinc-100 text-xxs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-xl z-50 pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-neutral-900 border border-neutral-800 text-neutral-100 text-xxs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-xl z-50 pointer-events-none">
           <FiCheckCircle className="w-4 h-4 text-white" />
           <span>Settings saved!</span>
         </div>
@@ -53,7 +53,7 @@ export const SettingsPanel: React.FC = () => {
 
           {/* Card 1: Account & Profile */}
           <div className="glass-panel rounded-2xl p-6 shadow-xl space-y-4 md:col-span-2">
-            <div className="flex items-center gap-2.5 text-xs font-bold text-zinc-350 uppercase tracking-wider mb-2">
+            <div className="flex items-center gap-2.5 text-xs font-bold text-neutral-350 uppercase tracking-wider mb-2">
               <FiUser className="w-4 h-4" />
               <span>Account &amp; Profile</span>
             </div>
@@ -62,67 +62,67 @@ export const SettingsPanel: React.FC = () => {
 
           {/* Card 2: Pomodoro */}
           <div className="glass-panel rounded-2xl p-6 shadow-xl space-y-4">
-            <div className="flex items-center gap-2.5 text-xs font-bold text-zinc-350 uppercase tracking-wider mb-2">
+            <div className="flex items-center gap-2.5 text-xs font-bold text-neutral-350 uppercase tracking-wider mb-2">
               <FiClock className="w-4.5 h-4.5" />
               <span>Pomodoro Clock Intervals</span>
             </div>
 
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="text-[9px] font-bold text-zinc-550 uppercase tracking-wider block mb-1">Work (min)</label>
+                <label className="text-[9px] font-bold text-neutral-550 uppercase tracking-wider block mb-1">Work (min)</label>
                 <input 
                   type="number" 
                   min="1" 
                   max="60"
                   value={workTime}
                   onChange={(e) => setWorkTime(Number(e.target.value))}
-                  className="w-full text-xs px-3.5 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 focus:outline-none focus:border-zinc-500 text-center"
+                  className="w-full text-xs px-3.5 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-200 focus:outline-none focus:border-neutral-500 text-center"
                   required
                 />
               </div>
 
               <div>
-                <label className="text-[9px] font-bold text-zinc-550 uppercase tracking-wider block mb-1">Short (min)</label>
+                <label className="text-[9px] font-bold text-neutral-550 uppercase tracking-wider block mb-1">Short (min)</label>
                 <input 
                   type="number" 
                   min="1" 
                   max="30"
                   value={shortBreak}
                   onChange={(e) => setShortBreak(Number(e.target.value))}
-                  className="w-full text-xs px-3.5 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 focus:outline-none focus:border-zinc-500 text-center"
+                  className="w-full text-xs px-3.5 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-200 focus:outline-none focus:border-neutral-500 text-center"
                   required
                 />
               </div>
 
               <div>
-                <label className="text-[9px] font-bold text-zinc-550 uppercase tracking-wider block mb-1">Long (min)</label>
+                <label className="text-[9px] font-bold text-neutral-550 uppercase tracking-wider block mb-1">Long (min)</label>
                 <input 
                   type="number" 
                   min="1" 
                   max="60"
                   value={longBreak}
                   onChange={(e) => setLongBreak(Number(e.target.value))}
-                  className="w-full text-xs px-3.5 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 focus:outline-none focus:border-zinc-500 text-center"
+                  className="w-full text-xs px-3.5 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-200 focus:outline-none focus:border-neutral-500 text-center"
                   required
                 />
               </div>
             </div>
 
-            <p className="text-[10px] text-zinc-500 leading-normal">
+            <p className="text-[10px] text-neutral-500 leading-normal">
               Changing Pomodoro clock parameters resets active timer intervals when timer is idle.
             </p>
           </div>
 
           {/* Card 3: Theme Aesthetics */}
           <div className="glass-panel rounded-2xl p-6 shadow-xl space-y-4">
-            <div className="flex items-center gap-2.5 text-xs font-bold text-zinc-350 uppercase tracking-wider mb-2">
+            <div className="flex items-center gap-2.5 text-xs font-bold text-neutral-350 uppercase tracking-wider mb-2">
               <FiSliders className="w-4 h-4" />
               <span>Theme Aesthetics</span>
             </div>
 
-            <div className="p-4 bg-zinc-950 border border-zinc-850 rounded-xl space-y-2">
-              <p className="text-xs font-bold text-zinc-200">Exclusive Flat Dark Theme Active</p>
-              <p className="text-[10px] text-zinc-500 leading-normal">
+            <div className="p-4 bg-neutral-900 border border-neutral-850 rounded-xl space-y-2">
+              <p className="text-xs font-bold text-neutral-200">Exclusive Flat Dark Theme Active</p>
+              <p className="text-[10px] text-neutral-500 leading-normal">
                 DevSpace is configured to run exclusively in high-contrast monochromatic dark mode. Color scheme controls have been disabled to ensure design consistency and eliminate visual fatigue.
               </p>
             </div>
@@ -131,18 +131,18 @@ export const SettingsPanel: React.FC = () => {
           {/* Card 4: Destructive */}
           <div className="glass-panel rounded-2xl p-6 shadow-xl flex flex-col justify-between gap-4">
             <div className="text-left">
-              <div className="flex items-center gap-2.5 text-xs font-bold text-zinc-350 uppercase tracking-wider mb-2">
+              <div className="flex items-center gap-2.5 text-xs font-bold text-neutral-350 uppercase tracking-wider mb-2">
                 <FiRotateCcw className="w-4 h-4" />
                 <span>Workspace Data</span>
               </div>
-              <p className="text-[11px] text-zinc-500 leading-normal">
+              <p className="text-[11px] text-neutral-500 leading-normal">
                 Resetting will wipe local storage, restoring default templates for tasks, notes, and Pomodoro history.
               </p>
             </div>
             <button
               type="button"
               onClick={handleResetWorkspace}
-              className="py-2.5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-white text-xs font-bold rounded-xl cursor-pointer text-center transition-colors"
+              className="py-2.5 bg-neutral-900 border border-neutral-800 hover:border-neutral-700 text-neutral-300 hover:text-white text-xs font-bold rounded-xl cursor-pointer text-center transition-colors"
             >
               Reset Workspace Data
             </button>
@@ -154,7 +154,7 @@ export const SettingsPanel: React.FC = () => {
         <div className="flex justify-end pt-2">
           <button
             type="submit"
-            className="flex items-center gap-1.5 px-6 py-2.5 bg-white hover:bg-zinc-200 text-xs font-bold text-zinc-950 rounded-xl cursor-pointer shadow-lg transition-colors"
+            className="flex items-center gap-1.5 px-6 py-2.5 bg-white hover:bg-neutral-200 text-xs font-bold text-neutral-950 rounded-xl cursor-pointer shadow-lg transition-colors"
           >
             <FiSave className="w-4 h-4" />
             <span>Save Settings</span>
