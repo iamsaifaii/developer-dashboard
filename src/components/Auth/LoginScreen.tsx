@@ -103,45 +103,45 @@ export const LoginScreen: React.FC = () => {
     <div className="min-h-screen bg-white dark:bg-neutral-950 flex overflow-hidden">
 
       {/* ── LEFT PANEL: Branding ── */}
-      <div className="hidden lg:flex lg:w-[52%] flex-col justify-between p-12 bg-neutral-950 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-[52%] flex-col justify-between p-12 bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white border-r border-neutral-200 dark:border-neutral-900 relative overflow-hidden">
         {/* Decorative background grid */}
-        <div className="absolute inset-0 opacity-[0.04]"
+        <div className="absolute inset-0 opacity-[0.05] dark:opacity-[0.04]"
           style={{
-            backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
+            backgroundImage: 'linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)',
             backgroundSize: '40px 40px'
           }}
         />
 
         {/* Gradient orbs */}
-        <div className="absolute top-[-80px] left-[-80px] w-[400px] h-[400px] rounded-full bg-green-500/10 blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-[-60px] right-[-60px] w-[300px] h-[300px] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none" />
+        <div className="absolute top-[-80px] left-[-80px] w-[400px] h-[400px] rounded-full bg-green-500/5 dark:bg-green-500/10 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[-60px] right-[-60px] w-[300px] h-[300px] rounded-full bg-blue-500/5 dark:bg-blue-500/10 blur-[100px] pointer-events-none" />
 
         {/* Logo / wordmark */}
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center">
-              <FiGitBranch className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-white/10 flex items-center justify-center">
+              <FiGitBranch className="w-5 h-5 text-neutral-800 dark:text-white" />
             </div>
-            <span className="text-white font-black text-lg tracking-tight">DevSpace</span>
+            <span className="text-neutral-900 dark:text-white font-black text-lg tracking-tight">DevSpace</span>
           </div>
           <p className="text-neutral-500 text-xs">Your developer productivity platform</p>
         </div>
 
         {/* Feature list */}
         <div className="relative z-10 space-y-5">
-          <h2 className="text-2xl font-black text-white leading-tight">
+          <h2 className="text-2xl font-black text-neutral-900 dark:text-white leading-tight">
             Everything a developer<br />
             needs in one place.
           </h2>
           <div className="space-y-3.5">
             {FEATURES.map(f => (
               <div key={f.title} className="flex items-start gap-3.5">
-                <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-lg bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 flex items-center justify-center text-neutral-600 dark:text-neutral-400 shrink-0 mt-0.5">
                   {f.icon}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">{f.title}</p>
-                  <p className="text-[11px] text-neutral-500 leading-relaxed">{f.desc}</p>
+                  <p className="text-sm font-semibold text-neutral-850 dark:text-white">{f.title}</p>
+                  <p className="text-[11px] text-neutral-505 dark:text-neutral-500 leading-relaxed">{f.desc}</p>
                 </div>
               </div>
             ))}
@@ -149,7 +149,7 @@ export const LoginScreen: React.FC = () => {
         </div>
 
         {/* Footer */}
-        <p className="relative z-10 text-[10px] text-neutral-600">
+        <p className="relative z-10 text-[10px] text-neutral-400 dark:text-neutral-600">
           © 2026 DevSpace · Secure · Synced · Private
         </p>
       </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FiCalendar } from 'react-icons/fi';
+import { useTheme } from '../Theme/ThemeProvider';
 
 interface ContributionDay {
   date: string;
@@ -31,7 +32,7 @@ function getContributionColorDark(count: number): string {
 
 export const ContributionHeatmap: React.FC<Props> = ({ commits }) => {
   const [tooltip, setTooltip] = useState<{ date: string; count: number; x: number; y: number } | null>(null);
-  const [isDark] = useState(() => document.documentElement.classList.contains('dark'));
+  const { isDark } = useTheme();
 
   // Build commit counts map
   const commitCounts: Record<string, number> = {};

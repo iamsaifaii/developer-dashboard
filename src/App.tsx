@@ -60,15 +60,6 @@ function App() {
     return () => unsubscribe();
   }, [setCurrentUser, setLinkedProviders]);
 
- // 0. Sync Theme
- useEffect(() => {
-   if (settings.colorScheme === 'dark') {
-     document.documentElement.classList.add('dark');
-   } else {
-     document.documentElement.classList.remove('dark');
-   }
- }, [settings.colorScheme]);
-
   // Auto fetch GitHub Data — runs once per session when user+token are ready
   const githubFetchedRef = useRef(false);
   useEffect(() => {

@@ -9,7 +9,8 @@ import {
   FiCheckCircle,
   FiUser,
   FiSun,
-  FiMoon
+  FiMoon,
+  FiMonitor
 } from 'react-icons/fi';
 import { UserProfilePanel } from '../Auth/UserProfilePanel';
 export const SettingsPanel: React.FC = () => {
@@ -126,7 +127,7 @@ export const SettingsPanel: React.FC = () => {
 
             <div>
               <label className="text-[9px] font-bold text-neutral-500 uppercase tracking-wider block mb-2">Color Scheme</label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <button
                   type="button"
                   onClick={() => setColorScheme('light')}
@@ -136,7 +137,7 @@ export const SettingsPanel: React.FC = () => {
                       : 'bg-white dark:bg-black/20 border-neutral-200 dark:border-neutral-800 text-neutral-400 hover:border-neutral-300'
                   }`}
                 >
-                  <FiSun className="w-4 h-4" />
+                  <FiSun className="w-4.5 h-4.5" />
                   Light
                 </button>
                 <button
@@ -148,8 +149,20 @@ export const SettingsPanel: React.FC = () => {
                       : 'bg-white dark:bg-black/20 border-neutral-200 dark:border-neutral-800 text-neutral-400 hover:border-neutral-300'
                   }`}
                 >
-                  <FiMoon className="w-4 h-4" />
+                  <FiMoon className="w-4.5 h-4.5" />
                   Dark
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setColorScheme('system')}
+                  className={`px-4 py-3 rounded-xl border cursor-pointer flex items-center justify-center gap-2 text-xs font-bold transition-all ${
+                    colorScheme === 'system'
+                      ? 'bg-neutral-100 dark:bg-neutral-800 border-neutral-400 text-neutral-800 dark:text-neutral-200'
+                      : 'bg-white dark:bg-black/20 border-neutral-200 dark:border-neutral-800 text-neutral-400 hover:border-neutral-300'
+                  }`}
+                >
+                  <FiMonitor className="w-4.5 h-4.5" />
+                  System
                 </button>
               </div>
             </div>

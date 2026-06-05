@@ -95,7 +95,7 @@ export const useStore = create<State>()((set, get) => {
     pomodoroShortBreak: 5,
     pomodoroLongBreak: 15,
     themeMode: 'glass',
-    colorScheme: 'dark',
+    colorScheme: 'system',
     avatarUrl: '',
     bio: ''
   };

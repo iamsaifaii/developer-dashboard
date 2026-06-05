@@ -144,7 +144,7 @@ export interface DeveloperSettings {
  pomodoroShortBreak: number;
  pomodoroLongBreak: number;
  themeMode: 'dark' | 'glass';
- colorScheme: 'dark' | 'light';
+ colorScheme: 'dark' | 'light' | 'system';
  avatarUrl?: string;
  bio?: string;
 }

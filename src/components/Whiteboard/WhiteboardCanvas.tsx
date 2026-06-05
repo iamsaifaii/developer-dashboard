@@ -3,6 +3,7 @@ import type {
   WBElement, ToolType, StickyEl, TextEl,
 } from './types';
 import { WhiteboardToolbar } from './WhiteboardToolbar';
+import { useTheme } from '../Theme/ThemeProvider';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 const GRID = 30;
@@ -102,6 +103,7 @@ function histReducer(s: Hist, a: HistAct): Hist {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 export const WhiteboardCanvas: React.FC = () => {
+  const { isDark } = useTheme();
   const [hist, dispatch] = useReducer(histReducer, { past: [], present: [], future: [] });
   const elements = hist.present;
   const canUndo = hist.past.length > 0;
@@ -114,7 +116,12 @@ export const WhiteboardCanvas: React.FC = () => {
 
   // Tool state
   const [activeTool, setActiveTool] = useState<ToolType>('select');
-  const [strokeColor, setStrokeColor] = useState('#a5b4fc');
+  const [strokeColor, setStrokeColor] = useState(isDark ? '#a5b4fc' : '#4f46e5');
+
+  // Set default colors based on dark/light mode on change
+  useEffect(() => {
+    setStrokeColor(isDark ? '#a5b4fc' : '#4f46e5');
+  }, [isDark]);
   const [fillColor, setFillColor] = useState('none');
   const [strokeWidth, setStrokeWidth] = useState(2);
   const [fontSize, setFontSize] = useState(20);
@@ -649,9 +656,15 @@ export const WhiteboardCanvas: React.FC = () => {
 
   const draggingId = dragData.current?.id;
 
+  const canvasBg = isDark ? '#0e0e14' : '#fafafa';
+  const dotColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.12)';
+  const zoomPillBg = isDark ? 'rgba(18,18,26,0.88)' : 'rgba(255,255,255,0.88)';
+  const zoomPillBorder = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
+  const zoomPillColor = isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)';
+
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: '#0e0e14' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: canvasBg }}>
       <svg
         ref={svgRef}
         style={{ display: 'block', width: '100%', height: '100%', cursor: getCursor() }}
@@ -663,12 +676,12 @@ export const WhiteboardCanvas: React.FC = () => {
       >
         <defs>
           <pattern id="wb-dots" x={gox} y={goy} width={gs} height={gs} patternUnits="userSpaceOnUse">
-            <circle cx={gs / 2} cy={gs / 2} r={dotR} fill="rgba(255,255,255,0.1)" />
+            <circle cx={gs / 2} cy={gs / 2} r={dotR} fill={dotColor} />
           </pattern>
         </defs>
 
         {/* Background */}
-        <rect width="100%" height="100%" fill="#0e0e14" />
+        <rect width="100%" height="100%" fill={canvasBg} />
         <rect width="100%" height="100%" fill="url(#wb-dots)" />
 
         {/* World transform group */}
@@ -692,6 +705,7 @@ export const WhiteboardCanvas: React.FC = () => {
 
       {/* Toolbar */}
       <WhiteboardToolbar
+        isDark={isDark}
         activeTool={activeTool}
         onToolChange={t => { setActiveTool(t); setSelectedId(null); setEditingId(null); }}
         strokeColor={strokeColor}
@@ -741,12 +755,12 @@ export const WhiteboardCanvas: React.FC = () => {
       {/* Zoom pill — top left */}
       <div style={{
         position: 'absolute', top: 14, left: 14,
-        background: 'rgba(18,18,26,0.88)', backdropFilter: 'blur(14px)',
-        border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10,
-        padding: '5px 13px', color: 'rgba(255,255,255,0.6)',
+        background: zoomPillBg, backdropFilter: 'blur(14px)',
+        border: `1px solid ${zoomPillBorder}`, borderRadius: 10,
+        padding: '5px 13px', color: zoomPillColor,
         fontSize: 12, fontFamily: 'Poppins, sans-serif', fontWeight: 600,
         pointerEvents: 'none', userSelect: 'none',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.35)',
+        boxShadow: isDark ? '0 2px 12px rgba(0,0,0,0.35)' : '0 2px 12px rgba(0,0,0,0.12)',
       }}>
         {Math.round(zoom * 100)}%
       </div>
@@ -755,9 +769,9 @@ export const WhiteboardCanvas: React.FC = () => {
       {elements.length > 0 && (
         <div style={{
           position: 'absolute', top: 14, right: 14,
-          background: 'rgba(18,18,26,0.88)', backdropFilter: 'blur(14px)',
-          border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10,
-          padding: '5px 13px', color: 'rgba(255,255,255,0.4)',
+          background: zoomPillBg, backdropFilter: 'blur(14px)',
+          border: `1px solid ${zoomPillBorder}`, borderRadius: 10,
+          padding: '5px 13px', color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
           fontSize: 11, fontFamily: 'Poppins, sans-serif',
           pointerEvents: 'none', userSelect: 'none',
         }}>
@@ -768,7 +782,7 @@ export const WhiteboardCanvas: React.FC = () => {
       {/* Keyboard hint — bottom right */}
       <div style={{
         position: 'absolute', bottom: 88, right: 14,
-        color: 'rgba(255,255,255,0.2)', fontSize: 10,
+        color: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.35)', fontSize: 10,
         fontFamily: 'Poppins, sans-serif', pointerEvents: 'none',
         lineHeight: 1.8, textAlign: 'right',
       }}>

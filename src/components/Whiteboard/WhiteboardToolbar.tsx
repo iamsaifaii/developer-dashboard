@@ -54,6 +54,7 @@ const ADD_TOOLS: ToolDef[] = [
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 interface Props {
+  isDark: boolean;
   activeTool: ToolType;
   onToolChange: (t: ToolType) => void;
   strokeColor: string;
@@ -83,6 +84,7 @@ interface Props {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 export const WhiteboardToolbar: React.FC<Props> = ({
+  isDark,
   activeTool, onToolChange,
   strokeColor, onStrokeColorChange,
   fillColor, onFillColorChange,
@@ -97,6 +99,12 @@ export const WhiteboardToolbar: React.FC<Props> = ({
   const [popup, setPopup] = useState<'stroke' | 'fill' | 'sticky' | 'width' | null>(null);
   const popRef = useRef<HTMLDivElement>(null);
 
+  const toolbarBg = isDark ? 'rgba(14,14,20,0.96)' : 'rgba(255,255,255,0.96)';
+  const toolbarBorder = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.1)';
+  const iconColor = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.55)';
+  const iconHoverColor = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)';
+  const dividerBg = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+
   // Close popups on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -110,7 +118,7 @@ export const WhiteboardToolbar: React.FC<Props> = ({
 
   // ─── Sub-renderers ───────────────────────────────────────────────────────
   const Divider = () => (
-    <div style={{ width: 1, height: 30, background: 'rgba(255,255,255,0.1)', flexShrink: 0, margin: '0 3px' }} />
+    <div style={{ width: 1, height: 30, background: dividerBg, flexShrink: 0, margin: '0 3px' }} />
   );
 
   const ToolBtn: React.FC<{ def: ToolDef }> = ({ def }) => {
@@ -123,12 +131,12 @@ export const WhiteboardToolbar: React.FC<Props> = ({
         style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           gap: 2, width: 46, height: 46, borderRadius: 10, flexShrink: 0,
-          background: active ? 'rgba(99,102,241,0.22)' : 'transparent',
-          border: active ? '1px solid rgba(129,140,248,0.6)' : '1px solid transparent',
-          color: active ? '#a5b4fc' : 'rgba(255,255,255,0.5)',
+          background: active ? (isDark ? 'rgba(99,102,241,0.22)' : 'rgba(79,70,229,0.15)') : 'transparent',
+          border: active ? (isDark ? '1px solid rgba(129,140,248,0.6)' : '1px solid rgba(79,70,229,0.5)') : '1px solid transparent',
+          color: active ? (isDark ? '#a5b4fc' : '#4f46e5') : iconColor,
           cursor: 'pointer', transition: 'all 0.13s',
         }}
-        onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.07)'; }}
+        onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)'; }}
         onMouseLeave={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
       >
         <Icon size={17} />
@@ -150,13 +158,13 @@ export const WhiteboardToolbar: React.FC<Props> = ({
       style={{
         width: size, height: size, borderRadius: 8, flexShrink: 0,
         background: 'transparent', border: 'none',
-        color: color || (disabled ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.55)'),
+        color: color || (disabled ? (isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)') : iconColor),
         cursor: disabled ? 'default' : 'pointer',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         transition: 'all 0.13s',
       }}
-      onMouseEnter={e => { if (!disabled) (e.currentTarget as HTMLButtonElement).style.color = color || 'rgba(255,255,255,0.9)'; }}
-      onMouseLeave={e => { if (!disabled) (e.currentTarget as HTMLButtonElement).style.color = color || (disabled ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.55)'); }}
+      onMouseEnter={e => { if (!disabled) (e.currentTarget as HTMLButtonElement).style.color = color || iconHoverColor; }}
+      onMouseLeave={e => { if (!disabled) (e.currentTarget as HTMLButtonElement).style.color = color || (disabled ? (isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)') : iconColor); }}
     >
       {children}
     </button>
@@ -171,7 +179,7 @@ export const WhiteboardToolbar: React.FC<Props> = ({
       style={{
         width: size, height: size, borderRadius: 5,
         background: color === 'none' ? 'transparent' : color,
-        border: active ? '2px solid #a5b4fc' : '2px solid rgba(255,255,255,0.15)',
+        border: active ? (isDark ? '2px solid #a5b4fc' : '2px solid #4f46e5') : (isDark ? '2px solid rgba(255,255,255,0.15)' : '2px solid rgba(0,0,0,0.15)'),
         cursor: 'pointer', flexShrink: 0, transition: 'border 0.13s',
         position: 'relative', overflow: 'hidden',
       }}
@@ -190,10 +198,10 @@ export const WhiteboardToolbar: React.FC<Props> = ({
     <div style={{
       position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)',
       marginBottom: 10,
-      background: 'rgba(15,15,22,0.97)', backdropFilter: 'blur(24px)',
-      border: '1px solid rgba(255,255,255,0.1)', borderRadius: 14,
+      background: isDark ? 'rgba(15,15,22,0.97)' : 'rgba(255,255,255,0.97)', backdropFilter: 'blur(24px)',
+      border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)', borderRadius: 14,
       padding: 14, zIndex: 300, minWidth: 180,
-      boxShadow: '0 16px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)',
+      boxShadow: isDark ? '0 16px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)' : '0 16px 48px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.04)',
     }}>
       {children}
     </div>
@@ -201,7 +209,7 @@ export const WhiteboardToolbar: React.FC<Props> = ({
 
   const SectionLabel: React.FC<{ children: string }> = ({ children }) => (
     <div style={{
-      fontSize: 9, color: 'rgba(255,255,255,0.4)',
+      fontSize: 9, color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.5)',
       fontFamily: 'Poppins, sans-serif', fontWeight: 700,
       letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 8,
     }}>
@@ -257,7 +265,7 @@ export const WhiteboardToolbar: React.FC<Props> = ({
             title={name.charAt(0).toUpperCase() + name.slice(1)}
             style={{
               width: 30, height: 30, borderRadius: '50%', background: color,
-              border: stickyBg === name ? '3px solid white' : '2px solid rgba(255,255,255,0.2)',
+              border: stickyBg === name ? (isDark ? '3px solid white' : '3px solid black') : '2px solid rgba(255,255,255,0.2)',
               cursor: 'pointer', transition: 'all 0.13s', flexShrink: 0,
             }}
           />
@@ -265,6 +273,12 @@ export const WhiteboardToolbar: React.FC<Props> = ({
       </div>
     </PopupPanel>
   );
+
+  const smlBtnStyle = (isDark: boolean): React.CSSProperties => ({
+    width: 28, height: 28, borderRadius: 8, border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid rgba(0,0,0,0.12)',
+    background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)', color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)',
+    cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
+  });
 
   const widthPopup = (
     <PopupPanel>
@@ -281,17 +295,17 @@ export const WhiteboardToolbar: React.FC<Props> = ({
               border: strokeWidth === w ? '1px solid rgba(129,140,248,0.5)' : '1px solid transparent',
             }}
           >
-            <div style={{ flex: 1, height: w === 1 ? 1 : w === 2 ? 2 : w === 4 ? 3 : 5, background: 'rgba(255,255,255,0.8)', borderRadius: 2 }} />
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontFamily: 'Poppins', width: 24, textAlign: 'right' }}>{w}px</span>
+            <div style={{ flex: 1, height: w === 1 ? 1 : w === 2 ? 2 : w === 4 ? 3 : 5, background: isDark ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.8)', borderRadius: 2 }} />
+            <span style={{ fontSize: 11, color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)', fontFamily: 'Poppins', width: 24, textAlign: 'right' }}>{w}px</span>
           </button>
         ))}
       </div>
       <div style={{ marginTop: 12 }}>
         <SectionLabel>Font Size</SectionLabel>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <button onClick={() => onFontSizeChange(Math.max(10, fontSize - 2))} style={{ ...smlBtnStyle }}>−</button>
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', fontFamily: 'Poppins', minWidth: 24, textAlign: 'center' }}>{fontSize}</span>
-          <button onClick={() => onFontSizeChange(Math.min(96, fontSize + 2))} style={{ ...smlBtnStyle }}>+</button>
+          <button onClick={() => onFontSizeChange(Math.max(10, fontSize - 2))} style={smlBtnStyle(isDark)}>−</button>
+          <span style={{ fontSize: 12, color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', fontFamily: 'Poppins', minWidth: 24, textAlign: 'center' }}>{fontSize}</span>
+          <button onClick={() => onFontSizeChange(Math.min(96, fontSize + 2))} style={smlBtnStyle(isDark)}>+</button>
         </div>
       </div>
     </PopupPanel>
@@ -304,17 +318,17 @@ export const WhiteboardToolbar: React.FC<Props> = ({
       style={{
         position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)',
         display: 'flex', alignItems: 'center', gap: 3,
-        background: 'rgba(14,14,20,0.96)', backdropFilter: 'blur(24px)',
-        border: '1px solid rgba(255,255,255,0.09)',
+        background: toolbarBg, backdropFilter: 'blur(24px)',
+        border: `1px solid ${toolbarBorder}`,
         borderRadius: 20, padding: '6px 10px',
-        boxShadow: '0 12px 48px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.03)',
+        boxShadow: isDark ? '0 12px 48px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.03)' : '0 12px 48px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.03)',
         userSelect: 'none', zIndex: 100,
         maxWidth: 'calc(100vw - 48px)', overflowX: 'auto',
       }}
     >
       {/* Zoom controls */}
       <IconBtn onClick={onZoomOut} title="Zoom Out (scroll)"><FiZoomOut size={14} /></IconBtn>
-      <span style={zoomLabelStyle}>{Math.round(zoom * 100)}%</span>
+      <span style={{ ...zoomLabelStyle, color: isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.65)' }}>{Math.round(zoom * 100)}%</span>
       <IconBtn onClick={onZoomIn} title="Zoom In (scroll)"><FiZoomIn size={14} /></IconBtn>
       <IconBtn onClick={onFitScreen} title="Reset View" size={30}><FiMaximize2 size={13} /></IconBtn>
 
@@ -357,7 +371,7 @@ export const WhiteboardToolbar: React.FC<Props> = ({
                   gap: 2, width: 46, height: 46, borderRadius: 10, flexShrink: 0,
                   background: active ? `${accentColor}25` : 'transparent',
                   border: active ? `1px solid ${accentColor}88` : '1px solid transparent',
-                  color: active ? accentColor : 'rgba(255,255,255,0.5)',
+                  color: active ? accentColor : iconColor,
                   cursor: 'pointer', transition: 'all 0.13s', position: 'relative',
                 }}
               >
@@ -391,12 +405,12 @@ export const WhiteboardToolbar: React.FC<Props> = ({
           title="Stroke Color"
           style={{
             width: 36, height: 36, borderRadius: 9, flexShrink: 0,
-            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)',
+            background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid rgba(0,0,0,0.12)',
             cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3,
             padding: 0,
           }}
         >
-          <div style={{ width: 18, height: 18, borderRadius: 4, background: strokeColor, border: '1.5px solid rgba(255,255,255,0.25)' }} />
+          <div style={{ width: 18, height: 18, borderRadius: 4, background: strokeColor, border: isDark ? '1.5px solid rgba(255,255,255,0.25)' : '1.5px solid rgba(0,0,0,0.25)' }} />
           <div style={{ width: 18, height: 2.5, background: strokeColor, borderRadius: 2 }} />
         </button>
         {popup === 'stroke' && strokePopup}
@@ -409,14 +423,14 @@ export const WhiteboardToolbar: React.FC<Props> = ({
           title="Fill Color"
           style={{
             width: 36, height: 36, borderRadius: 9, flexShrink: 0,
-            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)',
+            background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid rgba(0,0,0,0.12)',
             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0,
           }}
         >
           <div style={{
             width: 20, height: 20, borderRadius: 4,
             background: fillColor === 'none' ? 'transparent' : fillColor,
-            border: '1.5px solid rgba(255,255,255,0.25)',
+            border: isDark ? '1.5px solid rgba(255,255,255,0.25)' : '1.5px solid rgba(0,0,0,0.25)',
             position: 'relative', overflow: 'hidden',
           }}>
             {fillColor === 'none' && (
@@ -437,13 +451,13 @@ export const WhiteboardToolbar: React.FC<Props> = ({
           title="Stroke Width / Font Size"
           style={{
             width: 36, height: 36, borderRadius: 9, flexShrink: 0,
-            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)',
+            background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid rgba(0,0,0,0.12)',
             cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3,
             padding: '0 6px',
           }}
         >
           {[1, 2, 3.5].map((h, i) => (
-            <div key={i} style={{ width: 18, height: h, background: 'rgba(255,255,255,0.65)', borderRadius: 1 }} />
+            <div key={i} style={{ width: 18, height: h, background: isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)', borderRadius: 1 }} />
           ))}
         </button>
         {popup === 'width' && widthPopup}
@@ -482,13 +496,7 @@ export const WhiteboardToolbar: React.FC<Props> = ({
 
 // ─── Shared mini styles ──────────────────────────────────────────────────────
 const zoomLabelStyle: React.CSSProperties = {
-  fontSize: 11, color: 'rgba(255,255,255,0.55)',
+  fontSize: 11,
   fontFamily: 'Poppins, sans-serif', fontWeight: 700,
   minWidth: 36, textAlign: 'center', flexShrink: 0,
-};
-
-const smlBtnStyle: React.CSSProperties = {
-  width: 28, height: 28, borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)',
-  background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.7)',
-  cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
 };
