@@ -103,7 +103,7 @@ export const LoginScreen: React.FC = () => {
     <div className="min-h-screen bg-zinc-950 flex overflow-hidden">
 
       {/* ── LEFT PANEL: Branding ── */}
-      <div className="hidden lg:flex lg:w-[52%] flex-col justify-between p-12 bg-zinc-900 text-white border-r border-zinc-850 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-[52%] flex-col justify-between p-12 bg-zinc-900 text-white border-r border-zinc-800 relative overflow-hidden">
         {/* Decorative background grid */}
         <div className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -174,7 +174,7 @@ export const LoginScreen: React.FC = () => {
 
           {/* Error banner */}
           {error && (
-            <div className="flex items-start gap-3 px-4 py-3.5 rounded-xl border border-zinc-850 bg-zinc-900">
+            <div className="flex items-start gap-3 px-4 py-3.5 rounded-xl border border-zinc-800 bg-zinc-900">
               <FiAlertCircle className="w-4 h-4 text-zinc-300 shrink-0 mt-0.5" />
               <p className="text-xs text-zinc-300 leading-relaxed flex-1">{error}</p>
               <button
@@ -188,7 +188,7 @@ export const LoginScreen: React.FC = () => {
 
           {/* Account conflict / linking prompt */}
           {linkingState && (
-            <div className="px-4 py-4 rounded-xl border border-zinc-850 bg-zinc-900 space-y-3">
+            <div className="px-4 py-4 rounded-xl border border-zinc-800 bg-zinc-900 space-y-3">
               <div className="flex items-start gap-2.5">
                 <FiAlertCircle className="w-4 h-4 text-zinc-350 shrink-0 mt-0.5" />
                 <p className="text-xs text-zinc-300 leading-relaxed">
@@ -218,7 +218,7 @@ export const LoginScreen: React.FC = () => {
               id="btn-signin-github"
               onClick={handleGitHub}
               disabled={isLoading}
-              className="w-full relative flex items-center justify-center gap-3.5 px-5 py-3.5 bg-white hover:bg-zinc-150 text-zinc-950 font-semibold text-sm rounded-xl border border-zinc-800 disabled:opacity-60 active:scale-[0.98] transition-all shadow-sm cursor-pointer"
+              className="w-full relative flex items-center justify-center gap-3.5 px-5 py-3.5 bg-white hover:bg-zinc-100 text-zinc-950 font-semibold text-sm rounded-xl border border-zinc-800 disabled:opacity-60 active:scale-[0.98] transition-all shadow-sm cursor-pointer"
             >
               {loading === 'github' ? (
                 <div className="w-5 h-5 border-2 border-zinc-950/30 border-t-zinc-950 rounded-full animate-spin" />
@@ -235,9 +235,9 @@ export const LoginScreen: React.FC = () => {
 
             {/* Divider */}
             <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-zinc-850" />
-              <span className="text-[10px] font-medium text-zinc-650">or</span>
-              <div className="flex-1 h-px bg-zinc-850" />
+              <div className="flex-1 h-px bg-zinc-800" />
+              <span className="text-[10px] font-medium text-zinc-500">or</span>
+              <div className="flex-1 h-px bg-zinc-800" />
             </div>
 
             {/* Google */}
@@ -245,7 +245,7 @@ export const LoginScreen: React.FC = () => {
               id="btn-signin-google"
               onClick={handleGoogle}
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3.5 px-5 py-3.5 bg-zinc-900 hover:bg-zinc-850 text-zinc-100 font-semibold text-sm rounded-xl border border-zinc-800 disabled:opacity-60 active:scale-[0.98] transition-all shadow-sm cursor-pointer"
+              className="w-full flex items-center justify-center gap-3.5 px-5 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-100 font-semibold text-sm rounded-xl border border-zinc-800 disabled:opacity-60 active:scale-[0.98] transition-all shadow-sm cursor-pointer"
             >
               {loading === 'google' ? (
                 <div className="w-5 h-5 border-2 border-zinc-700 border-t-zinc-300 rounded-full animate-spin" />
