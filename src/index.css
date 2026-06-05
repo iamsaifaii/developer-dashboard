@@ -4,10 +4,7 @@
 
 @theme {
   --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --color-neutral-900: #1f1f1f;
-  --color-neutral-950: #1f1f1f;
-  --color-zinc-900: #1f1f1f;
-  --color-zinc-950: #1f1f1f;
+  --color-neutral-900: #1a1a1a;
 }
 
 /* Custom Scrollbar */
@@ -17,19 +14,24 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #09090b; /* zinc-950 */
+  background: #09090b;
+  /* zinc-950 */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #27272a; /* zinc-800 */
+  background: #27272a;
+  /* zinc-800 */
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46; /* zinc-700 */
+  background: #3f3f46;
+  /* zinc-700 */
 }
 
-html, body, #root {
+html,
+body,
+#root {
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -54,13 +56,16 @@ html, body, #root {
 }
 
 .glass-panel-interactive:hover {
-  border-color: #3f3f46; /* zinc-700 */
+  border-color: #3f3f46;
+  /* zinc-700 */
   background-color: #202023;
 }
 
 .glass-input {
-  background-color: #09090b; /* zinc-950 */
-  border: 1px solid #27272a; /* zinc-800 */
+  background-color: #09090b;
+  /* zinc-950 */
+  border: 1px solid #27272a;
+  /* zinc-800 */
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
   color: #f4f4f5;
@@ -69,5 +74,6 @@ html, body, #root {
 
 .glass-input:focus {
   outline: none;
-  border-color: #52525b; /* zinc-600 */
+  border-color: #52525b;
+  /* zinc-600 */
 }
