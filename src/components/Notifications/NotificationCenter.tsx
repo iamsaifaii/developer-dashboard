@@ -10,7 +10,7 @@ import {
   FiInfo 
 } from 'react-icons/fi';
 import { formatDistanceToNow } from 'date-fns';
-import { AppNotification, NotificationCategory } from '../../types';
+import type { AppNotification, NotificationCategory } from '../../types';
 
 interface NotificationCenterProps {}
 

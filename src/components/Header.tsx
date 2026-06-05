@@ -5,7 +5,6 @@ import { signOut } from 'firebase/auth';
 import { 
   FiPlus, 
   FiSearch, 
-  FiBell,
   FiLogOut,
   FiMenu
 } from 'react-icons/fi';
