@@ -10,8 +10,7 @@ import {
  FiPlay,
  FiPause,
  FiRotateCcw,
- FiPenTool,
- FiCpu
+ FiPenTool
 } from 'react-icons/fi';
 
 
@@ -31,7 +30,6 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
 
  const menuItems = [
  { id: 'dashboard', label: 'Dashboard', icon: FiLayout },
- { id: 'ai', label: 'DevPilot AI', icon: FiCpu },
  { id: 'kanban', label: 'Kanban Board', icon: TrelloIcon },
  { id: 'notes', label: 'Notes System', icon: FiFileText },
  { id: 'calendar', label: 'Calendar', icon: FiCalendar },

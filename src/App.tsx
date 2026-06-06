@@ -16,8 +16,6 @@ import { TaskModal } from './components/Kanban/TaskModal';
 import { WhiteboardCanvas } from './components/Whiteboard/WhiteboardCanvas';
 import { LoginScreen } from './components/Auth/LoginScreen';
 import { playChime } from './components/Pomodoro/SoundPlayer';
-import { DevPilotAI } from './components/AI/DevPilotAI';
-
 
 function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -157,8 +155,6 @@ function App() {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardHome onNavigate={(tab) => useStore.getState().setActiveTab(tab)} />;
-      case 'ai':
-        return <DevPilotAI />;
       case 'kanban':
         return <KanbanBoard />;
       case 'notes':
