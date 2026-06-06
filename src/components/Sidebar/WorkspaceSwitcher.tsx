@@ -9,11 +9,13 @@ export const WorkspaceSwitcher: React.FC = () => {
     activeWorkspaceId, 
     setActiveWorkspaceId, 
     workspaces, 
-    setWorkspaces 
+    setWorkspaces,
+    addNotification
   } = useStore();
   
   const [isOpen, setIsOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
 
   // Fetch workspaces on mount
@@ -23,8 +25,18 @@ export const WorkspaceSwitcher: React.FC = () => {
     }
   }, [currentUser, setWorkspaces]);
 
-  const handleCreate = async () => {
-    if (!newWorkspaceName.trim() || !currentUser) return;
+  const handleCreate = async (e?: React.MouseEvent | React.KeyboardEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (!newWorkspaceName.trim()) return;
+    if (!currentUser) {
+      addNotification({ title: 'Error', message: 'You must be logged in to create a workspace.', category: 'system' });
+      return;
+    }
+    
+    setIsSubmitting(true);
     try {
       await workspaceService.createWorkspace(newWorkspaceName, currentUser.uid, currentUser.email!);
       setNewWorkspaceName('');
@@ -32,8 +44,12 @@ export const WorkspaceSwitcher: React.FC = () => {
       // Refresh list
       const updated = await workspaceService.fetchUserWorkspaces(currentUser.uid);
       setWorkspaces(updated);
-    } catch (e) {
-      console.error(e);
+      addNotification({ title: 'Success', message: 'Workspace created', category: 'system' });
+    } catch (e: any) {
+      console.error('Error creating workspace:', e);
+      addNotification({ title: 'Error', message: e.message || String(e), category: 'system' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -91,11 +107,13 @@ export const WorkspaceSwitcher: React.FC = () => {
                   placeholder="Team Name..."
                   className="w-full text-xs px-2 py-1.5 bg-zinc-950 border border-zinc-700 rounded text-zinc-200 outline-none"
                   autoFocus
-                  onKeyDown={e => e.key === 'Enter' && handleCreate()}
+                  onKeyDown={e => e.key === 'Enter' && handleCreate(e)}
                 />
                 <div className="flex gap-2">
-                  <button onClick={handleCreate} className="flex-1 bg-emerald-500 text-black text-xs font-bold py-1 rounded">Create</button>
-                  <button onClick={() => setIsCreating(false)} className="flex-1 bg-zinc-800 text-white text-xs py-1 rounded">Cancel</button>
+                  <button onClick={handleCreate} disabled={isSubmitting} className="flex-1 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-black text-xs font-bold py-1 rounded transition-colors">
+                    {isSubmitting ? 'Creating...' : 'Create'}
+                  </button>
+                  <button onClick={() => setIsCreating(false)} disabled={isSubmitting} className="flex-1 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-white text-xs py-1 rounded transition-colors">Cancel</button>
                 </div>
               </div>
             ) : (

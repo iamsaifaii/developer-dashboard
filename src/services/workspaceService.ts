@@ -13,7 +13,7 @@ export const workspaceService = {
       members: {
         [userId]: {
           uid: userId,
-          email: userEmail,
+          email: userEmail || '',
           role: 'admin',
           joinedAt: new Date().toISOString()
         }
