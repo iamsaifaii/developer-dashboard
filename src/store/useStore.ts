@@ -6,8 +6,9 @@ import { auth } from '../lib/firebase';
 import type { 
   Task, Column, Note, CalendarEvent, PomodoroSession, TimerMode, DeveloperSettings,
   GithubRepo, GithubIssue, GithubPR, GithubCommit, GithubAnalytics, GithubWeeklyActivity,
-  AppNotification
+  AppNotification, AIMessage
 } from '../types';
+
 
 interface State {
   // Auth
@@ -94,6 +95,11 @@ interface State {
  setGithubToken: (token: string | null) => void;
  setGithubAnalytics: (analytics: GithubAnalytics | null) => void;
  fetchRealGithubData: () => Promise<void>;
+
+  // AI assistant messages
+  aiMessages: AIMessage[];
+  addAIMessage: (msg: Omit<AIMessage, 'id' | 'timestamp'>) => void;
+  clearAIMessages: () => void;
 }
 
 export const useStore = create<State>()((set, get) => {
@@ -204,6 +210,7 @@ export const useStore = create<State>()((set, get) => {
               githubIssues: cloudState.githubIssues || [],
               githubPRs: cloudState.githubPRs || [],
               githubCommits: cloudState.githubCommits || [],
+              aiMessages: cloudState.aiMessages || [],
               currentUser: user,
               githubToken: resolvedToken,
               // Reset githubConnected so App.tsx re-fetches fresh GitHub data
@@ -604,6 +611,18 @@ export const useStore = create<State>()((set, get) => {
  };
  }),
 
+  // AI State
+  aiMessages: [],
+  addAIMessage: (msg) => set((state) => {
+    const newMsg: AIMessage = {
+      ...msg,
+      id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: new Date().toISOString()
+    };
+    return { aiMessages: [...(state.aiMessages || []), newMsg] };
+  }),
+  clearAIMessages: () => set({ aiMessages: [] }),
+
  // Real Github API functions
  githubToken: null,
  githubIsLoading: false,
@@ -849,7 +868,8 @@ useStore.subscribe((state, prevState) => {
       githubPRs: state.githubPRs,
       githubCommits: state.githubCommits,
       githubToken: state.githubToken,
-      notifications: state.notifications
+      notifications: state.notifications,
+      aiMessages: state.aiMessages || []
     };
     
     const prevStateToSave = {
@@ -868,7 +888,8 @@ useStore.subscribe((state, prevState) => {
       githubPRs: prevState.githubPRs,
       githubCommits: prevState.githubCommits,
       githubToken: prevState.githubToken,
-      notifications: prevState.notifications
+      notifications: prevState.notifications,
+      aiMessages: prevState.aiMessages || []
     };
 
     // Only sync if the actual persistent data changed

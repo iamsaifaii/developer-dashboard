@@ -171,4 +171,15 @@ export interface DeveloperSettings {
  avatarUrl?: string;
  bio?: string;
  notificationPreferences: NotificationPreferences;
+ openaiApiKey?: string;
+}
+
+export type AIFeature = 'chat' | 'standup' | 'suggestions' | 'analytics' | 'summary' | 'notes' | 'automation';
+
+export interface AIMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+  feature?: AIFeature;
 }

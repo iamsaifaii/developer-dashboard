@@ -16,6 +16,8 @@ import { TaskModal } from './components/Kanban/TaskModal';
 import { WhiteboardCanvas } from './components/Whiteboard/WhiteboardCanvas';
 import { LoginScreen } from './components/Auth/LoginScreen';
 import { playChime } from './components/Pomodoro/SoundPlayer';
+import { DevPilotAI } from './components/AI/DevPilotAI';
+
 
 function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -150,29 +152,32 @@ function App() {
     });
   };
 
- // 3. Tab rendering switcher
- const renderTabContent = () => {
- switch (activeTab) {
- case 'dashboard':
- return <DashboardHome onNavigate={(tab) => useStore.getState().setActiveTab(tab)} />;
- case 'kanban':
- return <KanbanBoard />;
- case 'notes':
- return <NotesManager />;
- case 'calendar':
- return <ProjectCalendar />;
- case 'pomodoro':
- return <PomodoroTimer />;
- case 'github':
- return <GithubDashboard />;
- case 'settings':
- return <SettingsPanel />;
- case 'whiteboard':
- return <WhiteboardCanvas />;
- default:
- return <DashboardHome onNavigate={(tab) => useStore.getState().setActiveTab(tab)} />;
- }
- };
+  // 3. Tab rendering switcher
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return <DashboardHome onNavigate={(tab) => useStore.getState().setActiveTab(tab)} />;
+      case 'ai':
+        return <DevPilotAI />;
+      case 'kanban':
+        return <KanbanBoard />;
+      case 'notes':
+        return <NotesManager />;
+      case 'calendar':
+        return <ProjectCalendar />;
+      case 'pomodoro':
+        return <PomodoroTimer />;
+      case 'github':
+        return <GithubDashboard />;
+      case 'settings':
+        return <SettingsPanel />;
+      case 'whiteboard':
+        return <WhiteboardCanvas />;
+      default:
+        return <DashboardHome onNavigate={(tab) => useStore.getState().setActiveTab(tab)} />;
+    }
+  };
+
 
   if (isAuthLoading || (currentUser && isHydratingFromCloud)) {
     return (

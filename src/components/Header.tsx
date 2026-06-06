@@ -34,6 +34,7 @@ export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar 
  const getTitle = () => {
  switch (activeTab) {
  case 'dashboard': return 'Productivity Dashboard';
+ case 'ai': return 'DevPilot AI Workspace';
  case 'kanban': return 'Sprint Kanban';
  case 'notes': return 'Markdown Notes';
  case 'calendar': return 'Project Calendar';
