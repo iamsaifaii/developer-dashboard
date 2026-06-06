@@ -10,6 +10,7 @@ import {
   FiBell
 } from 'react-icons/fi';
 import { UserProfilePanel } from '../Auth/UserProfilePanel';
+import { ExportCenter } from './ExportCenter';
 
 export const SettingsPanel: React.FC = () => {
   const { settings, updateSettings } = useStore();
@@ -173,6 +174,9 @@ export const SettingsPanel: React.FC = () => {
               ))}
             </div>
           </div>
+
+          {/* Card 4.5: Export & Backup Center */}
+          <ExportCenter />
 
           {/* Card 5: Destructive */}
           <div className="glass-panel rounded-2xl p-6 shadow-xl flex flex-col justify-between gap-4 md:col-span-2">

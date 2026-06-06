@@ -187,4 +187,22 @@ export interface AIMessage {
   feature?: AIFeature;
 }
 
+export interface Goal {
+  id: string;
+  title: string;
+  period: 'weekly' | 'monthly';
+  target: number;
+  current: number;
+  createdAt: string;
+  completedAt?: string;
+}
+
+export interface HabitStreak {
+  id: string;
+  name: string;
+  currentStreak: number;
+  longestStreak: number;
+  lastLogDate: string;
+}
+
 

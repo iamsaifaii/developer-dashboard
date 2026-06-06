@@ -11,7 +11,8 @@ import {
  FiPlay,
  FiPause,
  FiRotateCcw,
- FiPenTool
+ FiPenTool,
+ FiTarget
 } from 'react-icons/fi';
 
 
@@ -37,6 +38,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  { id: 'notes', label: 'Notes System', icon: FiFileText },
  { id: 'calendar', label: 'Calendar', icon: FiCalendar },
  { id: 'pomodoro', label: 'Pomodoro', icon: FiClock },
+ { id: 'goals', label: 'Goals & Habits', icon: FiTarget },
  { id: 'whiteboard', label: 'Whiteboard', icon: FiPenTool },
  { id: 'github', label: 'GitHub Sync', icon: GithubIcon },
  { id: 'settings', label: 'Settings', icon: FiSettings },

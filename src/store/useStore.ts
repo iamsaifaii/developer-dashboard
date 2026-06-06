@@ -100,6 +100,15 @@ interface State {
   addAIMessage: (msg: Omit<AIMessage, 'id' | 'timestamp'>) => void;
   clearAIMessages: () => void;
 
+  // Goals
+  goals: import('../types').Goal[];
+  addGoal: (goal: Omit<import('../types').Goal, 'id' | 'createdAt'>) => void;
+  updateGoal: (goalId: string, updates: Partial<import('../types').Goal>) => void;
+  deleteGoal: (goalId: string) => void;
+
+  // Habits
+  habits: import('../types').HabitStreak[];
+  logHabit: (habitName: string) => void;
 }
 
 export const useStore = create<State>()((set, get) => {
@@ -212,6 +221,8 @@ export const useStore = create<State>()((set, get) => {
                githubPRs: cloudState.githubPRs || [],
                githubCommits: cloudState.githubCommits || [],
                aiMessages: cloudState.aiMessages || [],
+               goals: cloudState.goals || [],
+               habits: cloudState.habits || [],
                githubToken: resolvedToken,
                githubConnected: false,
                isHydratingFromCloud: false,
@@ -228,6 +239,8 @@ export const useStore = create<State>()((set, get) => {
            tasks: [],
            notes: [],
            events: [],
+           goals: [],
+           habits: [],
            isHydratingFromCloud: false,
            isReceivingSnapshot: true,
            cloudSyncStatus: 'synced',
@@ -254,6 +267,8 @@ export const useStore = create<State>()((set, get) => {
         githubIssues: [],
         githubPRs: [],
         githubCommits: [],
+        goals: [],
+        habits: [],
         githubConnected: false,
         githubUsername: '',
         githubToken: null,
@@ -613,6 +628,76 @@ export const useStore = create<State>()((set, get) => {
     return { aiMessages: [...(state.aiMessages || []), newMsg] };
   }),
   clearAIMessages: () => set({ aiMessages: [] }),
+
+  // Goals State
+  goals: [],
+  addGoal: (goal) => set((state) => {
+    const newGoal: import('../types').Goal = {
+      ...goal,
+      id: `goal-${Date.now()}`,
+      createdAt: new Date().toISOString()
+    };
+    return { goals: [...(state.goals || []), newGoal] };
+  }),
+  updateGoal: (goalId, updates) => set((state) => {
+    return { 
+      goals: (state.goals || []).map((g) => {
+        if (g.id === goalId) {
+          const updated = { ...g, ...updates };
+          if (updated.current >= updated.target && !g.completedAt) {
+            updated.completedAt = new Date().toISOString();
+          }
+          return updated;
+        }
+        return g;
+      })
+    };
+  }),
+  deleteGoal: (goalId) => set((state) => {
+    return { goals: (state.goals || []).filter(g => g.id !== goalId) };
+  }),
+
+  // Habits State
+  habits: [],
+  logHabit: (habitName) => set((state) => {
+    const today = new Date().toISOString().split('T')[0];
+    const existing = (state.habits || []).find(h => h.name === habitName);
+    
+    if (!existing) {
+      return { 
+        habits: [...(state.habits || []), {
+          id: `habit-${Date.now()}`,
+          name: habitName,
+          currentStreak: 1,
+          longestStreak: 1,
+          lastLogDate: today
+        }]
+      };
+    }
+
+    if (existing.lastLogDate === today) return state; // Already logged today
+
+    const lastLog = new Date(existing.lastLogDate);
+    const currentDate = new Date(today);
+    const diffTime = Math.abs(currentDate.getTime() - lastLog.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    let newStreak = existing.currentStreak;
+    if (diffDays === 1) {
+      newStreak += 1;
+    } else {
+      newStreak = 1; // broken streak
+    }
+
+    return {
+      habits: state.habits.map(h => h.id === existing.id ? {
+        ...h,
+        currentStreak: newStreak,
+        longestStreak: Math.max(existing.longestStreak, newStreak),
+        lastLogDate: today
+      } : h)
+    };
+  }),
 
  // Real Github API functions
  githubToken: null,

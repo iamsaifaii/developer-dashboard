@@ -7,7 +7,9 @@ import {
   FiX, 
   FiFileText, 
   FiCalendar,
-  FiArrowRight
+  FiArrowRight,
+  FiClock,
+  FiSettings
 } from 'react-icons/fi';
 import { TrelloIcon, GithubIcon } from '../BrandIcons';
 
@@ -18,7 +20,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
   
-  const { tasks, notes, events, githubRepos } = useStore();
+  const { tasks, notes, events, githubRepos, settings, updateSettings, timerStatus, setTimerStatus } = useStore();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -81,6 +83,43 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
     setQuery('');
   };
 
+  const executeAction = (action: string) => {
+    setIsOpen(false);
+    setQuery('');
+    switch (action) {
+      case 'create_task':
+        // Dispatching a custom event to open the Quick Task Modal
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'c' }));
+        break;
+      case 'create_note':
+        navigate('/notes');
+        break;
+      case 'create_event':
+        navigate('/calendar');
+        break;
+      case 'toggle_pomodoro':
+        setTimerStatus(timerStatus === 'running' ? 'paused' : 'running');
+        break;
+      case 'toggle_theme':
+        updateSettings({ themeMode: settings.themeMode === 'dark' ? 'glass' : 'dark' });
+        break;
+      case 'open_goals':
+        navigate('/goals');
+        break;
+    }
+  };
+
+  const actionResults = [
+    { id: 'create_task', label: 'Create New Task', icon: FiFileText, keywords: ['create', 'new', 'task', 'todo'] },
+    { id: 'create_note', label: 'Create New Note', icon: FiFileText, keywords: ['create', 'new', 'note', 'document'] },
+    { id: 'create_event', label: 'Create Event', icon: FiCalendar, keywords: ['create', 'new', 'event', 'calendar', 'meeting'] },
+    { id: 'toggle_pomodoro', label: timerStatus === 'running' ? 'Pause Pomodoro' : 'Start Pomodoro', icon: FiClock, keywords: ['pomodoro', 'timer', 'focus', 'start', 'pause'] },
+    { id: 'toggle_theme', label: 'Toggle Dark Theme', icon: FiSettings, keywords: ['theme', 'dark', 'light', 'mode', 'toggle'] },
+    { id: 'open_goals', label: 'View Goals & Habits', icon: FiArrowRight, keywords: ['goals', 'habits', 'streak', 'progress'] }
+  ].filter(a => q.startsWith('>') || a.keywords.some(k => k.includes(q.replace('>', '').trim()) || q.replace('>', '').trim().includes(k)));
+
+  const isCommandMode = q.startsWith('>');
+
   return (
     <>
       {/* Desktop / Mobile trigger */}
@@ -131,7 +170,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                   ) : (
                     <>
                       {/* Tasks */}
-                      {matchedTasks.length > 0 && (
+                      {!isCommandMode && matchedTasks.length > 0 && (
                         <div>
                           <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <TrelloIcon className="w-3 h-3" />
@@ -160,7 +199,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       )}
 
                       {/* Notes */}
-                      {matchedNotes.length > 0 && (
+                      {!isCommandMode && matchedNotes.length > 0 && (
                         <div>
                           <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <FiFileText className="w-3 h-3" />
@@ -187,7 +226,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       )}
 
                       {/* Events */}
-                      {matchedEvents.length > 0 && (
+                      {!isCommandMode && matchedEvents.length > 0 && (
                         <div>
                           <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <FiCalendar className="w-3 h-3" />
@@ -214,7 +253,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       )}
 
                       {/* Repos */}
-                      {matchedRepos.length > 0 && (
+                      {!isCommandMode && matchedRepos.length > 0 && (
                         <div>
                           <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <GithubIcon className="w-3 h-3" />
@@ -288,14 +327,41 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
             <div className="absolute top-full mt-2 w-full w-[400px] right-0 md:left-0 bg-neutral-900 border border-zinc-800 rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col max-h-[70vh]">
               {q ? (
                 <div className="overflow-y-auto flex-1 p-2 space-y-4">
-                  {!hasResults ? (
+                  {!hasResults && actionResults.length === 0 ? (
                     <div className="p-6 text-center text-zinc-500 text-xs">
                       No results found for "{debouncedQuery}"
                     </div>
                   ) : (
                     <>
+                      {/* Actions */}
+                      {actionResults.length > 0 && (
+                        <div>
+                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                            <span>Actions</span>
+                          </div>
+                          <div className="space-y-0.5">
+                            {actionResults.map(a => {
+                              const Icon = a.icon;
+                              return (
+                                <button
+                                  key={a.id}
+                                  onClick={() => executeAction(a.id)}
+                                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-zinc-800 flex items-center justify-between group transition-colors"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <Icon className="w-4 h-4 text-zinc-500" />
+                                    <div className="text-xs text-zinc-200 font-medium">{a.label}</div>
+                                  </div>
+                                  <span className="text-[9px] text-zinc-600 uppercase border border-zinc-700 px-1.5 py-0.5 rounded">Action</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
                       {/* Tasks */}
-                      {matchedTasks.length > 0 && (
+                      {!isCommandMode && matchedTasks.length > 0 && (
                         <div>
                           <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <TrelloIcon className="w-3 h-3" />
@@ -324,7 +390,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       )}
 
                       {/* Notes */}
-                      {matchedNotes.length > 0 && (
+                      {!isCommandMode && matchedNotes.length > 0 && (
                         <div>
                           <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <FiFileText className="w-3 h-3" />
@@ -351,7 +417,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       )}
 
                       {/* Events */}
-                      {matchedEvents.length > 0 && (
+                      {!isCommandMode && matchedEvents.length > 0 && (
                         <div>
                           <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <FiCalendar className="w-3 h-3" />
@@ -378,7 +444,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       )}
 
                       {/* Repos */}
-                      {matchedRepos.length > 0 && (
+                      {!isCommandMode && matchedRepos.length > 0 && (
                         <div>
                           <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <GithubIcon className="w-3 h-3" />

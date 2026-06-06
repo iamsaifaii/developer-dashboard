@@ -10,6 +10,7 @@ import { TaskModal } from './components/Kanban/TaskModal';
 import { LoginScreen } from './components/Auth/LoginScreen';
 import { playChime } from './components/Pomodoro/SoundPlayer';
 import { ErrorBoundary } from './components/Common/ErrorBoundary';
+import { GlobalShortcuts } from './components/GlobalShortcuts';
 
 // Lazy loaded components
 const DashboardHome = lazy(() => import('./components/DashboardHome').then(m => ({ default: m.DashboardHome })));
@@ -20,6 +21,7 @@ const PomodoroTimer = lazy(() => import('./components/Pomodoro/PomodoroTimer').t
 const GithubDashboard = lazy(() => import('./components/Github/GithubDashboard').then(m => ({ default: m.GithubDashboard })));
 const SettingsPanel = lazy(() => import('./components/Settings/SettingsPanel').then(m => ({ default: m.SettingsPanel })));
 const WhiteboardCanvas = lazy(() => import('./components/Whiteboard/WhiteboardCanvas').then(m => ({ default: m.WhiteboardCanvas })));
+const GoalsDashboard = lazy(() => import('./components/Goals/GoalsDashboard').then(m => ({ default: m.GoalsDashboard })));
 
 function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -225,6 +227,7 @@ function App() {
           <Route path="/calendar" element={<ProjectCalendar />} />
           <Route path="/pomodoro" element={<PomodoroTimer />} />
           <Route path="/github" element={<GithubDashboard />} />
+          <Route path="/goals" element={<GoalsDashboard />} />
           <Route path="/settings" element={<SettingsPanel />} />
           <Route path="/whiteboard" element={<WhiteboardCanvas />} />
           <Route path="*" element={<DashboardHome onNavigate={(tab) => navigate(tab === 'dashboard' ? '/' : `/${tab}`)} />} />
@@ -240,6 +243,8 @@ function App() {
  onClose={() => setIsQuickTaskOpen(false)}
  onSave={handleQuickTaskSave}
  />
+
+ <GlobalShortcuts onQuickTask={() => setIsQuickTaskOpen(true)} />
  </div>
  );
 }
