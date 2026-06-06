@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { 
  FiCalendar, 
@@ -6,7 +6,9 @@ import {
  FiStar,
  FiActivity,
  FiZap,
- FiChevronRight
+ FiChevronRight,
+ FiAlertCircle
+
 } from 'react-icons/fi';
 import { TrelloIcon, GithubIcon } from './BrandIcons';
 
@@ -14,10 +16,32 @@ interface DashboardHomeProps {
  onNavigate: (tab: string) => void;
 }
 
+interface SmartReminder {
+  title: string;
+  message: string;
+}
+
 export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
  const { tasks, events, githubCommits, timerStatus, secondsLeft, totalSessionsCompleted, settings } = useStore();
+ const [reminders, setReminders] = useState<SmartReminder[]>([]);
 
- // 1. Calculations
+ // 1. Fetch smart reminders from the backend
+ useEffect(() => {
+   fetch('/api/reminders/generate', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({ tasks, pomodoroSessions: totalSessionsCompleted })
+   })
+     .then(res => res.json())
+     .then(data => {
+       if (data && data.reminders) {
+         setReminders(data.reminders);
+       }
+     })
+     .catch(err => console.error('Error fetching smart reminders:', err));
+ }, [tasks, totalSessionsCompleted]);
+
+ // 2. Calculations
  const completedTasks = (tasks || []).filter(t => t.columnId === 'done').length;
  const inProgressTasks = (tasks || []).filter(t => t.columnId === 'in-progress');
  const upcomingEvents = (events || []).filter(e => {
@@ -71,6 +95,25 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
  </p>
  </div>
  </div>
+
+ {/* Smart Reminders Banner */}
+ {reminders.length > 0 && (
+   <div className="bg-violet-950/20 border border-violet-500/20 rounded-xl p-4 flex flex-col gap-2 relative overflow-hidden">
+     <div className="flex items-center gap-2 text-violet-400 font-semibold text-xs uppercase tracking-wider">
+       <FiAlertCircle className="w-4 h-4" />
+       <span>DevPilot Smart Reminders</span>
+     </div>
+     <div className="flex flex-col md:flex-row md:items-center gap-4 text-xs">
+       {reminders.map((r, idx) => (
+         <div key={idx} className="flex-1 bg-zinc-900/40 border border-zinc-800/60 rounded-lg p-2.5">
+           <strong className="text-zinc-200">{r.title}:</strong>{' '}
+           <span className="text-zinc-400 font-light">{r.message}</span>
+         </div>
+       ))}
+     </div>
+   </div>
+ )}
+
 
  {/* 2. Grid Dashboard Cards */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

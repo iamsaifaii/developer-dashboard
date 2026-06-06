@@ -13,7 +13,7 @@ export const AutomationPanel: React.FC<{ apiKey: string }> = ({ apiKey }) => {
     setLoadingType('duplicates');
     setOutput('');
     try {
-      const systemPrompt = `You are DevPilot AI. You perform task deduplication analysis using the OpenAI GPT-5.5 API.
+      const systemPrompt = `You are DevPilot AI. You perform task deduplication analysis using the Google Gemini API.
 Analyze the provided Kanban tasks for duplicates, highly overlapping titles/descriptions, or conflicting scope.
 Return a summary listing matching duplicates and suggestions for merging them, or confirm that the board has no duplicate items.`;
 
@@ -34,7 +34,7 @@ Return a summary listing matching duplicates and suggestions for merging them, o
     setLoadingType('sprint');
     setOutput('');
     try {
-      const systemPrompt = `You are DevPilot AI. You assist with sprint planning and milestone organization using the OpenAI GPT-5.5 API.
+      const systemPrompt = `You are DevPilot AI. You assist with sprint planning and milestone organization using the Google Gemini API.
 Analyze the user's tasks and create a Sprint Plan recommendation.
 Group tasks into categories, propose a realistic sprint duration, suggest target milestones, and assign suggested deadlines.`;
 
@@ -55,7 +55,7 @@ Group tasks into categories, propose a realistic sprint duration, suggest target
     setLoadingType('optimize');
     setOutput('');
     try {
-      const systemPrompt = `You are DevPilot AI. You perform productivity automation audits using the OpenAI GPT-5.5 API.
+      const systemPrompt = `You are DevPilot AI. You perform productivity automation audits using the Google Gemini API.
 Examine the user's workload volume and provide a quick Workflow Optimization report.
 Include smart reminders, categorize recommendations, and suggest 3 high-impact process improvements.`;
 
@@ -77,7 +77,8 @@ Include smart reminders, categorize recommendations, and suggest 3 high-impact p
     <div className="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-6 backdrop-blur-md space-y-6">
       <div>
         <h3 className="text-sm font-semibold text-white">DevPilot Automation Center</h3>
-        <p className="text-[10px] text-neutral-400">Automate repetitive management routines with OpenAI GPT-5.5 API</p>
+        <p className="text-[10px] text-neutral-400">Automate repetitive management routines with Google Gemini API</p>
+
       </div>
 
       <div className="grid grid-cols-3 gap-3">

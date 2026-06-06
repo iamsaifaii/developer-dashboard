@@ -32,7 +32,7 @@ export const NotesSummarizer: React.FC<{ apiKey: string }> = ({ apiKey }) => {
     setAddedTasks({});
 
     try {
-      const systemPrompt = `You are DevPilot AI. You summarize notes and extract tasks using the OpenAI GPT-5.5 API.
+      const systemPrompt = `You are DevPilot AI. You summarize notes and extract tasks using the Google Gemini API.
 You MUST output your response strictly as valid JSON with no markdown block fences (i.e. no \`\`\`json). The JSON structure must be:
 {
   "summary": "Short paragraph summary",
@@ -87,7 +87,8 @@ You MUST output your response strictly as valid JSON with no markdown block fenc
     <div className="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-6 backdrop-blur-md space-y-6">
       <div>
         <h3 className="text-sm font-semibold text-white">Notes Summarizer & Ingestion</h3>
-        <p className="text-[10px] text-neutral-400">Extract action items and ingest tasks to Kanban board via OpenAI GPT-5.5 API</p>
+        <p className="text-[10px] text-neutral-400">Extract action items and ingest tasks to Kanban board via Google Gemini API</p>
+
       </div>
 
       <div className="flex gap-3 items-center">

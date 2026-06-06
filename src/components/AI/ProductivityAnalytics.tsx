@@ -1,24 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useStore } from '../../store/useStore';
 import { askGPT } from '../../lib/openai';
 import { useDevPilotContext } from './DevPilotContext';
 import { FiTrendingUp, FiActivity, FiAlertCircle, FiCpu, FiAward } from 'react-icons/fi';
 
 export const ProductivityAnalytics: React.FC<{ apiKey: string }> = ({ apiKey }) => {
+  const { tasks, totalSessionsCompleted } = useStore();
   const [analysis, setAnalysis] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  
+  const [focusScore, setFocusScore] = useState(50);
+  const [burnoutRisk, setBurnoutRisk] = useState('Low');
+  const [riskColor, setRiskColor] = useState('text-green-400 bg-green-500/10 border-green-500/20');
+  
   const context = useDevPilotContext();
 
-  // Simple formulaic focus score calculation
-  const total = context.totalTasks || 1;
-  const compRate = context.completedTasks / total;
-  const sessions = context.pomodoroSessions;
-  const scoreBase = (compRate * 60) + (Math.min(sessions, 10) * 4);
-  const focusScore = Math.max(10, Math.min(Math.round(scoreBase), 100));
+  useEffect(() => {
+    // Fetch calculations from the backend API
+    fetch('/api/productivity/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tasks, pomodoroSessions: totalSessionsCompleted })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.focusScore !== undefined) {
+          setFocusScore(data.focusScore);
+          setBurnoutRisk(data.burnoutRisk);
+          setRiskColor(data.riskColor);
+        }
+      })
+      .catch(err => console.error('Error fetching productivity metrics:', err));
+  }, [tasks, totalSessionsCompleted]);
 
   const handleAnalyze = async () => {
     setLoading(true);
     try {
-      const systemPrompt = `You are DevPilot AI, a productivity coach. You analyze user work patterns and calculate focus/burnout metrics using the OpenAI GPT-5.5 API.
+      const systemPrompt = `You are DevPilot AI, a productivity coach. You analyze user work patterns and calculate focus/burnout metrics using the Google Gemini API.
 Analyze the user's workload, completed tasks, Pomodoro sessions, and recent commit logs.
 Identify work patterns (e.g. high volume but high overdue, strong git activity, etc.).
 Evaluate Burnout risk (High risk if active tasks > 10, low focus sessions, or multiple overdue items).
@@ -40,20 +58,12 @@ Offer 3 actionable tips for workload balancing.`;
     }
   };
 
-  const getBurnoutRisk = () => {
-    if (context.overdueTasks > 2 || context.inProgressTasks > 5) return { label: 'High', color: 'text-red-400 bg-red-500/10 border-red-500/20' };
-    if (context.inProgressTasks > 3) return { label: 'Moderate', color: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20' };
-    return { label: 'Low', color: 'text-green-400 bg-green-500/10 border-green-500/20' };
-  };
-
-  const risk = getBurnoutRisk();
-
   return (
     <div className="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-6 backdrop-blur-md space-y-6">
       <div className="flex justify-between items-start">
         <div>
           <h3 className="text-sm font-semibold text-white">Productivity Insights</h3>
-          <p className="text-[10px] text-neutral-400">Burnout audit and workflow analysis powered by OpenAI GPT-5.5 API</p>
+          <p className="text-[10px] text-neutral-400">Burnout audit and workflow analysis powered by Google Gemini API</p>
         </div>
         <button
           onClick={handleAnalyze}
@@ -96,13 +106,13 @@ Offer 3 actionable tips for workload balancing.`;
           </div>
         </div>
 
-        <div className={`bg-neutral-950/20 border rounded-xl p-4 flex items-center gap-3 ${risk.color}`}>
+        <div className={`bg-neutral-950/20 border rounded-xl p-4 flex items-center gap-3 ${riskColor}`}>
           <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
             <FiAlertCircle className="w-5 h-5" />
           </div>
           <div>
             <p className="text-[10px] text-neutral-400 font-medium">Burnout Risk</p>
-            <p className="text-sm font-bold mt-0.5">{risk.label}</p>
+            <p className="text-sm font-bold mt-0.5">{burnoutRisk}</p>
           </div>
         </div>
       </div>

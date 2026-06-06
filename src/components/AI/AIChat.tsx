@@ -40,7 +40,7 @@ export const AIChat: React.FC<{ apiKey: string }> = ({ apiKey }) => {
 
     try {
       // Gather context
-      const systemPrompt = `You are DevPilot AI, a premium productivity assistant powered by the OpenAI GPT-5.5 API.
+      const systemPrompt = `You are DevPilot AI, a premium productivity assistant powered by the Google Gemini API.
 Your goal is to help developers optimize their workflow, plan projects, organize their Kanban board, manage time, and gain focus insights.
 
 Here is the user's current project/developer context:
@@ -102,7 +102,8 @@ Generate highly actionable, clear, and context-aware responses. Format your resp
           </div>
           <div>
             <h3 className="text-sm font-semibold text-white">DevPilot Chat</h3>
-            <p className="text-[10px] text-neutral-400">Powered by OpenAI GPT-5.5 API</p>
+            <p className="text-[10px] text-neutral-400">Powered by Google Gemini API</p>
+
           </div>
         </div>
         {chatHistory.length > 0 && (

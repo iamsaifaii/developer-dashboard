@@ -1,5 +1,5 @@
-// Model to use
-export const DEVPILOT_MODEL = 'gpt-5.5';
+export const DEVPILOT_MODEL = 'gemini-1.5-flash';
+
 
 export interface DevPilotContext {
   userName: string;

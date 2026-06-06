@@ -12,7 +12,7 @@ export const SmartSuggestions: React.FC<{ apiKey: string }> = ({ apiKey }) => {
   const handleSuggest = async () => {
     setLoading(true);
     try {
-      const systemPrompt = `You are DevPilot AI. You analyze developer Kanban boards and suggest next steps using the OpenAI GPT-5.5 API.
+      const systemPrompt = `You are DevPilot AI. You analyze developer Kanban boards and suggest next steps using the Google Gemini API.
 Recommend which tasks the user should work on next, sorted by priority.
 Point out any overdue or urgent tasks first.
 Detect any dependencies or blockers based on titles/descriptions.
@@ -39,7 +39,8 @@ Provide a clear, bulleted response with 'Task Name', 'Recommended Priority', 'Re
     <div className="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-6 backdrop-blur-md space-y-6">
       <div>
         <h3 className="text-sm font-semibold text-white">Smart Task Suggestions</h3>
-        <p className="text-[10px] text-neutral-400">Get AI-driven priorities and bottleneck analysis from OpenAI GPT-5.5 API</p>
+        <p className="text-[10px] text-neutral-400">Get AI-driven priorities and bottleneck analysis from Google Gemini API</p>
+
       </div>
 
       <div>

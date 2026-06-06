@@ -13,7 +13,7 @@ export const ProjectSummary: React.FC<{ apiKey: string }> = ({ apiKey }) => {
   const handleSummarize = async () => {
     setLoading(true);
     try {
-      const systemPrompt = `You are DevPilot AI. You generate workspace and project summaries using the OpenAI GPT-5.5 API.
+      const systemPrompt = `You are DevPilot AI. You generate workspace and project summaries using the Google Gemini API.
 Generate a concise ${range} report.
 Ensure you highlight:
 1. Completed accomplishments
@@ -42,7 +42,8 @@ Ensure you highlight:
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-sm font-semibold text-white">Project & Sprint Summarizer</h3>
-          <p className="text-[10px] text-neutral-400">Generate executive summary reports powered by OpenAI GPT-5.5 API</p>
+          <p className="text-[10px] text-neutral-400">Generate executive summary reports powered by Google Gemini API</p>
+
         </div>
         <div className="flex gap-2">
           {(['sprint', 'weekly', 'monthly', 'overall'] as const).map((r) => (

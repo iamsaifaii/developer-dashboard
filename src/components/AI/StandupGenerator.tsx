@@ -14,7 +14,7 @@ export const StandupGenerator: React.FC<{ apiKey: string }> = ({ apiKey }) => {
     setLoading(true);
     setCopied(false);
     try {
-      const systemPrompt = `You are DevPilot AI. You generate a daily standup report for a developer using the OpenAI GPT-5.5 API.
+      const systemPrompt = `You are DevPilot AI. You generate a daily standup report for a developer using the Google Gemini API.
 Tone chosen: ${tone}.
 Format should clearly separate:
 1. Yesterday (Completed tasks/commits)
@@ -47,7 +47,8 @@ Format should clearly separate:
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-sm font-semibold text-white">Daily Standup Generator</h3>
-          <p className="text-[10px] text-neutral-400">Generate structured standup notes using OpenAI GPT-5.5 API</p>
+          <p className="text-[10px] text-neutral-400">Generate structured standup notes using Google Gemini API</p>
+
         </div>
         <div className="flex gap-2">
           {(['professional', 'casual', 'technical', 'bullet'] as const).map((t) => (

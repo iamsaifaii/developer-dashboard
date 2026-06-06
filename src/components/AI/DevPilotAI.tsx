@@ -59,8 +59,9 @@ export const DevPilotAI: React.FC = () => {
             <h1 className="text-base font-bold text-white flex items-center gap-2">
               DevPilot AI
               <span className="text-[9px] px-2 py-0.5 rounded-full bg-violet-600/20 border border-violet-500/30 text-violet-400 uppercase tracking-wider font-semibold">
-                GPT-5.5 Engine
+                Gemini Engine
               </span>
+
             </h1>
             <p className="text-[10px] text-neutral-400 mt-0.5">Your intelligent code companion & workspace coordinator</p>
           </div>

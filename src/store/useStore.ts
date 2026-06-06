@@ -299,77 +299,81 @@ export const useStore = create<State>()((set, get) => {
  )
  })),
 
- checkOverdueTasks: () => {
-   const state = get();
-   const today = new Date();
-   // Normalize today to midnight so overdue triggers at start of the day AFTER due date
-   today.setHours(0, 0, 0, 0);
+  checkOverdueTasks: () => {
+    const state = get();
+    const tasks = state.tasks || [];
+    if (tasks.length === 0) return;
 
-   // Load already-notified set from sessionStorage so we don't re-notify in same session
-   let notifiedIds: Set<string>;
-   try {
-     const stored = sessionStorage.getItem('overdueNotifiedIds');
-     notifiedIds = new Set(stored ? JSON.parse(stored) : []);
-   } catch {
-     notifiedIds = new Set();
-   }
+    // Load already-notified set from sessionStorage
+    let notifiedTags: Set<string>;
+    try {
+      const stored = sessionStorage.getItem('overdueNotifiedTags');
+      notifiedTags = new Set(stored ? JSON.parse(stored) : []);
+    } catch {
+      notifiedTags = new Set();
+    }
 
-   const overdueTasks = (state.tasks || []).filter(task => {
-     if (!task.dueDate) return false;
-     if (task.columnId === 'done') return false;
-     const due = new Date(task.dueDate);
-     due.setHours(0, 0, 0, 0);
-     // Overdue = due date is strictly before today
-     return due < today;
-   });
+    fetch('/api/deadlines/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tasks })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (!data || !data.notificationsToTrigger) return;
 
-   const newOverdueTasks = overdueTasks.filter(t => !notifiedIds.has(t.id));
+        const prefs = state.settings.notificationPreferences;
+        const newNotifications: import('../types').AppNotification[] = [];
 
-   if (newOverdueTasks.length === 0) return;
+        data.notificationsToTrigger.forEach((notif: any) => {
+          const uniqueTag = `${notif.title}-${notif.message}`;
+          if (notifiedTags.has(uniqueTag)) return;
 
-   const prefs = state.settings.notificationPreferences;
+          notifiedTags.add(uniqueTag);
 
-   newOverdueTasks.forEach(task => {
-     notifiedIds.add(task.id);
+          // 1. In-app notification
+          if (prefs.taskOverdue) {
+            newNotifications.push({
+              id: `notif-deadline-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+              title: notif.title,
+              message: notif.message,
+              category: notif.category,
+              isRead: false,
+              createdAt: new Date().toISOString(),
+              link: notif.link
+            });
+          }
 
-     // 1. In-app notification
-     if (prefs.taskOverdue) {
-       const message = `"${task.title}" was due on ${new Date(task.dueDate!).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} and is now overdue.`;
-       const newNotif: import('../types').AppNotification = {
-         id: `notif-overdue-${task.id}-${Date.now()}`,
-         title: '⚠️ Task Overdue',
-         message,
-         category: 'task',
-         isRead: false,
-         createdAt: new Date().toISOString()
-       };
-       set(s => ({ notifications: [newNotif, ...(s.notifications || [])] }));
-     }
+          // 2. Browser Push notification (desktop + mobile)
+          if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+            try {
+              const n = new Notification(`${notif.title} — DevFlow`, {
+                body: notif.message,
+                icon: '/favicon.svg',
+                tag: uniqueTag,
+                requireInteraction: true
+              });
+              n.onclick = () => {
+                window.focus();
+                n.close();
+              };
+            } catch (e) {
+              console.warn('Push notification failed:', e);
+            }
+          }
+        });
 
-     // 2. Browser Push notification (desktop + mobile)
-     if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
-       try {
-         const n = new Notification('⚠️ Task Overdue — Developer Dashboard', {
-           body: `"${task.title}" was due on ${new Date(task.dueDate!).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} and is now overdue.`,
-           icon: '/favicon.svg',
-           tag: `overdue-${task.id}`,
-           requireInteraction: true
-         });
-         n.onclick = () => {
-           window.focus();
-           n.close();
-         };
-       } catch (e) {
-         console.warn('Push notification failed:', e);
-       }
-     }
-   });
+        if (newNotifications.length > 0) {
+          set(s => ({ notifications: [...newNotifications, ...(s.notifications || [])] }));
+        }
 
-   // Persist updated notified IDs to sessionStorage
-   try {
-     sessionStorage.setItem('overdueNotifiedIds', JSON.stringify([...notifiedIds]));
-   } catch {}
- },
+        // Persist updated notified tags to sessionStorage
+        try {
+          sessionStorage.setItem('overdueNotifiedTags', JSON.stringify([...notifiedTags]));
+        } catch {}
+      })
+      .catch(err => console.error('Error checking deadlines on backend:', err));
+  },
 
  // Notes state
  notes: [],
