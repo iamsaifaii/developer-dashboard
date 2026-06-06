@@ -379,7 +379,9 @@ export const useStore = create<State>()((set, get) => {
         // Persist updated notified tags to sessionStorage
         try {
           sessionStorage.setItem('overdueNotifiedTags', JSON.stringify([...notifiedTags]));
-        } catch {}
+        } catch (e) { 
+          console.error('Failed to set overdueNotifiedTags', e);
+        }
       })
       .catch(err => console.error('Error checking deadlines on backend:', err));
   },
@@ -442,7 +444,7 @@ export const useStore = create<State>()((set, get) => {
  const nextStatus = 'idle';
  const mode = state.timerMode;
  let totalSess = state.totalSessionsCompleted;
- let nextMode: TimerMode = 'work';
+ let nextMode: TimerMode;
 
  if (mode === 'work') {
  totalSess += 1;

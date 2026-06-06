@@ -23,7 +23,6 @@
     "helmet": "^8.2.0",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
-    "openai": "^6.42.0",
     "papaparse": "^5.5.3",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
@@ -35,8 +34,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
     "@types/node": "^24.12.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

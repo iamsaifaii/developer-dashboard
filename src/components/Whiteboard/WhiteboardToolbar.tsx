@@ -121,11 +121,11 @@ export const WhiteboardToolbar: React.FC<Props> = ({
   }, [popup]);
 
   // ─── Sub-renderers ───────────────────────────────────────────────────────
-  const Divider = () => (
-    <div style={{ width: 1, height: 30, background: dividerBg, flexShrink: 0, margin: '0 3px' }} />
+  const renderDivider = (key?: string) => (
+    <div key={key} style={{ width: 1, height: 30, background: dividerBg, flexShrink: 0, margin: '0 3px' }} />
   );
 
-  const ToolBtn: React.FC<{ def: ToolDef }> = ({ def }) => {
+  const renderToolBtn = (def: ToolDef) => {
     const active = activeTool === def.id;
     const Icon = def.icon;
     return (
@@ -151,10 +151,10 @@ export const WhiteboardToolbar: React.FC<Props> = ({
     );
   };
 
-  const IconBtn: React.FC<{
-    onClick: () => void; title: string; disabled?: boolean;
-    children: React.ReactNode; color?: string; size?: number;
-  }> = ({ onClick, title, disabled, children, color, size = 32 }) => (
+  const renderIconBtn = (
+    onClick: () => void, title: string, disabled: boolean | undefined,
+    children: React.ReactNode, color: string | undefined, size: number = 32
+  ) => (
     <button
       onClick={onClick}
       disabled={disabled}
@@ -175,9 +175,7 @@ export const WhiteboardToolbar: React.FC<Props> = ({
   );
 
   // Color swatch helper
-  const Swatch: React.FC<{ color: string; active: boolean; onClick: () => void; size?: number }> = ({
-    color, active, onClick, size = 22,
-  }) => (
+  const renderSwatch = (color: string, active: boolean, onClick: () => void, size: number = 22) => (
     <button
       onClick={onClick}
       style={{
@@ -198,7 +196,7 @@ export const WhiteboardToolbar: React.FC<Props> = ({
   );
 
   // ─── Popup panels ────────────────────────────────────────────────────────
-  const PopupPanel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  const renderPopupPanel = (children: React.ReactNode) => (
     <div style={{
       position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)',
       marginBottom: 10,
@@ -211,7 +209,7 @@ export const WhiteboardToolbar: React.FC<Props> = ({
     </div>
   );
 
-  const SectionLabel: React.FC<{ children: string }> = ({ children }) => (
+  const renderSectionLabel = (children: string) => (
     <div style={{
       fontSize: 9, color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.5)',
       fontFamily: 'Poppins, sans-serif', fontWeight: 700,
@@ -222,46 +220,51 @@ export const WhiteboardToolbar: React.FC<Props> = ({
   );
 
   const strokePopup = (
-    <PopupPanel>
-      <SectionLabel>Stroke Color</SectionLabel>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6, marginBottom: 10 }}>
-        {STROKE_PALETTE.map(c => (
-          <Swatch key={c} color={c} active={strokeColor === c} onClick={() => onStrokeColorChange(c)} />
-        ))}
-      </div>
+    renderPopupPanel(
+      <>
+        {renderSectionLabel('Stroke Color')}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6, marginBottom: 10 }}>
+          {STROKE_PALETTE.map(c => (
+            <React.Fragment key={c}>{renderSwatch(c, strokeColor === c, () => onStrokeColorChange(c))}</React.Fragment>
+          ))}
+        </div>
       <input
         type="color"
         value={strokeColor}
         onChange={e => onStrokeColorChange(e.target.value)}
         style={{ width: '100%', height: 30, border: 'none', borderRadius: 8, cursor: 'pointer', background: 'transparent' }}
       />
-    </PopupPanel>
+      </>
+    )
   );
 
   const fillPopup = (
-    <PopupPanel>
-      <SectionLabel>Fill Color</SectionLabel>
-      <div style={{ marginBottom: 8 }}>
-        <Swatch color="none" active={fillColor === 'none'} onClick={() => onFillColorChange('none')} size={30} />
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6, marginBottom: 10 }}>
-        {FILL_PALETTE.map(c => (
-          <Swatch key={c} color={c} active={fillColor === c} onClick={() => onFillColorChange(c)} />
-        ))}
-      </div>
+    renderPopupPanel(
+      <>
+        {renderSectionLabel('Fill Color')}
+        <div style={{ marginBottom: 8 }}>
+          {renderSwatch('none', fillColor === 'none', () => onFillColorChange('none'), 30)}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6, marginBottom: 10 }}>
+          {FILL_PALETTE.map(c => (
+            <React.Fragment key={c}>{renderSwatch(c, fillColor === c, () => onFillColorChange(c))}</React.Fragment>
+          ))}
+        </div>
       <input
         type="color"
         value={fillColor === 'none' ? '#6366f1' : fillColor}
         onChange={e => onFillColorChange(e.target.value)}
         style={{ width: '100%', height: 30, border: 'none', borderRadius: 8, cursor: 'pointer', background: 'transparent' }}
       />
-    </PopupPanel>
+      </>
+    )
   );
 
   const stickyPopup = (
-    <PopupPanel>
-      <SectionLabel>Sticky Color</SectionLabel>
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+    renderPopupPanel(
+      <>
+        {renderSectionLabel('Sticky Color')}
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
         {Object.entries(STICKY_COLORS).map(([name, color]) => (
           <button
             key={name}
@@ -274,8 +277,9 @@ export const WhiteboardToolbar: React.FC<Props> = ({
             }}
           />
         ))}
-      </div>
-    </PopupPanel>
+        </div>
+      </>
+    )
   );
 
   const smlBtnStyle = (isDark: boolean): React.CSSProperties => ({
@@ -285,9 +289,10 @@ export const WhiteboardToolbar: React.FC<Props> = ({
   });
 
   const widthPopup = (
-    <PopupPanel>
-      <SectionLabel>Stroke Style</SectionLabel>
-      <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
+    renderPopupPanel(
+      <>
+        {renderSectionLabel('Stroke Style')}
+        <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
         {['solid', 'dashed', 'dotted'].map(st => (
           <button
             key={st}
@@ -303,9 +308,9 @@ export const WhiteboardToolbar: React.FC<Props> = ({
             {st}
           </button>
         ))}
-      </div>
-      <SectionLabel>Stroke Width</SectionLabel>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        </div>
+        {renderSectionLabel('Stroke Width')}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         {STROKE_WIDTHS.map(w => (
           <button
             key={w}
@@ -321,16 +326,17 @@ export const WhiteboardToolbar: React.FC<Props> = ({
             <span style={{ fontSize: 11, color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)', fontFamily: 'Poppins', width: 24, textAlign: 'right' }}>{w}px</span>
           </button>
         ))}
-      </div>
-      <div style={{ marginTop: 12 }}>
-        <SectionLabel>Font Size</SectionLabel>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        </div>
+        <div style={{ marginTop: 12 }}>
+          {renderSectionLabel('Font Size')}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button onClick={() => onFontSizeChange(Math.max(10, fontSize - 2))} style={smlBtnStyle(isDark)}>−</button>
           <span style={{ fontSize: 12, color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', fontFamily: 'Poppins', minWidth: 24, textAlign: 'center' }}>{fontSize}</span>
-          <button onClick={() => onFontSizeChange(Math.min(96, fontSize + 2))} style={smlBtnStyle(isDark)}>+</button>
+            <button onClick={() => onFontSizeChange(Math.min(96, fontSize + 2))} style={smlBtnStyle(isDark)}>+</button>
+          </div>
         </div>
-      </div>
-    </PopupPanel>
+      </>
+    )
   );
 
   // ─── Render ──────────────────────────────────────────────────────────────
@@ -349,33 +355,33 @@ export const WhiteboardToolbar: React.FC<Props> = ({
       }}
     >
       {/* Zoom controls */}
-      <IconBtn onClick={onZoomOut} title="Zoom Out (scroll)"><FiZoomOut size={14} /></IconBtn>
+      {renderIconBtn(onZoomOut, 'Zoom Out (scroll)', false, <FiZoomOut size={14} />, undefined)}
       <span style={{ ...zoomLabelStyle, color: isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.65)' }}>{Math.round(zoom * 100)}%</span>
-      <IconBtn onClick={onZoomIn} title="Zoom In (scroll)"><FiZoomIn size={14} /></IconBtn>
-      <IconBtn onClick={onFitScreen} title="Reset View" size={30}><FiMaximize2 size={13} /></IconBtn>
+      {renderIconBtn(onZoomIn, 'Zoom In (scroll)', false, <FiZoomIn size={14} />, undefined)}
+      {renderIconBtn(onFitScreen, 'Reset View', false, <FiMaximize2 size={13} />, undefined, 30)}
 
-      <Divider />
+      {renderDivider()}
 
       {/* Undo / Redo */}
-      <IconBtn onClick={onUndo} disabled={!canUndo} title="Undo (Ctrl+Z)"><FiRotateCcw size={14} /></IconBtn>
-      <IconBtn onClick={onRedo} disabled={!canRedo} title="Redo (Ctrl+Y)"><FiRotateCw size={14} /></IconBtn>
+      {renderIconBtn(onUndo, 'Undo (Ctrl+Z)', !canUndo, <FiRotateCcw size={14} />, undefined)}
+      {renderIconBtn(onRedo, 'Redo (Ctrl+Y)', !canRedo, <FiRotateCw size={14} />, undefined)}
 
-      <Divider />
+      {renderDivider()}
 
       {/* Nav tools */}
-      {NAV_TOOLS.map(t => <ToolBtn key={t.id} def={t} />)}
+      {NAV_TOOLS.map(t => <React.Fragment key={t.id}>{renderToolBtn(t)}</React.Fragment>)}
 
-      <Divider />
+      {renderDivider()}
 
       {/* Draw tools */}
-      {DRAW_TOOLS.map(t => <ToolBtn key={t.id} def={t} />)}
+      {DRAW_TOOLS.map(t => <React.Fragment key={t.id}>{renderToolBtn(t)}</React.Fragment>)}
 
-      <Divider />
+      {renderDivider()}
 
       {/* Shape tools */}
-      {SHAPE_TOOLS.map(t => <ToolBtn key={t.id} def={t} />)}
+      {SHAPE_TOOLS.map(t => <React.Fragment key={t.id}>{renderToolBtn(t)}</React.Fragment>)}
 
-      <Divider />
+      {renderDivider()}
 
       {/* Add tools (sticky special) */}
       {ADD_TOOLS.map(t => {
@@ -414,10 +420,10 @@ export const WhiteboardToolbar: React.FC<Props> = ({
             </div>
           );
         }
-        return <ToolBtn key={t.id} def={t} />;
+        return <React.Fragment key={t.id}>{renderToolBtn(t)}</React.Fragment>;
       })}
 
-      <Divider />
+      {renderDivider()}
 
       {/* Style controls */}
       {/* Stroke color */}
@@ -488,28 +494,24 @@ export const WhiteboardToolbar: React.FC<Props> = ({
       {/* Selection actions */}
       {selectedId && (
         <>
-          <Divider />
-          <IconBtn onClick={onDuplicateSelected} title="Duplicate" size={32}>
-            <FiCopy size={14} />
-          </IconBtn>
-          <IconBtn onClick={onDeleteSelected} title="Delete (Del)" color="#f87171" size={32}>
-            <FiTrash2 size={14} />
-          </IconBtn>
+          {renderDivider()}
+          {renderIconBtn(onDuplicateSelected, 'Duplicate', false, <FiCopy size={14} />, undefined, 32)}
+          {renderIconBtn(onDeleteSelected, 'Delete (Del)', false, <FiTrash2 size={14} />, '#f87171', 32)}
         </>
       )}
 
       {/* Clear canvas (when elements exist) */}
       {elementCount > 0 && (
         <>
-          <Divider />
-          <IconBtn
-            onClick={() => { if (window.confirm('Clear the entire whiteboard?')) onClearCanvas(); }}
-            title="Clear Canvas"
-            color="rgba(239,68,68,0.6)"
-            size={30}
-          >
-            <FiSlash size={13} />
-          </IconBtn>
+          {renderDivider()}
+          {renderIconBtn(
+            () => { if (window.confirm('Clear the entire whiteboard?')) onClearCanvas(); },
+            'Clear Canvas',
+            false,
+            <FiSlash size={13} />,
+            'rgba(239,68,68,0.6)',
+            30
+          )}
         </>
       )}
     </div>
