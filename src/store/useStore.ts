@@ -652,7 +652,7 @@ export const useStore = create<State>()((set, get) => {
       get().updateSettings({ githubUsername: realUsername });
 
       // 2. Parallel fetch: repos, open PRs, closed PRs, open issues, closed issues, events
-      const headers = { Authorization: `Bearer ${githubToken}` };
+      const headers = { Authorization: `Bearer ${githubToken}`, Accept: 'application/vnd.github+json' };
 
       const [reposResult, openPRsResult, closedPRsResult, openIssuesResult, closedIssuesResult, eventsResult] =
         await Promise.allSettled([
@@ -661,9 +661,8 @@ export const useStore = create<State>()((set, get) => {
           fetch(`https://api.github.com/search/issues?q=author:${realUsername}+type:pr+state:closed&per_page=20`, { headers }).then(r => r.json()),
           fetch(`https://api.github.com/search/issues?q=assignee:${realUsername}+type:issue+state:open&per_page=20`, { headers }).then(r => r.json()),
           fetch(`https://api.github.com/search/issues?q=assignee:${realUsername}+type:issue+state:closed&per_page=20`, { headers }).then(r => r.json()),
-          fetch(`https://api.github.com/users/${realUsername}/events?per_page=100`, { headers }).then(r => r.json()),
+          fetch(`https://api.github.com/search/commits?q=author:${realUsername}&sort=committer-date&order=desc&per_page=100`, { headers }).then(r => r.json()),
         ]);
-
       // 3. Process repos
       const repos: GithubRepo[] = reposResult.status === 'fulfilled' && Array.isArray(reposResult.value)
         ? reposResult.value.map((r: any) => ({
@@ -728,23 +727,19 @@ export const useStore = create<State>()((set, get) => {
         ...closedIssueItems.slice(0, 10).map(mapIssue)
       ];
 
-      // 6. Process commits from events
+      // 6. Process commits from search
       const commits: GithubCommit[] = [];
-      if (eventsResult.status === 'fulfilled' && Array.isArray(eventsResult.value)) {
-        eventsResult.value
-          .filter((e: any) => e.type === 'PushEvent')
-          .forEach((e: any) => {
-            (e.payload.commits || []).forEach((c: any) => {
-              commits.push({
-                id: c.sha,
-                sha: c.sha,
-                message: c.message.split('\n')[0],
-                date: e.created_at.split('T')[0],
-                repoName: e.repo.name.split('/')[1] || e.repo.name,
-                author: realUsername
-              });
-            });
+      if (eventsResult.status === 'fulfilled' && eventsResult.value.items) {
+        eventsResult.value.items.forEach((c: any) => {
+          commits.push({
+            id: c.sha,
+            sha: c.sha,
+            message: c.commit.message.split('\n')[0],
+            date: c.commit.committer.date.split('T')[0],
+            repoName: c.repository?.name || 'unknown',
+            author: realUsername
           });
+        });
       }
 
       // 7. Build analytics aggregate
