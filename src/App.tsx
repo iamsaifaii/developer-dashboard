@@ -1,25 +1,31 @@
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './lib/firebase';
 import { getProviderIds, validateGithubToken } from './lib/auth';
 import { useStore } from './store/useStore';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
-import { DashboardHome } from './components/DashboardHome';
-import { KanbanBoard } from './components/Kanban/KanbanBoard';
-import { NotesManager } from './components/Notes/NotesManager';
-import { ProjectCalendar } from './components/Calendar/ProjectCalendar';
-import { PomodoroTimer } from './components/Pomodoro/PomodoroTimer';
-import { GithubDashboard } from './components/Github/GithubDashboard';
-import { SettingsPanel } from './components/Settings/SettingsPanel';
 import { TaskModal } from './components/Kanban/TaskModal';
-import { WhiteboardCanvas } from './components/Whiteboard/WhiteboardCanvas';
 import { LoginScreen } from './components/Auth/LoginScreen';
 import { playChime } from './components/Pomodoro/SoundPlayer';
+import { ErrorBoundary } from './components/Common/ErrorBoundary';
+
+// Lazy loaded components
+const DashboardHome = lazy(() => import('./components/DashboardHome').then(m => ({ default: m.DashboardHome })));
+const KanbanBoard = lazy(() => import('./components/Kanban/KanbanBoard').then(m => ({ default: m.KanbanBoard })));
+const NotesManager = lazy(() => import('./components/Notes/NotesManager').then(m => ({ default: m.NotesManager })));
+const ProjectCalendar = lazy(() => import('./components/Calendar/ProjectCalendar').then(m => ({ default: m.ProjectCalendar })));
+const PomodoroTimer = lazy(() => import('./components/Pomodoro/PomodoroTimer').then(m => ({ default: m.PomodoroTimer })));
+const GithubDashboard = lazy(() => import('./components/Github/GithubDashboard').then(m => ({ default: m.GithubDashboard })));
+const SettingsPanel = lazy(() => import('./components/Settings/SettingsPanel').then(m => ({ default: m.SettingsPanel })));
+const WhiteboardCanvas = lazy(() => import('./components/Whiteboard/WhiteboardCanvas').then(m => ({ default: m.WhiteboardCanvas })));
 
 function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
   const { 
     currentUser,
     activeTab, 
@@ -150,29 +156,22 @@ function App() {
     });
   };
 
-  // 3. Tab rendering switcher
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'dashboard':
-        return <DashboardHome onNavigate={(tab) => useStore.getState().setActiveTab(tab)} />;
-      case 'kanban':
-        return <KanbanBoard />;
-      case 'notes':
-        return <NotesManager />;
-      case 'calendar':
-        return <ProjectCalendar />;
-      case 'pomodoro':
-        return <PomodoroTimer />;
-      case 'github':
-        return <GithubDashboard />;
-      case 'settings':
-        return <SettingsPanel />;
-      case 'whiteboard':
-        return <WhiteboardCanvas />;
-      default:
-        return <DashboardHome onNavigate={(tab) => useStore.getState().setActiveTab(tab)} />;
+  // Sync router with activeTab for legacy compatibility while transitioning
+  useEffect(() => {
+    const path = location.pathname.replace('/', '');
+    const tab = path || 'dashboard';
+    if (activeTab !== tab) {
+      useStore.getState().setActiveTab(tab);
     }
-  };
+  }, [location, activeTab]);
+
+  useEffect(() => {
+    const path = location.pathname.replace('/', '');
+    const tab = path || 'dashboard';
+    if (activeTab !== tab) {
+      navigate(activeTab === 'dashboard' ? '/' : `/${activeTab}`);
+    }
+  }, [activeTab, navigate, location.pathname]);
 
 
   if (isAuthLoading || (currentUser && isHydratingFromCloud)) {
@@ -227,17 +226,28 @@ function App() {
  onOpenSidebar={() => setIsMobileMenuOpen(true)}
  />
 
- {/* Workspace Views Wrapper */}
- <main className={`flex-1 relative ${activeTab === 'whiteboard' ? 'overflow-hidden' : 'overflow-y-auto p-4 md:p-8'}`}>
- <>
- <div
- key={activeTab}
- className="h-full"
- >
- {renderTabContent()}
- </div>
- </>
- </main>
+  {/* Workspace Views Wrapper */}
+  <main className={`flex-1 relative ${activeTab === 'whiteboard' ? 'overflow-hidden' : 'overflow-y-auto p-4 md:p-8'}`}>
+    <ErrorBoundary>
+      <Suspense fallback={
+        <div className="flex items-center justify-center w-full h-full min-h-[400px]">
+          <div className="w-10 h-10 border-4 border-neutral-300 border-t-transparent dark:border-neutral-700 dark:border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      }>
+        <Routes>
+          <Route path="/" element={<DashboardHome onNavigate={(tab) => useStore.getState().setActiveTab(tab)} />} />
+          <Route path="/kanban" element={<KanbanBoard />} />
+          <Route path="/notes" element={<NotesManager />} />
+          <Route path="/calendar" element={<ProjectCalendar />} />
+          <Route path="/pomodoro" element={<PomodoroTimer />} />
+          <Route path="/github" element={<GithubDashboard />} />
+          <Route path="/settings" element={<SettingsPanel />} />
+          <Route path="/whiteboard" element={<WhiteboardCanvas />} />
+          <Route path="*" element={<DashboardHome onNavigate={(tab) => useStore.getState().setActiveTab(tab)} />} />
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
+  </main>
  </div>
 
  {/* Global Quick-Add Task modal */}
