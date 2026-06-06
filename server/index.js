@@ -80,7 +80,10 @@ app.post('/api/ai/generate', async (req, res) => {
     }
   } catch (error) {
     console.error('Error generating AI response:', error);
-    const message = error.message || 'An error occurred while calling the OpenAI API.';
+    let message = error.message || 'An error occurred while calling the OpenAI API.';
+    if (error.status === 429 || error.code === 'insufficient_quota' || message.toLowerCase().includes('quota')) {
+      message = 'Your OpenAI API key has exceeded its quota or has no remaining credits. Please add billing credits to your OpenAI Platform account at https://platform.openai.com/settings/organization/billing to use this API key.';
+    }
     if (stream) {
       res.write(`data: ${JSON.stringify({ error: message })}\n\n`);
       return res.end();
@@ -89,6 +92,7 @@ app.post('/api/ai/generate', async (req, res) => {
     }
   }
 });
+
 
 app.listen(port, () => {
   console.log(`🚀 DevPilot AI Secure Backend running on port ${port}`);
