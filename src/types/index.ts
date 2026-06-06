@@ -187,3 +187,29 @@ export interface AIMessage {
   feature?: AIFeature;
 }
 
+export type WorkspaceRole = 'admin' | 'editor' | 'viewer';
+
+export interface WorkspaceMember {
+  uid: string;
+  email: string;
+  role: WorkspaceRole;
+  status: 'active' | 'invited';
+}
+
+export interface Workspace {
+  id: string;
+  name: string;
+  createdAt: string;
+  createdBy: string;
+  members: WorkspaceMember[];
+}
+
+export interface InviteToken {
+  id: string; // the token string itself
+  workspaceId: string;
+  email: string;
+  role: WorkspaceRole;
+  createdAt: string;
+  expiresAt: string;
+  used: boolean;
+}
