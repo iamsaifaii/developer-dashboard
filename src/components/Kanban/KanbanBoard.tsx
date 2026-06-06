@@ -25,7 +25,8 @@ export const KanbanBoard: React.FC = () => {
     moveTask,
     githubConnected,
     githubIssues,
-    importGithubIssue
+    importGithubIssue,
+    currentRole
   } = useStore();
 
   // Kanban view state
@@ -149,19 +150,21 @@ export const KanbanBoard: React.FC = () => {
   };
 
   // Drag and Drop implementation
-  const handleDragOver = (e: React.DragEvent, colId: string) => {
+  const handleDragOver = (e: React.DragEvent, targetColId: string) => {
+    if (currentRole === 'viewer') return;
     e.preventDefault();
-    setIsDragOverCol(colId);
+    setIsDragOverCol(targetColId);
   };
 
   const handleDragLeave = () => {
     setIsDragOverCol(null);
   };
 
-  const handleDrop = (e: React.DragEvent, colId: string) => {
+  const handleDrop = (e: React.DragEvent, targetColId: string) => {
+    if (currentRole === 'viewer') return;
     const taskId = e.dataTransfer.getData('text/plain');
     if (taskId) {
-      moveTask(taskId, colId);
+      moveTask(taskId, targetColId);
     }
     setIsDragOverCol(null);
   };
@@ -381,13 +384,15 @@ export const KanbanBoard: React.FC = () => {
                     {colTasks.length}
                   </span>
                 </div>
-                <button
-                  onClick={() => handleAddNewTaskToColumn(col.id)}
-                  className="p-1 text-neutral-500 hover:text-white rounded hover:bg-neutral-800 cursor-pointer"
-                  title={`Add task to ${col.title}`}
-                >
-                  <FiPlus className="w-4 h-4" />
-                </button>
+                {currentRole !== 'viewer' && (
+                  <button
+                    onClick={() => handleAddNewTaskToColumn(col.id)}
+                    className="p-1 text-neutral-500 hover:text-white rounded hover:bg-neutral-800 cursor-pointer"
+                    title={`Add task to ${col.title}`}
+                  >
+                    <FiPlus className="w-4 h-4" />
+                  </button>
+                )}
               </div>
 
               {/* Cards Container (Scrollable) */}

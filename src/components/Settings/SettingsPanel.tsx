@@ -7,12 +7,16 @@ import {
   FiSave, 
   FiCheckCircle,
   FiUser,
-  FiBell
+  FiBell,
+  FiUsers
 } from 'react-icons/fi';
 import { UserProfilePanel } from '../Auth/UserProfilePanel';
+import { TeamSettingsPanel } from './TeamSettingsPanel';
 
 export const SettingsPanel: React.FC = () => {
   const { settings, updateSettings } = useStore();
+
+  const [activeTab, setActiveTab] = useState<'personal' | 'team'>('personal');
 
   // Form local states
   const [workTime, setWorkTime] = useState(settings.pomodoroWorkTime);
@@ -48,6 +52,22 @@ export const SettingsPanel: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto relative text-left">
+      {/* Tabs */}
+      <div className="flex items-center gap-4 border-b border-zinc-800 mb-6">
+        <button
+          onClick={() => setActiveTab('personal')}
+          className={`pb-3 text-xs font-bold uppercase tracking-wider transition-colors ${activeTab === 'personal' ? 'text-white border-b-2 border-white' : 'text-zinc-500 hover:text-zinc-300'}`}
+        >
+          <div className="flex items-center gap-2"><FiUser /> Personal</div>
+        </button>
+        <button
+          onClick={() => setActiveTab('team')}
+          className={`pb-3 text-xs font-bold uppercase tracking-wider transition-colors ${activeTab === 'team' ? 'text-white border-b-2 border-white' : 'text-zinc-500 hover:text-zinc-300'}`}
+        >
+          <div className="flex items-center gap-2"><FiUsers /> Team</div>
+        </button>
+      </div>
+
       {showSaveAlert && (
         <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-neutral-900 border border-neutral-800 text-neutral-100 text-xxs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-xl z-50 pointer-events-none">
           <FiCheckCircle className="w-4 h-4 text-white" />
@@ -55,6 +75,9 @@ export const SettingsPanel: React.FC = () => {
         </div>
       )}
 
+      {activeTab === 'team' ? (
+        <TeamSettingsPanel />
+      ) : (
       <form onSubmit={handleSave} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -204,6 +227,7 @@ export const SettingsPanel: React.FC = () => {
           </button>
         </div>
       </form>
+      )}
     </div>
   );
 };

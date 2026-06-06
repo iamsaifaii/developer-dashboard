@@ -16,6 +16,7 @@ import {
 
 
 import { TrelloIcon, GithubIcon } from './BrandIcons';
+import { WorkspaceSwitcher } from './Sidebar/WorkspaceSwitcher';
 
 export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
  const navigate = useNavigate();
@@ -81,6 +82,9 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
 
  {/* Navigation List */}
  <nav className="flex-1 px-3 space-y-1 overflow-y-auto py-3">
+ <div className="px-2 mb-4">
+    <WorkspaceSwitcher />
+ </div>
  {menuItems.map((item) => {
  const Icon = item.icon;
  const isActive = currentPath === item.id;

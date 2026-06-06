@@ -11,6 +11,7 @@ import {
 
 } from 'react-icons/fi';
 import { TrelloIcon, GithubIcon } from './BrandIcons';
+import { TeamMetrics } from './Dashboard/TeamMetrics';
 
 interface DashboardHomeProps {
  onNavigate: (tab: string) => void;
@@ -114,6 +115,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
    </div>
  )}
 
+ <TeamMetrics />
 
  {/* 2. Grid Dashboard Cards */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

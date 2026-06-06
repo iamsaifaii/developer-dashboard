@@ -30,6 +30,8 @@ export interface Task {
  attachments?: TaskAttachment[];
  dependencies?: string[];
  createdAt: string;
+ author?: string;
+ assignedTo?: string;
 }
 
 export interface Column {
@@ -44,6 +46,7 @@ export interface Note {
  folder: string;
  tags: string[];
  updatedAt: string;
+ author?: string;
 }
 
 export interface CalendarEvent {
@@ -182,4 +185,25 @@ export interface AIMessage {
   content: string;
   timestamp: string;
   feature?: AIFeature;
+}
+
+export type WorkspaceRole = 'admin' | 'editor' | 'viewer';
+
+export interface WorkspaceMember {
+  uid: string;
+  email: string;
+  role: WorkspaceRole;
+  joinedAt: string;
+}
+
+export interface Workspace {
+  id: string;
+  name: string;
+  ownerId: string;
+  memberIds: string[];
+  members: Record<string, WorkspaceMember>;
+  pendingInvites: Record<string, WorkspaceRole>; // email -> role
+  metrics?: {
+    totalTasksCompleted: number;
+  };
 }

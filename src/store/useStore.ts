@@ -6,7 +6,7 @@ import { auth } from '../lib/firebase';
 import type { 
   Task, Column, Note, CalendarEvent, PomodoroSession, TimerMode, DeveloperSettings,
   GithubRepo, GithubIssue, GithubPR, GithubCommit, GithubAnalytics,
-  AppNotification, AIMessage
+  AppNotification, AIMessage, Workspace, WorkspaceRole
 } from '../types';
 import { fetchGithubData } from '../services/githubService';
 import { productivityService } from '../services/productivityService';
@@ -23,6 +23,13 @@ interface State {
   setAuthError: (error: string | null) => void;
   setLinkedProviders: (providers: string[]) => void;
   signOut: () => Promise<void>;
+
+  // Workspaces
+  workspaces: Workspace[];
+  activeWorkspaceId: string;
+  currentRole: WorkspaceRole | 'admin'; // personal is admin
+  setWorkspaces: (workspaces: Workspace[]) => void;
+  setActiveWorkspaceId: (id: string) => void;
 
  // Notifications
  notifications: AppNotification[];
@@ -182,79 +189,108 @@ export const useStore = create<State>()((set, get) => {
       cloudSyncError: null,
     });
   },
-  setCurrentUser: (user) => {
-    if (user) {
-      set({ currentUser: user, isHydratingFromCloud: true, cloudSyncStatus: 'syncing', cloudSyncError: null });
-      const docRef = doc(db, 'users', user.uid);
-      
-      // Cleanup previous listener if any
-      if ((window as any)._unsubscribeSnapshot) {
-        (window as any)._unsubscribeSnapshot();
-      }
+   workspaces: [],
+   activeWorkspaceId: 'personal',
+   currentRole: 'admin',
+   setWorkspaces: (workspaces) => set({ workspaces }),
+   setActiveWorkspaceId: (id) => {
+     const { currentUser, workspaces } = get();
+     if (!currentUser) return;
+     
+     set({ activeWorkspaceId: id, isHydratingFromCloud: true, cloudSyncStatus: 'syncing', cloudSyncError: null });
+     
+     if (id === 'personal') {
+       set({ currentRole: 'admin' });
+     } else {
+       const ws = workspaces.find(w => w.id === id);
+       if (ws && ws.members[currentUser.uid]) {
+         set({ currentRole: ws.members[currentUser.uid].role });
+       } else {
+         set({ currentRole: 'viewer' }); // fallback
+       }
+     }
 
-      (window as any)._unsubscribeSnapshot = onSnapshot(docRef, (docSnap) => {
-        if (docSnap.exists()) {
-          const cloudState = docSnap.data().state;
-          if (cloudState) {
-            const currentToken = get().githubToken;
-            const resolvedToken = currentToken || cloudState.githubToken || null;
-            set({ 
-              ...cloudState, 
-              tasks: cloudState.tasks || [],
-              notes: cloudState.notes || [],
-              events: cloudState.events || [],
-              pomodoroHistory: cloudState.pomodoroHistory || [],
-              githubRepos: cloudState.githubRepos || [],
-              githubIssues: cloudState.githubIssues || [],
-              githubPRs: cloudState.githubPRs || [],
-              githubCommits: cloudState.githubCommits || [],
-              aiMessages: cloudState.aiMessages || [],
-              currentUser: user,
-              githubToken: resolvedToken,
-              // Reset githubConnected so App.tsx re-fetches fresh GitHub data
-              // This is critical for cross-device sync — without this, the
-              // auto-fetch effect is blocked by !githubConnected being false
-              githubConnected: false,
-              isHydratingFromCloud: false,
-              isReceivingSnapshot: true,
-              cloudSyncStatus: 'synced',
-              cloudSyncError: null
-            });
-            // Allow subscribe to trigger normally after this tick
-            setTimeout(() => set({ isReceivingSnapshot: false }), 0);
-            return;
-          }
-        }
-        set({ isHydratingFromCloud: false, cloudSyncStatus: 'synced', cloudSyncError: null });
-      }, (err) => {
-        console.error("Failed to sync from cloud", err);
-        set({ cloudSyncStatus: 'error', cloudSyncError: err.message });
-      });
+     if ((window as any)._unsubscribeSnapshot) {
+       (window as any)._unsubscribeSnapshot();
+     }
 
-    } else {
-      if ((window as any)._unsubscribeSnapshot) {
-        (window as any)._unsubscribeSnapshot();
-        (window as any)._unsubscribeSnapshot = null;
-      }
-      // Reset on logout
-      set({
-       currentUser: null,
-       tasks: [],
-       notes: [],
-       events: [],
-       pomodoroHistory: [],
-       githubRepos: [],
-       githubIssues: [],
-       githubPRs: [],
-       githubCommits: [],
-       githubConnected: false,
-       githubUsername: '',
-       githubToken: null,
-       cloudSyncStatus: null,
-       cloudSyncError: null
+     const docRef = id === 'personal' ? doc(db, 'users', currentUser.uid) : doc(db, 'workspaces', id);
+     
+     (window as any)._unsubscribeSnapshot = onSnapshot(docRef, (docSnap) => {
+       if (docSnap.exists()) {
+         const cloudState = docSnap.data().state;
+         if (cloudState) {
+           const currentToken = get().githubToken;
+           const resolvedToken = currentToken || cloudState.githubToken || null;
+           set({ 
+             ...cloudState, 
+             tasks: cloudState.tasks || [],
+             notes: cloudState.notes || [],
+             events: cloudState.events || [],
+             pomodoroHistory: cloudState.pomodoroHistory || [],
+             githubRepos: cloudState.githubRepos || [],
+             githubIssues: cloudState.githubIssues || [],
+             githubPRs: cloudState.githubPRs || [],
+             githubCommits: cloudState.githubCommits || [],
+             aiMessages: cloudState.aiMessages || [],
+             githubToken: resolvedToken,
+             githubConnected: false,
+             isHydratingFromCloud: false,
+             isReceivingSnapshot: true,
+             cloudSyncStatus: 'synced',
+             cloudSyncError: null
+           });
+           setTimeout(() => set({ isReceivingSnapshot: false }), 0);
+           return;
+         }
+       }
+       // If no state exists yet
+       set({
+         tasks: [],
+         notes: [],
+         events: [],
+         isHydratingFromCloud: false,
+         isReceivingSnapshot: true,
+         cloudSyncStatus: 'synced',
+         cloudSyncError: null
+       });
+       setTimeout(() => set({ isReceivingSnapshot: false }), 0);
+     }, (err) => {
+       console.error("Failed to sync from cloud", err);
+       set({ cloudSyncStatus: 'error', cloudSyncError: err.message });
      });
-   }
- },
+   },
+   setCurrentUser: (user) => {
+     if (user) {
+       set({ currentUser: user });
+       get().setActiveWorkspaceId('personal');
+     } else {
+       if ((window as any)._unsubscribeSnapshot) {
+         (window as any)._unsubscribeSnapshot();
+         (window as any)._unsubscribeSnapshot = null;
+       }
+       // Reset on logout
+       set({
+        currentUser: null,
+        tasks: [],
+        notes: [],
+        events: [],
+        pomodoroHistory: [],
+        githubRepos: [],
+        githubIssues: [],
+        githubPRs: [],
+        githubCommits: [],
+        githubConnected: false,
+        githubUsername: '',
+        githubToken: null,
+        cloudSyncStatus: null,
+        cloudSyncError: null,
+        workspaces: [],
+        activeWorkspaceId: 'personal',
+        currentRole: 'admin'
+      });
+    }
+  },
 
  // Board state
  columns: [
@@ -266,6 +302,7 @@ export const useStore = create<State>()((set, get) => {
  ],
  tasks: [],
  addTask: (task) => set((state) => {
+ if (state.currentRole === 'viewer') return {};
  // Auto-set dueDate to tomorrow if not specified
  let dueDate = task.dueDate;
  if (!dueDate) {
@@ -281,17 +318,18 @@ export const useStore = create<State>()((set, get) => {
  };
  return { tasks: [...(state.tasks || []), newTask] };
  }),
- updateTask: (taskId, updates) => set((state) => ({
- tasks: (state.tasks || []).map((task) => task.id === taskId ? { ...task, ...updates } : task)
- })),
- deleteTask: (taskId) => set((state) => ({
- tasks: (state.tasks || []).filter((task) => task.id !== taskId)
- })),
- moveTask: (taskId, targetColumnId) => set((state) => ({
- tasks: (state.tasks || []).map((task) => 
-   task.id === taskId ? { ...task, columnId: targetColumnId } : task
- )
- })),
+ updateTask: (taskId, updates) => set((state) => {
+   if (state.currentRole === 'viewer') return {};
+   return { tasks: (state.tasks || []).map((task) => task.id === taskId ? { ...task, ...updates } : task) };
+ }),
+ deleteTask: (taskId) => set((state) => {
+   if (state.currentRole === 'viewer') return {};
+   return { tasks: (state.tasks || []).filter((task) => task.id !== taskId) };
+ }),
+ moveTask: (taskId, targetColumnId) => set((state) => {
+   if (state.currentRole === 'viewer') return {};
+   return { tasks: (state.tasks || []).map((task) => task.id === taskId ? { ...task, columnId: targetColumnId } : task) };
+ }),
 
   checkOverdueTasks: () => {
     const state = get();
@@ -368,6 +406,7 @@ export const useStore = create<State>()((set, get) => {
  notes: [],
  folders: ['Work', 'Ideas', 'Snippets'],
  addNote: (note) => set((state) => {
+ if (state.currentRole === 'viewer') return {};
  const newNote: Note = {
  ...note,
  id: `note-${Date.now()}`,
@@ -375,36 +414,35 @@ export const useStore = create<State>()((set, get) => {
  };
  return { notes: [...(state.notes || []), newNote] };
  }),
- updateNote: (noteId, updates) => set((state) => ({
- notes: (state.notes || []).map((note) => 
- note.id === noteId 
- ? { ...note, ...updates, updatedAt: new Date().toISOString() } 
- : note
- )
- })),
- deleteNote: (noteId) => set((state) => ({
- notes: (state.notes || []).filter((note) => note.id !== noteId)
- })),
+ updateNote: (noteId, updates) => set((state) => {
+   if (state.currentRole === 'viewer') return {};
+   return { notes: (state.notes || []).map((note) => note.id === noteId ? { ...note, ...updates, updatedAt: new Date().toISOString() } : note) };
+ }),
+ deleteNote: (noteId) => set((state) => {
+   if (state.currentRole === 'viewer') return {};
+   return { notes: (state.notes || []).filter((note) => note.id !== noteId) };
+ }),
  addFolder: (folderName) => set((state) => {
- if (state.folders.includes(folderName)) return {};
+   if (state.currentRole === 'viewer') return {};
+   if (state.folders.includes(folderName)) return {};
  return { folders: [...state.folders, folderName] };
  }),
 
  // Calendar state
  events: [],
  addEvent: (event) => set((state) => {
- const newEvent: CalendarEvent = {
- ...event,
- id: `event-${Date.now()}`
- };
- return { events: [...(state.events || []), newEvent] };
+   if (state.currentRole === 'viewer') return {};
+   const newEvent: CalendarEvent = { ...event, id: `event-${Date.now()}` };
+   return { events: [...(state.events || []), newEvent] };
  }),
- updateEvent: (eventId, updates) => set((state) => ({
- events: (state.events || []).map((evt) => evt.id === eventId ? { ...evt, ...updates } : evt)
- })),
- deleteEvent: (eventId) => set((state) => ({
- events: (state.events || []).filter((evt) => evt.id !== eventId)
- })),
+ updateEvent: (eventId, updates) => set((state) => {
+   if (state.currentRole === 'viewer') return {};
+   return { events: (state.events || []).map((evt) => evt.id === eventId ? { ...evt, ...updates } : evt) };
+ }),
+ deleteEvent: (eventId) => set((state) => {
+   if (state.currentRole === 'viewer') return {};
+   return { events: (state.events || []).filter((evt) => evt.id !== eventId) };
+ }),
 
  // Pomodoro state
  timerMode: 'work',
@@ -671,11 +709,7 @@ function serializeForFirestore(val: any): any {
 // Cloud Sync Listener
 useStore.subscribe((state, prevState) => {
   if (state.currentUser && !state.isHydratingFromCloud && !state.isReceivingSnapshot) {
-    const stateToSave = {
-      tasks: state.tasks,
-      notes: state.notes,
-      folders: state.folders,
-      events: state.events,
+    const personalStateToSave = {
       totalSessionsCompleted: state.totalSessionsCompleted,
       pomodoroHistory: state.pomodoroHistory,
       settings: state.settings,
@@ -689,12 +723,8 @@ useStore.subscribe((state, prevState) => {
       notifications: state.notifications,
       aiMessages: state.aiMessages || []
     };
-    
-    const prevStateToSave = {
-      tasks: prevState.tasks,
-      notes: prevState.notes,
-      folders: prevState.folders,
-      events: prevState.events,
+
+    const prevPersonalState = {
       totalSessionsCompleted: prevState.totalSessionsCompleted,
       pomodoroHistory: prevState.pomodoroHistory,
       settings: prevState.settings,
@@ -709,11 +739,40 @@ useStore.subscribe((state, prevState) => {
       aiMessages: prevState.aiMessages || []
     };
 
+    const collabStateToSave = {
+      tasks: state.tasks,
+      notes: state.notes,
+      folders: state.folders,
+      events: state.events
+    };
+
+    const prevCollabState = {
+      tasks: prevState.tasks,
+      notes: prevState.notes,
+      folders: prevState.folders,
+      events: prevState.events
+    };
+
+    const stateToSave = { ...personalStateToSave, ...collabStateToSave };
+    const prevStateToSave = { ...prevPersonalState, ...prevCollabState };
+
     // Only sync if the actual persistent data changed
-    // This prevents the pomodoro timer (which updates secondsLeft every 1s) from triggering a Firebase write every second
     if (JSON.stringify(stateToSave) !== JSON.stringify(prevStateToSave)) {
-      setDoc(doc(db, 'users', state.currentUser.uid), { state: serializeForFirestore(stateToSave) }, { merge: true })
-        .catch(err => console.error('Cloud sync failed:', err));
+      if (state.activeWorkspaceId === 'personal') {
+        setDoc(doc(db, 'users', state.currentUser.uid), { state: serializeForFirestore(stateToSave) }, { merge: true })
+          .catch(err => console.error('Cloud sync failed:', err));
+      } else {
+        // Save collaborative state to workspace
+        if (JSON.stringify(collabStateToSave) !== JSON.stringify(prevCollabState) && state.currentRole !== 'viewer') {
+          setDoc(doc(db, 'workspaces', state.activeWorkspaceId), { state: serializeForFirestore(collabStateToSave) }, { merge: true })
+            .catch(err => console.error('Cloud sync workspace failed:', err));
+        }
+        // Save personal state to users/{uid}
+        if (JSON.stringify(personalStateToSave) !== JSON.stringify(prevPersonalState)) {
+          setDoc(doc(db, 'users', state.currentUser.uid), { state: serializeForFirestore(personalStateToSave) }, { merge: true })
+            .catch(err => console.error('Cloud sync personal failed:', err));
+        }
+      }
     }
   }
 });
