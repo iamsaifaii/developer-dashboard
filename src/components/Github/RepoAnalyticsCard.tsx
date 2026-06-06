@@ -84,7 +84,7 @@ export const RepoAnalyticsCard: React.FC<Props> = ({ repos }) => {
               key={repo.name}
               className="p-3 rounded-xl border border-zinc-800 bg-zinc-950 hover:bg-zinc-900 transition-colors group"
             >
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div className="flex-1 min-w-0 space-y-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <FiGitBranch className="w-3 h-3 shrink-0 text-zinc-500" />

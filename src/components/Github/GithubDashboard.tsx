@@ -118,7 +118,7 @@ export const GithubDashboard: React.FC = () => {
 
         {/* Profile header */}
         <div className="glass-panel rounded-2xl p-6">
-          <div className="flex items-center justify-between gap-4 mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-3.5">
               <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
                 <GithubIcon className="w-5 h-5" />
@@ -167,7 +167,7 @@ export const GithubDashboard: React.FC = () => {
         <div className="glass-panel rounded-2xl p-5">
 
           {/* Tab header */}
-          <div className="flex bg-zinc-950 p-1 rounded-xl border border-zinc-800 gap-1 mb-5">
+          <div className="flex overflow-x-auto hide-scrollbar bg-zinc-950 p-1 rounded-xl border border-zinc-800 gap-1 mb-5">
             {TAB_CONFIG.map(tab => {
               const countMap: Record<AnalyticsTab, number> = {
                 repos: githubRepos.length,

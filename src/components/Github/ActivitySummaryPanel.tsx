@@ -115,7 +115,7 @@ export const ActivitySummaryPanel: React.FC<Props> = ({ analytics, githubUsernam
           <FiAward className="w-3 h-3" />
           <span>Commit Streak</span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-zinc-200">{currentStreak}</div>
             <div className="text-[9px] text-zinc-500">Current</div>
