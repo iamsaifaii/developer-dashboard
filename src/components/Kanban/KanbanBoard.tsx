@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useStore } from '../../store/useStore';
+import { useDebounce } from '../../hooks/useDebounce';
 import type { Task, Priority } from '../../types';
 import { TaskCard } from './TaskCard';
 import { TaskModal } from './TaskModal';
@@ -30,6 +31,19 @@ export const KanbanBoard: React.FC = () => {
   // Kanban view state
   const [searchQuery, setSearchQuery] = useState('');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [dueDateFilter, setDueDateFilter] = useState<string>('all');
+  const [tagFilter, setTagFilter] = useState<string>('all');
+  const [showFilters, setShowFilters] = useState(false);
+  
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+  // Extract all unique tags
+  const allTags = useMemo(() => {
+    const tags = new Set<string>();
+    tasks.forEach(t => t.tags.forEach(tag => tags.add(tag)));
+    return Array.from(tags).sort();
+  }, [tasks]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [activeColumnForNewTask, setActiveColumnForNewTask] = useState<string>('todo');
@@ -46,14 +60,47 @@ export const KanbanBoard: React.FC = () => {
   // Filters tasks based on Title/Description and Priority
   const getFilteredTasks = (colId: string) => {
     return (tasks || []).filter(task => {
-      const matchesColumn = task.columnId === colId;
-      const matchesSearch =
-        task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        task.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        task.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-      const matchesPriority = priorityFilter === 'all' || task.priority === priorityFilter;
+      // 1. Column/Status check
+      if (task.columnId !== colId) return false;
+      if (statusFilter !== 'all' && task.columnId !== statusFilter) return false;
 
-      return matchesColumn && matchesSearch && matchesPriority;
+      // 2. Search check
+      const q = debouncedSearchQuery.toLowerCase();
+      const matchesSearch = !q ||
+        task.title.toLowerCase().includes(q) ||
+        task.description.toLowerCase().includes(q) ||
+        task.tags.some(tag => tag.toLowerCase().includes(q));
+
+      // 3. Priority check
+      const matchesPriority = priorityFilter === 'all' || task.priority === priorityFilter;
+      
+      // 4. Tag check
+      const matchesTag = tagFilter === 'all' || task.tags.includes(tagFilter);
+
+      // 5. Due Date check
+      let matchesDate = true;
+      if (dueDateFilter !== 'all') {
+        if (!task.dueDate) {
+          matchesDate = false;
+        } else {
+          const due = new Date(task.dueDate);
+          const now = new Date();
+          now.setHours(0,0,0,0);
+          due.setHours(0,0,0,0);
+          
+          if (dueDateFilter === 'overdue') {
+            matchesDate = due < now && task.columnId !== 'done';
+          } else if (dueDateFilter === 'today') {
+            matchesDate = due.getTime() === now.getTime();
+          } else if (dueDateFilter === 'week') {
+            const nextWeek = new Date(now);
+            nextWeek.setDate(now.getDate() + 7);
+            matchesDate = due >= now && due <= nextWeek;
+          }
+        }
+      }
+
+      return matchesSearch && matchesPriority && matchesTag && matchesDate;
     });
   };
 
@@ -173,9 +220,8 @@ export const KanbanBoard: React.FC = () => {
       {/* 1. Filter Bar */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
 
-        {/* Search & Priority Filter */}
-        <div className="flex flex-wrap items-center gap-3.5 w-full md:w-auto">
-          {/* Search Input */}
+        {/* Search & Basic Filters */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full md:w-auto">
           <div className="relative w-full sm:w-60">
             <FiSearch className="w-4 h-4 text-neutral-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
             <input
@@ -187,21 +233,20 @@ export const KanbanBoard: React.FC = () => {
             />
           </div>
 
-          {/* Filter Dropdown */}
-          <div className="relative w-full sm:w-44 flex items-center">
-            <FiFilter className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-            <select
-              value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
-              className="w-full text-xs pl-8 pr-3 py-2 rounded-lg bg-white dark:bg-black/40 border border-neutral-200 dark:border-neutral-800/80 text-neutral-350 focus:outline-none focus:border-neutral-500"
-            >
-              <option value="all">All Priorities</option>
-              <option value="urgent">Urgent Priority</option>
-              <option value="high">High Priority</option>
-              <option value="medium">Medium Priority</option>
-              <option value="low">Low Priority</option>
-            </select>
-          </div>
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={`flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border transition-colors ${
+              showFilters 
+                ? 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 text-black dark:text-white' 
+                : 'bg-white dark:bg-black/40 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-900'
+            }`}
+          >
+            <FiFilter className="w-3.5 h-3.5" />
+            <span>Filters</span>
+            {(priorityFilter !== 'all' || statusFilter !== 'all' || dueDateFilter !== 'all' || tagFilter !== 'all') && (
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 ml-1"></span>
+            )}
+          </button>
         </div>
 
         {/* Global Board Actions */}
@@ -228,6 +273,80 @@ export const KanbanBoard: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Advanced Filters Panel */}
+      {showFilters && (
+        <div className="glass-panel p-3 rounded-xl border border-neutral-200 dark:border-neutral-800/80 flex flex-wrap gap-3 animate-in slide-in-from-top-2 fade-in duration-200 z-10">
+          <div className="flex flex-col gap-1 w-full sm:w-auto min-w-[140px]">
+            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Status</label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full text-xs px-2 py-1.5 rounded bg-white dark:bg-black/40 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-500"
+            >
+              <option value="all">Any Status</option>
+              {columns.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
+            </select>
+          </div>
+          
+          <div className="flex flex-col gap-1 w-full sm:w-auto min-w-[140px]">
+            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Priority</label>
+            <select
+              value={priorityFilter}
+              onChange={(e) => setPriorityFilter(e.target.value)}
+              className="w-full text-xs px-2 py-1.5 rounded bg-white dark:bg-black/40 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-500"
+            >
+              <option value="all">Any Priority</option>
+              <option value="urgent">Urgent</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1 w-full sm:w-auto min-w-[140px]">
+            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Due Date</label>
+            <select
+              value={dueDateFilter}
+              onChange={(e) => setDueDateFilter(e.target.value)}
+              className="w-full text-xs px-2 py-1.5 rounded bg-white dark:bg-black/40 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-500"
+            >
+              <option value="all">Any Date</option>
+              <option value="overdue">Overdue</option>
+              <option value="today">Due Today</option>
+              <option value="week">Due This Week</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1 w-full sm:w-auto min-w-[140px]">
+            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Tag</label>
+            <select
+              value={tagFilter}
+              onChange={(e) => setTagFilter(e.target.value)}
+              className="w-full text-xs px-2 py-1.5 rounded bg-white dark:bg-black/40 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-500"
+            >
+              <option value="all">Any Tag</option>
+              {allTags.map(tag => <option key={tag} value={tag}>{tag}</option>)}
+            </select>
+          </div>
+
+          {(priorityFilter !== 'all' || statusFilter !== 'all' || dueDateFilter !== 'all' || tagFilter !== 'all') && (
+            <div className="flex items-end pb-0.5">
+              <button 
+                onClick={() => {
+                  setPriorityFilter('all');
+                  setStatusFilter('all');
+                  setDueDateFilter('all');
+                  setTagFilter('all');
+                }}
+                className="text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 px-2 py-1"
+              >
+                Clear all
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 2. Main Columns Display */}
       <div className="flex-1 flex gap-4 overflow-x-auto pb-4 select-none pr-1">

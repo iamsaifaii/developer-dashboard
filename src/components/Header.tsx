@@ -4,13 +4,13 @@ import { useStore } from '../store/useStore';
 import { auth } from '../lib/firebase';
 import { signOut } from 'firebase/auth';
 import { 
+  FiMenu, 
   FiPlus, 
-  FiSearch, 
-  FiLogOut,
-  FiMenu
+  FiLogOut
 } from 'react-icons/fi';
 import { GithubIcon } from './BrandIcons';
 import { NotificationCenter } from './Notifications/NotificationCenter';
+import { GlobalSearch } from './Search/GlobalSearch';
 
 
 interface HeaderProps {
@@ -75,14 +75,12 @@ export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar 
  
   {/* Header Actions */}
   <div className="flex items-center gap-3">
-  {/* Search Bar */}
-  <div className="relative hidden md:block w-56">
-  <FiSearch className="w-4 h-4 text-zinc-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-  <input 
-  type="text" 
-  placeholder="Search workspace..." 
-  className="w-full text-xs pl-8 pr-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-zinc-650"
-  />
+  {/* Search Bar (Desktop) */}
+  <GlobalSearch />
+  
+  {/* Mobile Search Icon */}
+  <div className="md:hidden">
+    <GlobalSearch isMobile={true} />
   </div>
  
   {/* Quick Task Button */}

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useStore } from '../../store/useStore';
+import { useDebounce } from '../../hooks/useDebounce';
 import type { Note } from '../../types';
 import { 
  FiFolder, 
@@ -14,7 +15,8 @@ import {
  FiType,
  FiCode,
  FiList,
- FiCheckSquare
+ FiCheckSquare,
+ FiFilter
 } from 'react-icons/fi';
 // Custom Markdown Parser
 const parseMarkdown = (text: string): string => {
@@ -61,9 +63,21 @@ export const NotesManager: React.FC = () => {
   const [activeFolder, setActiveFolder] = useState<string>('All');
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [tagFilter, setTagFilter] = useState<string>('all');
+  const [dateFilter, setDateFilter] = useState<string>('all');
+  const [showFilters, setShowFilters] = useState(false);
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  
   const [newFolderName, setNewFolderName] = useState('');
   const [isAddingFolder, setIsAddingFolder] = useState(false);
   const [editorTab, setEditorTab] = useState<'write' | 'preview'>('write');
+
+  // Extract all unique tags for notes
+  const allTags = useMemo(() => {
+    const tags = new Set<string>();
+    notes.forEach(n => n.tags.forEach(tag => tags.add(tag)));
+    return Array.from(tags).sort();
+  }, [notes]);
 
   // Auto-select first note on initial cloud load, or when selected note is deleted by another device
   React.useEffect(() => {
@@ -80,14 +94,31 @@ export const NotesManager: React.FC = () => {
  // Retrieve current active note object
  const activeNote = notes.find(n => n.id === selectedNoteId) || null;
 
- // Filters notes based on Folder selection & Search query
+ // Filters notes based on Folder selection & Search query & Advanced Filters
  const filteredNotes = notes.filter(note => {
- const matchesFolder = activeFolder === 'All' || note.folder === activeFolder;
- const matchesSearch = 
- note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
- note.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
- note.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
- return matchesFolder && matchesSearch;
+  const matchesFolder = activeFolder === 'All' || note.folder === activeFolder;
+  
+  const q = debouncedSearchQuery.toLowerCase();
+  const matchesSearch = !q ||
+  note.title.toLowerCase().includes(q) ||
+  note.content.toLowerCase().includes(q) ||
+  note.tags.some(tag => tag.toLowerCase().includes(q));
+
+  const matchesTag = tagFilter === 'all' || note.tags.includes(tagFilter);
+
+  let matchesDate = true;
+  if (dateFilter !== 'all') {
+    const noteDate = new Date(note.updatedAt || new Date());
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - noteDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    
+    if (dateFilter === 'today') matchesDate = diffDays <= 1;
+    else if (dateFilter === 'week') matchesDate = diffDays <= 7;
+    else if (dateFilter === 'month') matchesDate = diffDays <= 30;
+  }
+
+  return matchesFolder && matchesSearch && matchesTag && matchesDate;
  });
 
  const handleCreateNote = () => {
@@ -273,16 +304,60 @@ export const NotesManager: React.FC = () => {
 
  {/* 2. Notes List Column */}
  <div className="h-64 md:h-auto md:col-span-1 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl p-4 flex flex-col gap-4 shadow-xl">
- {/* Search */}
- <div className="relative">
- <FiSearch className="w-4 h-4 text-neutral-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
- <input 
- type="text" 
- placeholder="Search notes..." 
- value={searchQuery}
- onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full text-xs pl-8 pr-3 py-2 rounded-lg bg-white dark:bg-black/40 border border-neutral-200 dark:border-neutral-800/80 text-neutral-800 dark:text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-neutral-500"
- />
+ {/* Search & Filters */}
+ <div className="space-y-3">
+   <div className="flex items-center gap-2">
+     <div className="relative flex-1">
+       <FiSearch className="w-4 h-4 text-neutral-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+       <input 
+         type="text" 
+         placeholder="Search notes..." 
+         value={searchQuery}
+         onChange={(e) => setSearchQuery(e.target.value)}
+         className="w-full text-xs pl-8 pr-3 py-2 rounded-lg bg-white dark:bg-black/40 border border-neutral-200 dark:border-neutral-800/80 text-neutral-800 dark:text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-neutral-500"
+       />
+     </div>
+     <button
+       onClick={() => setShowFilters(!showFilters)}
+       className={`p-2 rounded-lg border transition-colors ${
+         showFilters 
+           ? 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 text-black dark:text-white' 
+           : 'bg-white dark:bg-black/40 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-900'
+       }`}
+       title="Advanced Filters"
+     >
+       <FiFilter className="w-4 h-4" />
+     </button>
+   </div>
+
+   {showFilters && (
+     <div className="flex flex-col gap-2 p-2.5 bg-white dark:bg-black/20 border border-neutral-200 dark:border-neutral-800/80 rounded-lg animate-in slide-in-from-top-1 fade-in duration-200">
+       <div className="flex flex-col gap-1">
+         <label className="text-[9px] font-bold text-neutral-500 uppercase tracking-wider">Filter by Tag</label>
+         <select
+           value={tagFilter}
+           onChange={(e) => setTagFilter(e.target.value)}
+           className="w-full text-xs px-2 py-1.5 rounded bg-neutral-50 dark:bg-black/60 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-500"
+         >
+           <option value="all">Any Tag</option>
+           {allTags.map(tag => <option key={tag} value={tag}>{tag}</option>)}
+         </select>
+       </div>
+       <div className="flex flex-col gap-1">
+         <label className="text-[9px] font-bold text-neutral-500 uppercase tracking-wider">Date Modified</label>
+         <select
+           value={dateFilter}
+           onChange={(e) => setDateFilter(e.target.value)}
+           className="w-full text-xs px-2 py-1.5 rounded bg-neutral-50 dark:bg-black/60 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-500"
+         >
+           <option value="all">Any Time</option>
+           <option value="today">Today</option>
+           <option value="week">Past 7 Days</option>
+           <option value="month">Past 30 Days</option>
+         </select>
+       </div>
+     </div>
+   )}
  </div>
 
  {/* Note Grid */}
