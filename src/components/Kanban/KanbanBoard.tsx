@@ -25,8 +25,7 @@ export const KanbanBoard: React.FC = () => {
     moveTask,
     githubConnected,
     githubIssues,
-    importGithubIssue,
-    currentRole
+    importGithubIssue
   } = useStore();
 
   // Kanban view state
@@ -151,7 +150,6 @@ export const KanbanBoard: React.FC = () => {
 
   // Drag and Drop implementation
   const handleDragOver = (e: React.DragEvent, targetColId: string) => {
-    if (currentRole === 'viewer') return;
     e.preventDefault();
     setIsDragOverCol(targetColId);
   };
@@ -161,7 +159,6 @@ export const KanbanBoard: React.FC = () => {
   };
 
   const handleDrop = (e: React.DragEvent, targetColId: string) => {
-    if (currentRole === 'viewer') return;
     const taskId = e.dataTransfer.getData('text/plain');
     if (taskId) {
       moveTask(taskId, targetColId);
@@ -384,7 +381,6 @@ export const KanbanBoard: React.FC = () => {
                     {colTasks.length}
                   </span>
                 </div>
-                {currentRole !== 'viewer' && (
                   <button
                     onClick={() => handleAddNewTaskToColumn(col.id)}
                     className="p-1 text-neutral-500 hover:text-white rounded hover:bg-neutral-800 cursor-pointer"
@@ -392,7 +388,6 @@ export const KanbanBoard: React.FC = () => {
                   >
                     <FiPlus className="w-4 h-4" />
                   </button>
-                )}
               </div>
 
               {/* Cards Container (Scrollable) */}

@@ -59,7 +59,7 @@ const parseMarkdown = (text: string): string => {
 };
 
 export const NotesManager: React.FC = () => {
- const { notes, folders, addNote, updateNote, deleteNote, addFolder, currentRole } = useStore();
+ const { notes, folders, addNote, updateNote, deleteNote, addFolder } = useStore();
   const [activeFolder, setActiveFolder] = useState<string>('All');
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -229,7 +229,6 @@ export const NotesManager: React.FC = () => {
  <div>
  <div className="flex items-center justify-between mb-4">
  <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">Notebooks</span>
- {currentRole !== 'viewer' && (
    <button 
    onClick={() => setIsAddingFolder(!isAddingFolder)} 
    className="p-1 text-neutral-500 dark:text-neutral-400 hover:text-black dark:text-white hover:bg-neutral-100 dark:bg-neutral-800 rounded cursor-pointer"
@@ -237,7 +236,6 @@ export const NotesManager: React.FC = () => {
    >
    <FiPlus className="w-4 h-4" />
    </button>
- )}
  </div>
 
  {/* Add Folder Input Form */}
@@ -384,7 +382,6 @@ export const NotesManager: React.FC = () => {
  <h4 className="text-xs font-semibold text-black dark:text-white truncate max-w-[80%]">
  {note.title || 'Untitled Note'}
  </h4>
- {currentRole !== 'viewer' && (
  <button
  onClick={(e) => {
  e.stopPropagation();
@@ -395,7 +392,6 @@ export const NotesManager: React.FC = () => {
  >
  <FiTrash2 className="w-3.5 h-3.5" />
  </button>
- )}
  </div>
  <p className="text-xxs text-neutral-500 dark:text-neutral-400 line-clamp-2 mt-1.5">
  {note.content.replace(/[#*`\-]/g, '').substring(0, 75)}
@@ -416,7 +412,6 @@ export const NotesManager: React.FC = () => {
  </div>
 
  {/* Create Note Trigger */}
- {currentRole !== 'viewer' && (
  <button
  onClick={handleCreateNote}
  className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 text-black dark:text-white rounded-xl cursor-pointer"
@@ -424,7 +419,6 @@ export const NotesManager: React.FC = () => {
  <FiPlus className="w-4 h-4" />
  <span>New Note</span>
  </button>
- )}
  </div>
 
  {/* 3. Editor Column */}
@@ -434,7 +428,6 @@ export const NotesManager: React.FC = () => {
  {/* Editor Toolbar */}
  <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-850 bg-white dark:bg-black/20 flex items-center justify-between">
  <div className="flex items-center gap-3">
- {currentRole !== 'viewer' && (
  <div className="flex bg-white dark:bg-black/60 p-0.5 rounded-lg border border-neutral-300 dark:border-black">
  <button
  onClick={() => setEditorTab('write')}
@@ -459,7 +452,6 @@ export const NotesManager: React.FC = () => {
  <span>Preview</span>
  </button>
  </div>
- )}
 
  {editorTab === 'write' && (
  <div className="flex items-center gap-1 border-l border-neutral-200 dark:border-neutral-800/60 pl-2">
@@ -508,7 +500,6 @@ export const NotesManager: React.FC = () => {
  <select
  value={activeNote.folder}
  onChange={(e) => handleUpdateNoteFolder(e.target.value)}
- disabled={currentRole === 'viewer'}
  className="bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 text-xxs font-semibold text-neutral-700 dark:text-neutral-300 rounded px-2 py-1 focus:outline-none focus:border-neutral-500"
  >
  {folders.map(f => (
@@ -526,7 +517,6 @@ export const NotesManager: React.FC = () => {
  value={activeNote.title}
  onChange={(e) => handleUpdateNoteTitle(e.target.value)}
  placeholder="Note Title" 
- readOnly={currentRole === 'viewer'}
  className="w-full text-sm font-semibold bg-transparent border-b border-transparent hover:border-neutral-200 dark:border-neutral-800 focus:border-neutral-500 focus:outline-none text-black dark:text-white py-1 px-0"
  />
  </div>
@@ -538,7 +528,6 @@ export const NotesManager: React.FC = () => {
  value={activeNote.tags.join(', ')}
  onChange={(e) => handleUpdateNoteTags(e.target.value)}
  placeholder="tags, separated, by, commas" 
- readOnly={currentRole === 'viewer'}
  className="w-full text-xxs bg-transparent border-b border-transparent hover:border-neutral-200 dark:border-neutral-800 focus:border-neutral-500 focus:outline-none text-neutral-700 dark:text-neutral-300 py-1 px-0"
  />
  </div>
@@ -546,7 +535,7 @@ export const NotesManager: React.FC = () => {
 
  {/* Note Body editor / Preview panel */}
  <div className="flex-1 p-4 overflow-y-auto">
- {editorTab === 'write' && currentRole !== 'viewer' ? (
+ {editorTab === 'write' ? (
  <textarea
  id="note-textarea"
  value={activeNote.content}
