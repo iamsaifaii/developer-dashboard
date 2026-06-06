@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FiChevronDown, FiPlus, FiUsers, FiUser } from 'react-icons/fi';
+import { FiChevronDown, FiPlus, FiUsers, FiUser, FiCheck, FiX, FiMail } from 'react-icons/fi';
+import type { Workspace } from '../../types';
 import { useStore } from '../../store/useStore';
 import { workspaceService } from '../../services/workspaceService';
 
@@ -17,12 +18,20 @@ export const WorkspaceSwitcher: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
+  const [pendingInvites, setPendingInvites] = useState<Workspace[]>([]);
+
+  const fetchAllWorkspaces = async () => {
+    if (currentUser?.uid && currentUser?.email) {
+      const wss = await workspaceService.fetchUserWorkspaces(currentUser.uid);
+      setWorkspaces(wss);
+      const invites = await workspaceService.fetchPendingInvites(currentUser.email);
+      setPendingInvites(invites);
+    }
+  };
 
   // Fetch workspaces on mount
   useEffect(() => {
-    if (currentUser?.uid && currentUser?.email) {
-      workspaceService.fetchUserWorkspaces(currentUser.uid).then(setWorkspaces);
-    }
+    fetchAllWorkspaces();
   }, [currentUser, setWorkspaces]);
 
   const handleCreate = async (e?: React.MouseEvent | React.KeyboardEvent) => {
@@ -42,14 +51,37 @@ export const WorkspaceSwitcher: React.FC = () => {
       setNewWorkspaceName('');
       setIsCreating(false);
       // Refresh list
-      const updated = await workspaceService.fetchUserWorkspaces(currentUser.uid);
-      setWorkspaces(updated);
+      await fetchAllWorkspaces();
       addNotification({ title: 'Success', message: 'Workspace created', category: 'system' });
     } catch (e: any) {
       console.error('Error creating workspace:', e);
       addNotification({ title: 'Error', message: e.message || String(e), category: 'system' });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleAcceptInvite = async (e: React.MouseEvent, wsId: string) => {
+    e.stopPropagation();
+    if (!currentUser?.email) return;
+    try {
+      await workspaceService.acceptInvite(wsId, currentUser.uid, currentUser.email);
+      addNotification({ title: 'Joined Workspace', message: 'You have joined the workspace.', category: 'system' });
+      await fetchAllWorkspaces();
+    } catch (err: any) {
+      addNotification({ title: 'Error', message: err.message, category: 'system' });
+    }
+  };
+
+  const handleDeclineInvite = async (e: React.MouseEvent, wsId: string) => {
+    e.stopPropagation();
+    if (!currentUser?.email) return;
+    try {
+      await workspaceService.declineInvite(wsId, currentUser.email);
+      addNotification({ title: 'Invite Declined', message: 'You declined the invitation.', category: 'system' });
+      await fetchAllWorkspaces();
+    } catch (err: any) {
+      addNotification({ title: 'Error', message: err.message, category: 'system' });
     }
   };
 
@@ -96,6 +128,38 @@ export const WorkspaceSwitcher: React.FC = () => {
               </button>
             ))}
           </div>
+
+          {pendingInvites.length > 0 && (
+            <div className="border-t border-zinc-800 p-1">
+              <div className="px-3 py-1 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+                Pending Invites
+              </div>
+              {pendingInvites.map(ws => (
+                <div key={`invite-${ws.id}`} className="px-3 py-2 flex items-center justify-between text-sm hover:bg-zinc-800 rounded">
+                  <div className="flex items-center gap-2 text-zinc-300 truncate">
+                    <FiMail className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="truncate">{ws.name}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button 
+                      onClick={(e) => handleAcceptInvite(e, ws.id)}
+                      className="p-1 text-emerald-400 hover:bg-emerald-400/20 rounded"
+                      title="Accept"
+                    >
+                      <FiCheck className="w-3.5 h-3.5" />
+                    </button>
+                    <button 
+                      onClick={(e) => handleDeclineInvite(e, ws.id)}
+                      className="p-1 text-rose-400 hover:bg-rose-400/20 rounded"
+                      title="Decline"
+                    >
+                      <FiX className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           
           <div className="border-t border-zinc-800 p-2">
             {isCreating ? (

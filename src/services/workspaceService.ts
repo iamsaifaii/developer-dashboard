@@ -70,6 +70,20 @@ export const workspaceService = {
     });
   },
 
+  async declineInvite(workspaceId: string, userEmail: string): Promise<void> {
+    const wsRef = doc(db, 'workspaces', workspaceId);
+    const snap = await getDoc(wsRef);
+    if (!snap.exists()) throw new Error('Workspace not found');
+    
+    const data = snap.data() as Workspace;
+    const pendingInvites = { ...data.pendingInvites };
+    
+    if (pendingInvites[userEmail]) {
+      delete pendingInvites[userEmail];
+      await updateDoc(wsRef, { pendingInvites });
+    }
+  },
+
   async fetchUserWorkspaces(userId: string): Promise<Workspace[]> {
     const q = query(collection(db, 'workspaces'), where('memberIds', 'array-contains', userId));
     const snapshot = await getDocs(q);
