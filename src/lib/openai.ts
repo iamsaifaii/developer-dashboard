@@ -1,21 +1,5 @@
-import OpenAI from 'openai';
-
 // Model to use
 export const DEVPILOT_MODEL = 'gpt-5.5';
-
-// Singleton client (browser-safe)
-let _client: OpenAI | null = null;
-
-export function getOpenAIClient(apiKey: string): OpenAI {
-  if (!_client || (_client as any)._apiKey !== apiKey) {
-    _client = new OpenAI({
-      apiKey,
-      dangerouslyAllowBrowser: true,
-    });
-    (_client as any)._apiKey = apiKey;
-  }
-  return _client;
-}
 
 export interface DevPilotContext {
   userName: string;
@@ -55,87 +39,133 @@ Pomodoro focus sessions completed: ${ctx.pomodoroSessions}
 }
 
 export async function askGPT(
-  apiKey: string,
+  _apiKey: string, // Kept for API interface compatibility but unused
+
   systemPrompt: string,
   userMessage: string,
   onChunk?: (text: string) => void
 ): Promise<string> {
-  const client = getOpenAIClient(apiKey);
+  const response = await fetch('/api/ai/generate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      systemPrompt,
+      userMessage,
+      stream: !!onChunk,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ error: 'Failed to generate AI response' }));
+    throw new Error(errorData.error || 'Failed to generate AI response');
+  }
 
   if (onChunk) {
-    // Streaming mode
-    const stream = await client.chat.completions.create({
-      model: DEVPILOT_MODEL,
-      stream: true,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userMessage },
-      ],
-      temperature: 0.7,
-      max_tokens: 1500,
-    });
+    const reader = response.body?.getReader();
+    if (!reader) throw new Error('Response body not readable');
 
-    let full = '';
-    for await (const chunk of stream) {
-      const delta = chunk.choices[0]?.delta?.content || '';
-      if (delta) {
-        full += delta;
-        onChunk(full);
+    const decoder = new TextDecoder();
+    let fullText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunkStr = decoder.decode(value);
+      const lines = chunkStr.split('\n');
+
+      for (const line of lines) {
+        const cleanLine = line.trim();
+        if (!cleanLine || !cleanLine.startsWith('data: ')) continue;
+
+        const dataStr = cleanLine.substring(6);
+        if (dataStr === '[DONE]') break;
+
+        try {
+          const parsed = JSON.parse(dataStr);
+          if (parsed.error) {
+            throw new Error(parsed.error);
+          }
+          if (parsed.text) {
+            fullText += parsed.text;
+            onChunk(fullText);
+          }
+        } catch (e) {
+          // Ignore incomplete chunk errors
+        }
       }
     }
-    return full;
+    return fullText;
   } else {
-    const res = await client.chat.completions.create({
-      model: DEVPILOT_MODEL,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userMessage },
-      ],
-      temperature: 0.7,
-      max_tokens: 1500,
-    });
-    return res.choices[0]?.message?.content || '';
+    const data = await response.json();
+    return data.text;
   }
 }
 
 export async function askGPTWithHistory(
-  apiKey: string,
+  _apiKey: string, // Kept for API interface compatibility but unused
+
   systemPrompt: string,
   messages: Array<{ role: 'user' | 'assistant'; content: string }>,
   onChunk?: (text: string) => void
 ): Promise<string> {
-  const client = getOpenAIClient(apiKey);
+  const response = await fetch('/api/ai/generate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      systemPrompt,
+      messages,
+      stream: !!onChunk,
+    }),
+  });
 
-  const fullMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-    { role: 'system', content: systemPrompt },
-    ...messages,
-  ];
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ error: 'Failed to generate AI response' }));
+    throw new Error(errorData.error || 'Failed to generate AI response');
+  }
 
   if (onChunk) {
-    const stream = await client.chat.completions.create({
-      model: DEVPILOT_MODEL,
-      stream: true,
-      messages: fullMessages,
-      temperature: 0.7,
-      max_tokens: 2000,
-    });
+    const reader = response.body?.getReader();
+    if (!reader) throw new Error('Response body not readable');
 
-    let full = '';
-    for await (const chunk of stream) {
-      const delta = chunk.choices[0]?.delta?.content || '';
-      if (delta) {
-        full += delta;
-        onChunk(full);
+    const decoder = new TextDecoder();
+    let fullText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunkStr = decoder.decode(value);
+      const lines = chunkStr.split('\n');
+
+      for (const line of lines) {
+        const cleanLine = line.trim();
+        if (!cleanLine || !cleanLine.startsWith('data: ')) continue;
+
+        const dataStr = cleanLine.substring(6);
+        if (dataStr === '[DONE]') break;
+
+        try {
+          const parsed = JSON.parse(dataStr);
+          if (parsed.error) {
+            throw new Error(parsed.error);
+          }
+          if (parsed.text) {
+            fullText += parsed.text;
+            onChunk(fullText);
+          }
+        } catch (e) {
+          // Ignore incomplete chunk errors
+        }
       }
     }
-    return full;
+    return fullText;
   } else {
-    const res = await client.chat.completions.create({
-      model: DEVPILOT_MODEL,
-      messages: fullMessages,
-      temperature: 0.7,
-      max_tokens: 2000,
-    });
-    return res.choices[0]?.message?.content || '';
+    const data = await response.json();
+    return data.text;
   }
 }
