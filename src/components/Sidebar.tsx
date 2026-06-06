@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { 
  FiLayout, 
@@ -17,9 +18,11 @@ import {
 import { TrelloIcon, GithubIcon } from './BrandIcons';
 
 export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+ const navigate = useNavigate();
+ const location = useLocation();
+ const currentPath = location.pathname.replace(/^\//, '') || 'dashboard';
+
  const { 
- activeTab, 
- setActiveTab, 
  timerStatus, 
  timerMode, 
  secondsLeft, 
@@ -80,11 +83,11 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
  <nav className="flex-1 px-3 space-y-1 overflow-y-auto py-3">
  {menuItems.map((item) => {
  const Icon = item.icon;
- const isActive = activeTab === item.id;
+ const isActive = currentPath === item.id;
  return (
  <button
  key={item.id}
- onClick={() => { setActiveTab(item.id); onClose(); }}
+ onClick={() => { navigate(item.id === 'dashboard' ? '/' : `/${item.id}`); onClose(); }}
  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg group cursor-pointer transition-all border ${
  isActive
  ? 'bg-neutral-900 border-neutral-800 text-white font-medium shadow-sm'

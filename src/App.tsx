@@ -28,7 +28,6 @@ function App() {
   const location = useLocation();
   const { 
     currentUser,
-    activeTab, 
     timerStatus, 
     tick, 
     addTask,
@@ -156,22 +155,7 @@ function App() {
     });
   };
 
-  // Sync router with activeTab for legacy compatibility while transitioning
-  useEffect(() => {
-    const path = location.pathname.replace('/', '');
-    const tab = path || 'dashboard';
-    if (activeTab !== tab) {
-      useStore.getState().setActiveTab(tab);
-    }
-  }, [location, activeTab]);
-
-  useEffect(() => {
-    const path = location.pathname.replace('/', '');
-    const tab = path || 'dashboard';
-    if (activeTab !== tab) {
-      navigate(activeTab === 'dashboard' ? '/' : `/${activeTab}`);
-    }
-  }, [activeTab, navigate, location.pathname]);
+  // Replaced bidirectional activeTab sync with direct navigate calls below
 
 
   if (isAuthLoading || (currentUser && isHydratingFromCloud)) {
@@ -227,7 +211,7 @@ function App() {
  />
 
   {/* Workspace Views Wrapper */}
-  <main className={`flex-1 relative ${activeTab === 'whiteboard' ? 'overflow-hidden' : 'overflow-y-auto p-4 md:p-8'}`}>
+  <main className={`flex-1 relative ${location.pathname === '/whiteboard' ? 'overflow-hidden' : 'overflow-y-auto p-4 md:p-8'}`}>
     <ErrorBoundary>
       <Suspense fallback={
         <div className="flex items-center justify-center w-full h-full min-h-[400px]">
@@ -235,7 +219,7 @@ function App() {
         </div>
       }>
         <Routes>
-          <Route path="/" element={<DashboardHome onNavigate={(tab) => useStore.getState().setActiveTab(tab)} />} />
+          <Route path="/" element={<DashboardHome onNavigate={(tab) => navigate(tab === 'dashboard' ? '/' : `/${tab}`)} />} />
           <Route path="/kanban" element={<KanbanBoard />} />
           <Route path="/notes" element={<NotesManager />} />
           <Route path="/calendar" element={<ProjectCalendar />} />
@@ -243,7 +227,7 @@ function App() {
           <Route path="/github" element={<GithubDashboard />} />
           <Route path="/settings" element={<SettingsPanel />} />
           <Route path="/whiteboard" element={<WhiteboardCanvas />} />
-          <Route path="*" element={<DashboardHome onNavigate={(tab) => useStore.getState().setActiveTab(tab)} />} />
+          <Route path="*" element={<DashboardHome onNavigate={(tab) => navigate(tab === 'dashboard' ? '/' : `/${tab}`)} />} />
         </Routes>
       </Suspense>
     </ErrorBoundary>

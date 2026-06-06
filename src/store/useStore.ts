@@ -31,10 +31,6 @@ interface State {
  markAllNotificationsRead: () => void;
  clearNotification: (id: string) => void;
 
- // Navigation
- activeTab: string;
- setActiveTab: (tab: string) => void;
-
  // Board
  columns: Column[];
  tasks: Task[];
@@ -259,10 +255,6 @@ export const useStore = create<State>()((set, get) => {
      });
    }
  },
-
- // Navigation state
- activeTab: 'dashboard',
- setActiveTab: (tab) => set({ activeTab: tab }),
 
  // Board state
  columns: [
@@ -680,7 +672,6 @@ function serializeForFirestore(val: any): any {
 useStore.subscribe((state, prevState) => {
   if (state.currentUser && !state.isHydratingFromCloud && !state.isReceivingSnapshot) {
     const stateToSave = {
-      activeTab: state.activeTab,
       tasks: state.tasks,
       notes: state.notes,
       folders: state.folders,
@@ -700,7 +691,6 @@ useStore.subscribe((state, prevState) => {
     };
     
     const prevStateToSave = {
-      activeTab: prevState.activeTab,
       tasks: prevState.tasks,
       notes: prevState.notes,
       folders: prevState.folders,

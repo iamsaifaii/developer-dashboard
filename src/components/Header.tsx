@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { auth } from '../lib/firebase';
 import { signOut } from 'firebase/auth';
@@ -18,7 +19,9 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar }) => {
- const { currentUser, setCurrentUser, activeTab, githubConnected, githubUsername, settings } = useStore();
+ const { currentUser, setCurrentUser, githubConnected, githubUsername, settings } = useStore();
+ const location = useLocation();
+ const currentPath = location.pathname.replace(/^\//, '') || 'dashboard';
 
  const avatarToShow = settings.avatarUrl || currentUser?.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(settings.userName || currentUser?.displayName || 'Dev')}`;
 
@@ -32,7 +35,7 @@ export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar 
  };
 
  const getTitle = () => {
- switch (activeTab) {
+ switch (currentPath) {
  case 'dashboard': return 'Productivity Dashboard';
  case 'ai': return 'DevPilot AI Workspace';
  case 'kanban': return 'Sprint Kanban';
