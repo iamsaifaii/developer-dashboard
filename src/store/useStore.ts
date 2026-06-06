@@ -39,6 +39,7 @@ interface State {
  updateTask: (taskId: string, updates: Partial<Task>) => void;
  deleteTask: (taskId: string) => void;
  moveTask: (taskId: string, targetColumnId: string) => void;
+ checkOverdueTasks: () => void;
 
  // Notes
  notes: Note[];
@@ -264,10 +265,18 @@ export const useStore = create<State>()((set, get) => {
  ],
  tasks: [],
  addTask: (task) => set((state) => {
+ // Auto-set dueDate to tomorrow if not specified
+ let dueDate = task.dueDate;
+ if (!dueDate) {
+   const tomorrow = new Date();
+   tomorrow.setDate(tomorrow.getDate() + 1);
+   dueDate = tomorrow.toISOString().split('T')[0];
+ }
  const newTask: Task = {
- ...task,
- id: `task-${Date.now()}`,
- createdAt: new Date().toISOString()
+   ...task,
+   dueDate,
+   id: `task-${Date.now()}`,
+   createdAt: new Date().toISOString()
  };
  return { tasks: [...(state.tasks || []), newTask] };
  }),
@@ -279,9 +288,81 @@ export const useStore = create<State>()((set, get) => {
  })),
  moveTask: (taskId, targetColumnId) => set((state) => ({
  tasks: (state.tasks || []).map((task) => 
- task.id === taskId ? { ...task, columnId: targetColumnId } : task
+   task.id === taskId ? { ...task, columnId: targetColumnId } : task
  )
  })),
+
+ checkOverdueTasks: () => {
+   const state = get();
+   const today = new Date();
+   // Normalize today to midnight so overdue triggers at start of the day AFTER due date
+   today.setHours(0, 0, 0, 0);
+
+   // Load already-notified set from sessionStorage so we don't re-notify in same session
+   let notifiedIds: Set<string>;
+   try {
+     const stored = sessionStorage.getItem('overdueNotifiedIds');
+     notifiedIds = new Set(stored ? JSON.parse(stored) : []);
+   } catch {
+     notifiedIds = new Set();
+   }
+
+   const overdueTasks = (state.tasks || []).filter(task => {
+     if (!task.dueDate) return false;
+     if (task.columnId === 'done') return false;
+     const due = new Date(task.dueDate);
+     due.setHours(0, 0, 0, 0);
+     // Overdue = due date is strictly before today
+     return due < today;
+   });
+
+   const newOverdueTasks = overdueTasks.filter(t => !notifiedIds.has(t.id));
+
+   if (newOverdueTasks.length === 0) return;
+
+   const prefs = state.settings.notificationPreferences;
+
+   newOverdueTasks.forEach(task => {
+     notifiedIds.add(task.id);
+
+     // 1. In-app notification
+     if (prefs.taskOverdue) {
+       const message = `"${task.title}" was due on ${new Date(task.dueDate!).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} and is now overdue.`;
+       const newNotif: import('../types').AppNotification = {
+         id: `notif-overdue-${task.id}-${Date.now()}`,
+         title: '⚠️ Task Overdue',
+         message,
+         category: 'task',
+         isRead: false,
+         createdAt: new Date().toISOString()
+       };
+       set(s => ({ notifications: [newNotif, ...(s.notifications || [])] }));
+     }
+
+     // 2. Browser Push notification (desktop + mobile)
+     if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+       try {
+         const n = new Notification('⚠️ Task Overdue — Developer Dashboard', {
+           body: `"${task.title}" was due on ${new Date(task.dueDate!).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} and is now overdue.`,
+           icon: '/favicon.svg',
+           tag: `overdue-${task.id}`,
+           requireInteraction: true
+         });
+         n.onclick = () => {
+           window.focus();
+           n.close();
+         };
+       } catch (e) {
+         console.warn('Push notification failed:', e);
+       }
+     }
+   });
+
+   // Persist updated notified IDs to sessionStorage
+   try {
+     sessionStorage.setItem('overdueNotifiedIds', JSON.stringify([...notifiedIds]));
+   } catch {}
+ },
 
  // Notes state
  notes: [],

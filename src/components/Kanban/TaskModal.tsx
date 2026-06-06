@@ -76,10 +76,14 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
       setAttachments(task.attachments || []);
       setDependencies(task.dependencies || []);
     } else {
+      // Auto-set deadline to tomorrow for new tasks
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = tomorrow.toISOString().split('T')[0];
       setTitle('');
       setDescription('');
       setPriority('medium');
-      setDueDate('');
+      setDueDate(tomorrowStr);
       setTagsInput('');
       setSubtasks([]);
       setCoverImage('');

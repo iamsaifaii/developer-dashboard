@@ -9,7 +9,8 @@ import {
   FiFlag,
   FiTag,
   FiGitBranch,
-  FiArrowRight
+  FiArrowRight,
+  FiAlertTriangle
 } from 'react-icons/fi';
 
 const STAGE_ADVANCE_MAP: Record<string, { target: string; label: string; styles: string }> = {
@@ -49,8 +50,36 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
     e.dataTransfer.effectAllowed = 'move';
   };
 
+  const getDeadlineStatus = (task: Task): 'overdue' | 'due-today' | 'upcoming' | 'none' => {
+    if (!task.dueDate || task.columnId === 'done') return 'none';
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const due = new Date(task.dueDate);
+    due.setHours(0, 0, 0, 0);
+    if (due < today) return 'overdue';
+    if (due.getTime() === today.getTime()) return 'due-today';
+    return 'upcoming';
+  };
+
   const renderCalendarPill = () => {
+    const status = getDeadlineStatus(task);
     if (task.dueDate) {
+      if (status === 'overdue') {
+        return (
+          <div className="flex items-center gap-1 px-2 py-0.5 rounded border border-red-500/40 bg-red-950/30 text-[9px] font-bold text-red-400 shadow-sm shrink-0 animate-pulse">
+            <FiAlertTriangle className="w-3 h-3 text-red-400" />
+            <span>Overdue</span>
+          </div>
+        );
+      }
+      if (status === 'due-today') {
+        return (
+          <div className="flex items-center gap-1 px-2 py-0.5 rounded border border-amber-500/40 bg-amber-950/20 text-[9px] font-bold text-amber-400 shadow-sm shrink-0">
+            <FiCalendar className="w-3 h-3 text-amber-400" />
+            <span>Today</span>
+          </div>
+        );
+      }
       return (
         <div className="flex items-center gap-1 px-2 py-0.5 rounded border border-emerald-500/20 bg-neutral-900/60 text-[9px] font-bold text-emerald-400 shadow-sm shrink-0">
           <FiCalendar className="w-3 h-3 text-emerald-400" />
@@ -91,13 +120,27 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
   // Use the cover image URL if set, or auto-detect the first attached image to display as cover
   const coverImageSrc = task.coverImage || task.attachments?.find(a => a.type.startsWith('image/'))?.url;
 
+  const deadlineStatus = getDeadlineStatus(task);
+  const isOverdue = deadlineStatus === 'overdue';
+
   return (
     <div
       draggable="true"
       onDragStart={handleDragStart as any}
       onClick={() => onEdit(task)}
-      className="group rounded-xl border border-neutral-800 bg-neutral-900 hover:border-neutral-700 transition-all duration-200 shadow-lg cursor-grab active:cursor-grabbing text-left select-none relative overflow-hidden flex flex-col w-full"
+      className={`group rounded-xl border bg-neutral-900 transition-all duration-200 shadow-lg cursor-grab active:cursor-grabbing text-left select-none relative overflow-hidden flex flex-col w-full ${
+        isOverdue
+          ? 'border-red-500/50 hover:border-red-400/70 shadow-red-900/20'
+          : 'border-neutral-800 hover:border-neutral-700'
+      }`}
     >
+      {/* Overdue Banner Strip */}
+      {isOverdue && (
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-red-950/60 border-b border-red-500/30">
+          <FiAlertTriangle className="w-3 h-3 text-red-400 shrink-0" />
+          <span className="text-[9px] font-extrabold text-red-400 uppercase tracking-widest">Overdue</span>
+        </div>
+      )}
       {/* Cover Image */}
       {coverImageSrc && (
         <div className="w-full h-32 overflow-hidden border-b border-neutral-800">

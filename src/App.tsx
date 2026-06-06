@@ -34,7 +34,8 @@ function App() {
     setGithubToken,
     isHydratingFromCloud,
     cloudSyncStatus,
-    cloudSyncError
+    cloudSyncError,
+    checkOverdueTasks
   } = useStore();
 
   const [isQuickTaskOpen, setIsQuickTaskOpen] = useState(false);
@@ -79,6 +80,26 @@ function App() {
       githubFetchedRef.current = false;
     }
   }, [currentUser, githubToken, fetchRealGithubData, setGithubToken]);
+
+  // 2. Request browser notification permission once on mount (for push overdue alerts)
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission().catch(() => {});
+      }
+    }
+  }, []);
+
+  // 3. Overdue task checker — runs on mount and every 60 seconds
+  useEffect(() => {
+    if (!currentUser) return;
+    // Run immediately after user loads
+    checkOverdueTasks();
+    const interval = setInterval(() => {
+      checkOverdueTasks();
+    }, 60_000);
+    return () => clearInterval(interval);
+  }, [currentUser, checkOverdueTasks]);
 
  // 1. Global Pomodoro Clock Loop
  useEffect(() => {
