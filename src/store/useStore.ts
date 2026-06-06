@@ -100,14 +100,6 @@ interface State {
   addAIMessage: (msg: Omit<AIMessage, 'id' | 'timestamp'>) => void;
   clearAIMessages: () => void;
 
-  // Workspaces
-  workspaces: import('../types').Workspace[];
-  activeWorkspaceId: string;
-  currentRole: import('../types').WorkspaceRole;
-  createWorkspace: (name: string) => Promise<void>;
-  switchWorkspace: (workspaceId: string) => void;
-  inviteMember: (email: string, role: import('../types').WorkspaceRole) => Promise<void>;
-  acceptInvite: (token: string) => Promise<void>;
 }
 
 export const useStore = create<State>()((set, get) => {
@@ -141,11 +133,6 @@ export const useStore = create<State>()((set, get) => {
     linkedProviders: [],
     cloudSyncStatus: null,
     cloudSyncError: null,
-
-    // Workspaces
-    workspaces: [],
-    activeWorkspaceId: 'personal',
-    currentRole: 'admin',
 
     notifications: [],
    addNotification: (notif) => set((state) => {
@@ -208,13 +195,6 @@ export const useStore = create<State>()((set, get) => {
        
        const docRef = doc(db, 'users', user.uid);
        
-       // Async fetch of workspaces
-       import('../services/workspaceService').then(({ workspaceService }) => {
-         workspaceService.getUserWorkspaces(user.uid).then(workspaces => {
-           set({ workspaces });
-         }).catch(console.error);
-       });
-
        (window as any)._unsubscribeSnapshot = onSnapshot(docRef, (docSnap) => {
          if (docSnap.exists()) {
            const cloudState = docSnap.data().state;
@@ -283,117 +263,7 @@ export const useStore = create<State>()((set, get) => {
     }
   },
 
-  createWorkspace: async (name) => {
-    const { currentUser } = get();
-    if (!currentUser) return;
-    const { workspaceService } = await import('../services/workspaceService');
-    const newWs = await workspaceService.createWorkspace(currentUser.uid, currentUser.email || '', name);
-    set(state => ({
-      workspaces: [...state.workspaces, newWs]
-    }));
-    get().switchWorkspace(newWs.id);
-  },
-
-  switchWorkspace: (workspaceId) => {
-    const { currentUser } = get();
-    if (!currentUser) return;
-    
-    // Clear snapshot listener
-    if ((window as any)._unsubscribeSnapshot) {
-      (window as any)._unsubscribeSnapshot();
-      (window as any)._unsubscribeSnapshot = null;
-    }
-
-    set({ isHydratingFromCloud: true, cloudSyncStatus: 'syncing', activeWorkspaceId: workspaceId });
-
-    // Determine target doc
-    const docRef = workspaceId === 'personal' 
-      ? doc(db, 'users', currentUser.uid)
-      : doc(db, 'workspaces', workspaceId);
-
-    // Fetch workspace metadata to determine role if it's a team workspace
-    if (workspaceId !== 'personal') {
-      const ws = get().workspaces.find(w => w.id === workspaceId);
-      if (ws) {
-        const member = ws.members.find(m => m.uid === currentUser.uid);
-        if (member) {
-          set({ currentRole: member.role });
-        }
-      }
-    } else {
-      set({ currentRole: 'admin' });
-    }
-
-    (window as any)._unsubscribeSnapshot = onSnapshot(docRef, (docSnap) => {
-      if (docSnap.exists()) {
-        const cloudState = docSnap.data().state;
-        if (cloudState) {
-          const currentToken = get().githubToken;
-          const resolvedToken = currentToken || cloudState.githubToken || null;
-          set({ 
-            ...cloudState, 
-            tasks: cloudState.tasks || [],
-            notes: cloudState.notes || [],
-            events: cloudState.events || [],
-            pomodoroHistory: cloudState.pomodoroHistory || [],
-            githubRepos: cloudState.githubRepos || [],
-            githubIssues: cloudState.githubIssues || [],
-            githubPRs: cloudState.githubPRs || [],
-            githubCommits: cloudState.githubCommits || [],
-            aiMessages: cloudState.aiMessages || [],
-            githubToken: resolvedToken,
-            githubConnected: false,
-            isHydratingFromCloud: false,
-            isReceivingSnapshot: true,
-            cloudSyncStatus: 'synced',
-            cloudSyncError: null
-          });
-          setTimeout(() => set({ isReceivingSnapshot: false }), 0);
-          return;
-        }
-      }
-      
-      // If no state exists yet
-      set({
-        tasks: [],
-        notes: [],
-        events: [],
-        isHydratingFromCloud: false,
-        isReceivingSnapshot: true,
-        cloudSyncStatus: 'synced',
-        cloudSyncError: null
-      });
-      setTimeout(() => set({ isReceivingSnapshot: false }), 0);
-    }, (err) => {
-      console.error("Failed to sync from cloud", err);
-      set({ cloudSyncStatus: 'error', cloudSyncError: err.message });
-    });
-  },
-
-  inviteMember: async (email, role) => {
-    const { activeWorkspaceId } = get();
-    if (activeWorkspaceId === 'personal') return;
-    const { workspaceService } = await import('../services/workspaceService');
-    await workspaceService.generateInviteToken(activeWorkspaceId, email, role);
-    // You could theoretically trigger the Firebase Function from frontend explicitly,
-    // but the best way is to let the Firestore trigger catch the new doc in 'invites'
-    // collection and send the email.
-  },
-
-  acceptInvite: async (token) => {
-    const { currentUser } = get();
-    if (!currentUser || !currentUser.email) return;
-    const { workspaceService } = await import('../services/workspaceService');
-    const workspaceId = await workspaceService.validateAndAcceptInvite(token, currentUser.uid, currentUser.email);
-    // Reload user workspaces
-    const workspaces = await workspaceService.getUserWorkspaces(currentUser.uid);
-    set({ workspaces });
-    if (workspaceId) {
-      get().switchWorkspace(workspaceId);
-    }
-  },
-
- // Board state
+  // Board state
  columns: [
  { id: 'backlog', title: 'Backlog' },
  { id: 'todo', title: 'To Do' },

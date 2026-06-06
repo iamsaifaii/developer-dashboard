@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { auth } from '../lib/firebase';
@@ -11,8 +11,6 @@ import {
 import { GithubIcon } from './BrandIcons';
 import { NotificationCenter } from './Notifications/NotificationCenter';
 import { GlobalSearch } from './Search/GlobalSearch';
-import { WorkspaceManager } from './Workspace/WorkspaceManager';
-import { FiUsers } from 'react-icons/fi';
 
 
 interface HeaderProps {
@@ -20,15 +18,10 @@ interface HeaderProps {
  onOpenSidebar: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar }) => {
- const { currentUser, setCurrentUser, githubConnected, githubUsername, settings, activeWorkspaceId, workspaces } = useStore();
- const location = useLocation();
- const currentPath = location.pathname.replace(/^\//, '') || 'dashboard';
- const [isWorkspaceManagerOpen, setIsWorkspaceManagerOpen] = useState(false);
-
- const activeWorkspaceName = activeWorkspaceId === 'personal' 
-   ? 'Personal Workspace' 
-   : workspaces.find(w => w.id === activeWorkspaceId)?.name || 'Unknown Workspace';
+ export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar }) => {
+  const { currentUser, setCurrentUser, githubConnected, githubUsername, settings } = useStore();
+  const location = useLocation();
+  const currentPath = location.pathname.replace(/^\//, '') || 'dashboard';
 
  const avatarToShow = settings.avatarUrl || currentUser?.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(settings.userName || currentUser?.displayName || 'Dev')}`;
 
@@ -90,15 +83,6 @@ export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar 
     <GlobalSearch isMobile={true} />
   </div>
  
-  {/* Workspace Switcher */}
-  <button
-    onClick={() => setIsWorkspaceManagerOpen(true)}
-    className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold bg-neutral-800 text-neutral-300 border border-neutral-700 hover:bg-neutral-750 rounded-lg cursor-pointer transition-colors"
-  >
-    <FiUsers className="w-3.5 h-3.5 text-blue-400" />
-    <span className="max-w-[120px] truncate">{activeWorkspaceName}</span>
-  </button>
- 
   {/* Quick Task Button */}
   <button
   onClick={onQuickTaskClick}
@@ -142,11 +126,6 @@ export const Header: React.FC<HeaderProps> = ({ onQuickTaskClick, onOpenSidebar 
   </div>
   </div>
   </div>
-  
-  <WorkspaceManager 
-    isOpen={isWorkspaceManagerOpen} 
-    onClose={() => setIsWorkspaceManagerOpen(false)} 
-  />
   </header>
  );
 };

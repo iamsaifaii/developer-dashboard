@@ -20,7 +20,6 @@ const PomodoroTimer = lazy(() => import('./components/Pomodoro/PomodoroTimer').t
 const GithubDashboard = lazy(() => import('./components/Github/GithubDashboard').then(m => ({ default: m.GithubDashboard })));
 const SettingsPanel = lazy(() => import('./components/Settings/SettingsPanel').then(m => ({ default: m.SettingsPanel })));
 const WhiteboardCanvas = lazy(() => import('./components/Whiteboard/WhiteboardCanvas').then(m => ({ default: m.WhiteboardCanvas })));
-const WorkspaceInviteHandler = lazy(() => import('./components/Workspace/WorkspaceInviteHandler').then(m => ({ default: m.WorkspaceInviteHandler })));
 
 function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -228,7 +227,6 @@ function App() {
           <Route path="/github" element={<GithubDashboard />} />
           <Route path="/settings" element={<SettingsPanel />} />
           <Route path="/whiteboard" element={<WhiteboardCanvas />} />
-          <Route path="/invite/:token" element={<WorkspaceInviteHandler />} />
           <Route path="*" element={<DashboardHome onNavigate={(tab) => navigate(tab === 'dashboard' ? '/' : `/${tab}`)} />} />
         </Routes>
       </Suspense>

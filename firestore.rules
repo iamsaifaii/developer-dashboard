@@ -8,16 +8,7 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
     
-    match /workspaces/{workspaceId} {
-      // For now, allow any authenticated user to read/write workspaces (to allow invite acceptance)
-      allow read, write: if request.auth != null;
-    }
 
-    match /invites/{tokenId} {
-      allow read, write: if request.auth != null;
-    }
-
-    // Catch-all for anything else (if needed)
     match /{document=**} {
       allow read, write: if request.auth != null;
     }
