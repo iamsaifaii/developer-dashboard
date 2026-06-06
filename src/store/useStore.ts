@@ -661,7 +661,7 @@ export const useStore = create<State>()((set, get) => {
           fetch(`https://api.github.com/search/issues?q=author:${realUsername}+type:pr+state:closed&per_page=20`, { headers }).then(r => r.json()),
           fetch(`https://api.github.com/search/issues?q=assignee:${realUsername}+type:issue+state:open&per_page=20`, { headers }).then(r => r.json()),
           fetch(`https://api.github.com/search/issues?q=assignee:${realUsername}+type:issue+state:closed&per_page=20`, { headers }).then(r => r.json()),
-          fetch(`https://api.github.com/users/${realUsername}/events/public?per_page=100`, { headers }).then(r => r.json()),
+          fetch(`https://api.github.com/users/${realUsername}/events?per_page=100`, { headers }).then(r => r.json()),
         ]);
 
       // 3. Process repos
