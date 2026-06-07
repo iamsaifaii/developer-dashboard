@@ -108,6 +108,9 @@ interface State {
   // Habits
   habits: import('../types').HabitStreak[];
   logHabit: (habitName: string) => void;
+
+  // Global time to force UI updates
+  currentTime: number;
 }
 
 export const useStore = create<State>()((set, get) => {
@@ -133,6 +136,7 @@ export const useStore = create<State>()((set, get) => {
   };
 
   return {
+    currentTime: Date.now(),
     // Auth state
     currentUser: null,
     isHydratingFromCloud: false,
@@ -333,6 +337,9 @@ export const useStore = create<State>()((set, get) => {
     const now = new Date();
     let hasUpdates = false;
 
+    // Update global time to trigger UI re-renders for overdue statuses
+    set({ currentTime: Date.now() });
+
     tasks.forEach(task => {
       if (task.columnId === 'done' || !task.dueDate) return;
       const due = new Date(task.dueDate);
@@ -340,7 +347,8 @@ export const useStore = create<State>()((set, get) => {
       if (due < now) {
         const title = "Task Overdue";
         const message = `The task "${task.title}" is now overdue!`;
-        const uniqueTag = `overdue-${task.id}`;
+        // Include dueDate in the tag so if the user edits the date to a future time, it resets the notification lock
+        const uniqueTag = `overdue-${task.id}-${task.dueDate}`;
 
         if (!notifiedTags.has(uniqueTag)) {
           notifiedTags.add(uniqueTag);

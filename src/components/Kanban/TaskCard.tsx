@@ -37,7 +37,7 @@ interface TaskCardProps {
 }
 
 export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
-  const { deleteTask, currentUser, moveTask, settings } = useStore();
+  const { deleteTask, currentUser, moveTask, settings, currentTime } = useStore();
 
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return '';
