@@ -52,7 +52,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
 
   const getDeadlineStatus = (task: Task): 'overdue' | 'due-today' | 'upcoming' | 'none' => {
     if (!task.dueDate || task.columnId === 'done') return 'none';
-    const now = new Date();
+    const now = new Date(currentTime);
     const due = new Date(task.dueDate);
     if (due < now) return 'overdue';
     if (
