@@ -321,7 +321,6 @@ export const useStore = create<State>()((set, get) => {
     const tasks = state.tasks || [];
     if (tasks.length === 0) return;
 
-    // Load already-notified set from sessionStorage
     let notifiedTags: Set<string>;
     try {
       const stored = sessionStorage.getItem('overdueNotifiedTags');
@@ -330,74 +329,75 @@ export const useStore = create<State>()((set, get) => {
       notifiedTags = new Set();
     }
 
-    productivityService.checkDeadlines(tasks)
-      .then(data => {
-        if (!data || !data.notificationsToTrigger) return;
+    const prefs = state.settings.notificationPreferences;
+    const newNotifications: import('../types').AppNotification[] = [];
+    const now = new Date();
+    let hasUpdates = false;
 
-        const prefs = state.settings.notificationPreferences;
-        const newNotifications: import('../types').AppNotification[] = [];
+    tasks.forEach(task => {
+      if (task.columnId === 'done' || !task.dueDate) return;
+      const due = new Date(task.dueDate);
+      
+      if (due < now) {
+        const title = "Task Overdue";
+        const message = `The task "${task.title}" is now overdue!`;
+        const uniqueTag = `overdue-${task.id}`;
 
-        data.notificationsToTrigger.forEach((notif: any) => {
-          const uniqueTag = `${notif.title}-${notif.message}`;
-          if (notifiedTags.has(uniqueTag)) return;
-
+        if (!notifiedTags.has(uniqueTag)) {
           notifiedTags.add(uniqueTag);
+          hasUpdates = true;
 
           // 1. In-app notification
           if (prefs.taskOverdue) {
             newNotifications.push({
               id: `notif-deadline-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-              title: notif.title,
-              message: notif.message,
-              category: notif.category,
+              title,
+              message,
+              category: 'task',
               isRead: false,
-              createdAt: new Date().toISOString(),
-              link: notif.link
+              createdAt: new Date().toISOString()
             });
           }
 
-          // 2. Browser Push notification (desktop + mobile via Service Worker)
+          // 2. Browser Push notification
           if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
             try {
               if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.ready.then(registration => {
-                  registration.showNotification(`${notif.title} — DevFlow`, {
-                    body: notif.message,
+                  registration.showNotification(`${title} — DevFlow`, {
+                    body: message,
                     icon: '/icon.svg',
                     tag: uniqueTag,
                     requireInteraction: true
                   });
                 });
               } else {
-                const n = new Notification(`${notif.title} — DevFlow`, {
-                  body: notif.message,
+                const n = new Notification(`${title} — DevFlow`, {
+                  body: message,
                   icon: '/icon.svg',
                   tag: uniqueTag,
                   requireInteraction: true
                 });
-                n.onclick = () => {
-                  window.focus();
-                  n.close();
-                };
+                n.onclick = () => { window.focus(); n.close(); };
               }
             } catch (e) {
               console.warn('Push notification failed:', e);
             }
           }
-        });
-
-        if (newNotifications.length > 0) {
-          set(s => ({ notifications: [...newNotifications, ...(s.notifications || [])] }));
         }
+      }
+    });
 
-        // Persist updated notified tags to sessionStorage
-        try {
-          sessionStorage.setItem('overdueNotifiedTags', JSON.stringify([...notifiedTags]));
-        } catch (e) { 
-          console.error('Failed to set overdueNotifiedTags', e);
-        }
-      })
-      .catch(err => console.error('Error checking deadlines on backend:', err));
+    if (hasUpdates) {
+      try {
+        sessionStorage.setItem('overdueNotifiedTags', JSON.stringify([...notifiedTags]));
+      } catch (e) {
+        console.error('Failed to set overdueNotifiedTags', e);
+      }
+      if (newNotifications.length > 0) {
+        set(s => ({ notifications: [...newNotifications, ...(s.notifications || [])] }));
+      }
+    }
   },
 
  // Notes state

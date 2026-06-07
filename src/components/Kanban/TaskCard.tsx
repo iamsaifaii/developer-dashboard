@@ -42,7 +42,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   };
 
   const handleDragStart = (e: React.DragEvent) => {
@@ -52,12 +52,16 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
 
   const getDeadlineStatus = (task: Task): 'overdue' | 'due-today' | 'upcoming' | 'none' => {
     if (!task.dueDate || task.columnId === 'done') return 'none';
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const now = new Date();
     const due = new Date(task.dueDate);
-    due.setHours(0, 0, 0, 0);
-    if (due < today) return 'overdue';
-    if (due.getTime() === today.getTime()) return 'due-today';
+    if (due < now) return 'overdue';
+    if (
+      due.getFullYear() === now.getFullYear() &&
+      due.getMonth() === now.getMonth() &&
+      due.getDate() === now.getDate()
+    ) {
+      return 'due-today';
+    }
     return 'upcoming';
   };
 

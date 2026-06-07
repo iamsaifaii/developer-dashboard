@@ -320,23 +320,20 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
               </div>
 
               {/* Dates */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 sm:col-span-2">
                 <span className="flex items-center gap-1.5 text-xs text-neutral-400 w-28 shrink-0">
                   <FiCalendar className="w-3.5 h-3.5" />
-                  Dates
+                  Due Date
                 </span>
-                <div className="flex items-center gap-1.5">
+                <div className="flex-1 flex items-center gap-2">
                   <input
                     type="datetime-local"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    className="text-xs bg-transparent text-neutral-300 border-none outline-none cursor-pointer [color-scheme:dark]"
+                    className="flex-1 max-w-xs px-2.5 py-1.5 text-xs bg-neutral-800 rounded border border-neutral-700 text-neutral-300 outline-none cursor-pointer [color-scheme:dark] focus:border-neutral-500 transition-colors"
                   />
-                  {dueDate && (
-                    <span className="text-[10px] text-neutral-500">Due</span>
-                  )}
                   {!dueDate && (
-                    <span className="text-xs text-neutral-600">Empty</span>
+                    <span className="text-xs text-neutral-600">No date set</span>
                   )}
                 </div>
               </div>
