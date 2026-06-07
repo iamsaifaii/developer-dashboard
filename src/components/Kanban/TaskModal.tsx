@@ -79,7 +79,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
       // Auto-set deadline to tomorrow for new tasks
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+      const yyyy = tomorrow.getFullYear();
+      const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+      const dd = String(tomorrow.getDate()).padStart(2, '0');
+      const tomorrowStr = `${yyyy}-${mm}-${dd}T12:00`;
       setTitle('');
       setDescription('');
       setPriority('medium');
@@ -324,7 +327,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
                 </span>
                 <div className="flex items-center gap-1.5">
                   <input
-                    type="date"
+                    type="datetime-local"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
                     className="text-xs bg-transparent text-neutral-300 border-none outline-none cursor-pointer [color-scheme:dark]"

@@ -293,7 +293,10 @@ export const useStore = create<State>()((set, get) => {
  if (!dueDate) {
    const tomorrow = new Date();
    tomorrow.setDate(tomorrow.getDate() + 1);
-   dueDate = tomorrow.toISOString().split('T')[0];
+   const yyyy = tomorrow.getFullYear();
+   const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+   const dd = String(tomorrow.getDate()).padStart(2, '0');
+   dueDate = `${yyyy}-${mm}-${dd}T12:00`;
  }
  const newTask: Task = {
    ...task,
@@ -353,19 +356,30 @@ export const useStore = create<State>()((set, get) => {
             });
           }
 
-          // 2. Browser Push notification (desktop + mobile)
+          // 2. Browser Push notification (desktop + mobile via Service Worker)
           if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
             try {
-              const n = new Notification(`${notif.title} — DevFlow`, {
-                body: notif.message,
-                icon: '/favicon.svg',
-                tag: uniqueTag,
-                requireInteraction: true
-              });
-              n.onclick = () => {
-                window.focus();
-                n.close();
-              };
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.ready.then(registration => {
+                  registration.showNotification(`${notif.title} — DevFlow`, {
+                    body: notif.message,
+                    icon: '/icon.svg',
+                    tag: uniqueTag,
+                    requireInteraction: true
+                  });
+                });
+              } else {
+                const n = new Notification(`${notif.title} — DevFlow`, {
+                  body: notif.message,
+                  icon: '/icon.svg',
+                  tag: uniqueTag,
+                  requireInteraction: true
+                });
+                n.onclick = () => {
+                  window.focus();
+                  n.close();
+                };
+              }
             } catch (e) {
               console.warn('Push notification failed:', e);
             }

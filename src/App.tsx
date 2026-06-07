@@ -97,13 +97,50 @@ function App() {
     }
   }, []);
 
-  // 3. Overdue task checker — runs on mount and every 60 seconds
+  // 3. Overdue task checker and 5-hour reminder — runs on mount and every 60 seconds
   useEffect(() => {
     if (!currentUser) return;
+
+    const checkProductivityReminder = () => {
+      const lastReminderStr = localStorage.getItem('lastProductivityReminder');
+      const now = Date.now();
+      // 5 hours in milliseconds: 5 * 60 * 60 * 1000 = 18000000
+      const FIVE_HOURS = 18000000;
+      
+      if (!lastReminderStr || now - parseInt(lastReminderStr, 10) > FIVE_HOURS) {
+        if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+          const title = "Stay Focused!";
+          const body = "Let's do some productive work and focus on today's tasks.";
+          
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(registration => {
+              registration.showNotification(title, {
+                body,
+                icon: '/icon.svg',
+                tag: 'productivity-reminder',
+                requireInteraction: true
+              });
+            });
+          } else {
+            const n = new Notification(title, {
+              body,
+              icon: '/icon.svg',
+              tag: 'productivity-reminder'
+            });
+            n.onclick = () => window.focus();
+          }
+          localStorage.setItem('lastProductivityReminder', now.toString());
+        }
+      }
+    };
+
     // Run immediately after user loads
     checkOverdueTasks();
+    checkProductivityReminder();
+    
     const interval = setInterval(() => {
       checkOverdueTasks();
+      checkProductivityReminder();
     }, 60_000);
     return () => clearInterval(interval);
   }, [currentUser, checkOverdueTasks]);
