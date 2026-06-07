@@ -9,7 +9,6 @@ import type {
   AppNotification, AIMessage
 } from '../types';
 import { fetchGithubData } from '../services/githubService';
-import { productivityService } from '../services/productivityService';
 
 
 interface State {
