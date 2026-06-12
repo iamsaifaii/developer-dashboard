@@ -38,7 +38,7 @@ export const PomodoroTimer: React.FC = () => {
   const progress = secondsLeft / totalSeconds;
   
   // SVG Ring Calculations
-  const radius = 120;
+  const radius = 130;
   const circumference = 2 * Math.PI * radius;
 
   const formatTime = (secs: number) => {
@@ -60,15 +60,15 @@ export const PomodoroTimer: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-start text-left">
+    <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-start text-left animate-fade-in-up">
       
       {/* Timer Display Panel */}
-      <div className="md:col-span-2 glass-panel rounded-2xl p-8 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl">
+      <div className="md:col-span-2 glass-panel p-8 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl">
         
         {/* Chime sound test shortcut */}
         <button 
           onClick={handleTestChime}
-          className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white bg-zinc-950 border border-zinc-800 hover:border-zinc-700 rounded-lg cursor-pointer flex items-center gap-1.5 text-xs transition-colors"
+          className="absolute top-5 right-5 p-2 text-zinc-500 hover:text-white bg-transparent border border-zinc-800 hover:border-zinc-700 rounded-lg cursor-pointer flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest transition-all duration-200"
           title="Test audio chime"
         >
           <FiVolume2 className="w-3.5 h-3.5" />
@@ -76,15 +76,15 @@ export const PomodoroTimer: React.FC = () => {
         </button>
 
         {/* Mode Selector Header */}
-        <div className="flex gap-2.5 bg-zinc-950 p-1.5 rounded-xl border border-zinc-800 mb-8 z-10">
+        <div className="flex gap-2 bg-[#0a0a0a] p-1.5 rounded-xl border border-zinc-800/80 mb-10 z-10 shadow-inner">
           {(['work', 'shortBreak', 'longBreak'] as const).map((mode) => (
             <button
               key={mode}
               onClick={() => setTimerMode(mode)}
-              className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer transition-colors ${
+              className={`px-5 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-all duration-200 ${
                 timerMode === mode
-                  ? 'bg-zinc-850 text-white shadow-sm'
-                  : 'text-zinc-550 hover:text-zinc-250'
+                  ? 'bg-zinc-800 text-white shadow-sm'
+                  : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900'
               }`}
             >
               {mode === 'work' ? 'Focus Mode' : mode === 'shortBreak' ? 'Short Break' : 'Long Break'}
@@ -93,24 +93,27 @@ export const PomodoroTimer: React.FC = () => {
         </div>
 
         {/* Circular SVG Timer */}
-        <div className="relative w-72 h-72 flex items-center justify-center z-10 mb-8 select-none">
+        <div className="relative w-80 h-80 flex items-center justify-center z-10 mb-10 select-none group">
+          {/* Subtle glow effect behind timer */}
+          <div className="absolute inset-0 bg-white opacity-[0.02] rounded-full blur-3xl group-hover:opacity-[0.04] transition-opacity duration-500" />
+          
           <svg className="w-full h-full transform -rotate-90">
             {/* Background track */}
             <circle
-              cx="144"
-              cy="144"
+              cx="160"
+              cy="160"
               r={radius}
               className="stroke-zinc-900 fill-none"
-              strokeWidth="8"
+              strokeWidth="6"
             />
             {/* Progress track */}
             <circle
-              cx="144"
-              cy="144"
+              cx="160"
+              cy="160"
               r={radius}
-              className="fill-none transition-all duration-300"
+              className="fill-none transition-all duration-1000 ease-linear"
               stroke={currentModeInfo.color}
-              strokeWidth="8"
+              strokeWidth="6"
               strokeDasharray={circumference}
               strokeDashoffset={circumference * (1 - progress)}
               strokeLinecap="round"
@@ -121,7 +124,7 @@ export const PomodoroTimer: React.FC = () => {
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <div
               key={timerMode}
-              className="flex items-center gap-1.5 text-xs font-semibold tracking-wide uppercase mb-1"
+              className="flex items-center gap-1.5 text-[10px] font-bold tracking-widest uppercase mb-2"
               style={{ color: currentModeInfo.color }}
             >
               {timerMode === 'work' ? (
@@ -137,21 +140,22 @@ export const PomodoroTimer: React.FC = () => {
               )}
             </div>
 
-            <span className="text-5xl font-extrabold tracking-tight text-white tabular-nums">
+            <span className="text-7xl font-black tracking-tighter text-white tabular-nums drop-shadow-lg">
               {formatTime(secondsLeft)}
             </span>
 
-            <span className="text-[10px] text-zinc-550 mt-1 tracking-wider uppercase">
+            <span className="text-[10px] text-zinc-500 mt-3 tracking-widest uppercase font-bold flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 px-3 py-1 rounded-full">
+              {timerStatus === 'running' && <span className="w-1.5 h-1.5 rounded-full bg-green-500 status-dot-online" />}
               {timerStatus === 'running' ? 'Focusing' : timerStatus === 'paused' ? 'Paused' : 'Ready'}
             </span>
           </div>
         </div>
 
         {/* Timer Control Panel */}
-        <div className="flex items-center gap-5 z-10">
+        <div className="flex items-center gap-6 z-10">
           <button
             onClick={resetTimer}
-            className="p-3.5 rounded-full glass-panel-interactive text-zinc-400 hover:text-white cursor-pointer shadow-lg"
+            className="p-4 rounded-full bg-[#0a0a0a] border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 cursor-pointer shadow-lg transition-all duration-200 btn-press"
             title="Reset timer"
           >
             <FiRotateCcw className="w-5 h-5" />
@@ -159,19 +163,19 @@ export const PomodoroTimer: React.FC = () => {
 
           <button
             onClick={() => setTimerStatus(timerStatus === 'running' ? 'paused' : 'running')}
-            className="p-5 rounded-full bg-white hover:bg-zinc-200 text-zinc-950 cursor-pointer shadow-xl transition-colors"
+            className="p-6 rounded-full bg-white hover:bg-zinc-200 text-zinc-950 cursor-pointer shadow-[0_0_30px_rgba(255,255,255,0.15)] hover:shadow-[0_0_40px_rgba(255,255,255,0.25)] transition-all duration-300 btn-press transform hover:scale-105"
             title={timerStatus === 'running' ? 'Pause focus session' : 'Start focus session'}
           >
             {timerStatus === 'running' ? (
-              <FiPause className="w-7 h-7 fill-zinc-950 stroke-none" />
+              <FiPause className="w-8 h-8 fill-zinc-950 stroke-none" />
             ) : (
-              <FiPlay className="w-7 h-7 fill-zinc-950 stroke-none translate-x-0.5" />
+              <FiPlay className="w-8 h-8 fill-zinc-950 stroke-none translate-x-1" />
             )}
           </button>
 
           <button
             onClick={handleSkip}
-            className="p-3.5 rounded-full glass-panel-interactive text-zinc-400 hover:text-white cursor-pointer shadow-lg"
+            className="p-4 rounded-full bg-[#0a0a0a] border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 cursor-pointer shadow-lg transition-all duration-200 btn-press"
             title="Skip current session"
           >
             <FiSkipForward className="w-5 h-5" />
@@ -182,42 +186,43 @@ export const PomodoroTimer: React.FC = () => {
       {/* Productivity Stats Sidebar */}
       <div className="space-y-6 md:col-span-1">
         {/* Completed Cards */}
-        <div className="glass-panel rounded-2xl p-6 shadow-xl relative overflow-hidden">
-          <div className="flex items-start justify-between">
+        <div className="glass-panel p-6 shadow-xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="flex items-start justify-between relative z-10">
             <div>
-              <p className="text-xs text-zinc-400 font-semibold uppercase tracking-wider">Focus Sessions</p>
-              <h3 className="text-3xl font-extrabold text-white mt-1.5">{totalSessionsCompleted}</h3>
+              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Focus Sessions</p>
+              <h3 className="text-4xl font-black text-white mt-1 tracking-tighter">{totalSessionsCompleted}</h3>
             </div>
-            <div className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400">
+            <div className="p-3.5 rounded-xl bg-[#080809] border border-zinc-800 text-zinc-300 shadow-sm">
               <FiAward className="w-6 h-6" />
             </div>
           </div>
-          <p className="text-xs text-zinc-400 mt-4 leading-relaxed">
-            You completed <span className="text-zinc-200 font-bold">{totalSessionsCompleted}</span> sessions of focus today. That equals <span className="text-zinc-200 font-bold">{totalSessionsCompleted * settings.pomodoroWorkTime} minutes</span> of deep work.
+          <p className="text-[11px] text-zinc-400 mt-5 leading-relaxed font-medium relative z-10">
+            You completed <span className="text-white font-bold bg-zinc-800 px-1.5 py-0.5 rounded">{totalSessionsCompleted}</span> sessions of focus today. That equals <span className="text-white font-bold bg-zinc-800 px-1.5 py-0.5 rounded">{totalSessionsCompleted * settings.pomodoroWorkTime} minutes</span> of deep work.
           </p>
         </div>
 
         {/* Quick Tips */}
-        <div className="glass-panel rounded-2xl p-6 shadow-xl relative">
-          <div className="flex items-center gap-2.5 text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">
-            <FiStar className="w-4 h-4" />
+        <div className="glass-panel p-6 shadow-xl relative">
+          <div className="flex items-center gap-2.5 text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-4">
+            <FiStar className="w-3.5 h-3.5" />
             <span>Developer Tip</span>
           </div>
-          <p className="text-xs text-zinc-300 leading-relaxed font-light">
+          <p className="text-[11px] text-zinc-300 leading-relaxed font-medium italic">
             "Studies show that developers work best in focused sprints. Use the Pomodoro timer to block out email, Slack, and pull request reviews, letting your brain dive deep into complex state logic and algorithms."
           </p>
-          <div className="h-px bg-zinc-800 my-4" />
-          <div className="space-y-2 text-xxs text-zinc-500">
-            <div className="flex justify-between">
-              <span>WORK STATE:</span>
-              <span className="text-zinc-300">{settings.pomodoroWorkTime}m</span>
+          <div className="h-px bg-zinc-800 my-5" />
+          <div className="space-y-3 text-[10px] text-zinc-500 font-bold tracking-widest">
+            <div className="flex justify-between items-center bg-[#080809] border border-zinc-800/50 px-3 py-2 rounded-lg">
+              <span>WORK STATE</span>
+              <span className="text-white">{settings.pomodoroWorkTime}m</span>
             </div>
-            <div className="flex justify-between">
-              <span>SHORT BREAK:</span>
+            <div className="flex justify-between items-center bg-[#080809] border border-zinc-800/50 px-3 py-2 rounded-lg">
+              <span>SHORT BREAK</span>
               <span className="text-zinc-300">{settings.pomodoroShortBreak}m</span>
             </div>
-            <div className="flex justify-between">
-              <span>LONG BREAK:</span>
+            <div className="flex justify-between items-center bg-[#080809] border border-zinc-800/50 px-3 py-2 rounded-lg">
+              <span>LONG BREAK</span>
               <span className="text-zinc-300">{settings.pomodoroLongBreak}m</span>
             </div>
           </div>

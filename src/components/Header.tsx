@@ -56,25 +56,25 @@ interface HeaderProps {
  };
 
  return (
-  <header className="h-16 border-b border-zinc-800 px-6 flex items-center justify-between bg-neutral-900 sticky top-0 z-20">
+  <header className="h-[60px] border-b border-zinc-900 px-5 flex items-center justify-between bg-[#080809]/95 backdrop-blur-md sticky top-0 z-20">
   <div className="flex items-center gap-3">
   <button 
   onClick={onOpenSidebar}
-  className="lg:hidden p-2 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white"
+  className="lg:hidden p-2 rounded-lg hover:bg-zinc-800/80 text-zinc-500 hover:text-white transition-colors cursor-pointer"
   >
-  <FiMenu className="w-5 h-5" />
+  <FiMenu className="w-4.5 h-4.5" />
   </button>
   {/* Dynamic Title */}
   <div className="hidden sm:block">
-  <h2 className="text-sm font-bold tracking-tight text-white">{getTitle()}</h2>
-  <p className="text-xxs text-zinc-400 mt-0.5">
-  {getGreeting()}, <span className="text-zinc-200 font-semibold">{currentUser?.displayName || settings.userName}</span> — let's build something great.
+  <h2 className="text-[13px] font-bold tracking-tight text-white leading-none">{getTitle()}</h2>
+  <p className="text-[10px] text-zinc-600 mt-1 leading-none">
+  {getGreeting()}, <span className="text-zinc-400 font-semibold">{currentUser?.displayName || settings.userName}</span>
   </p>
   </div>
   </div>
  
   {/* Header Actions */}
-  <div className="flex items-center gap-3">
+  <div className="flex items-center gap-2.5">
   {/* Search Bar (Desktop) */}
   <GlobalSearch />
   
@@ -86,42 +86,42 @@ interface HeaderProps {
   {/* Quick Task Button */}
   <button
   onClick={onQuickTaskClick}
-  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-white text-zinc-950 hover:bg-zinc-150 rounded-lg cursor-pointer transition-colors"
+  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-white text-zinc-950 hover:bg-zinc-100 rounded-lg cursor-pointer transition-all duration-150 shadow-sm btn-press"
   >
   <FiPlus className="w-3.5 h-3.5" />
-  <span>New Task</span>
+  <span className="hidden sm:inline">New Task</span>
   </button>
  
   {/* Divider */}
-  <div className="hidden md:block h-5 w-px bg-zinc-850" />
+  <div className="hidden md:block h-5 w-px bg-zinc-800/60" />
  
   {/* GitHub Status Indicator */}
   <div 
-  className={`hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xxs font-medium ${
+  className={`hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-[10px] font-medium transition-colors ${
   githubConnected 
-  ? 'bg-zinc-900 border-zinc-700 text-zinc-300' 
-  : 'bg-zinc-950 border-zinc-850 text-zinc-500'
+  ? 'bg-zinc-900/80 border-zinc-800 text-zinc-300' 
+  : 'bg-zinc-950 border-zinc-900 text-zinc-600'
   }`}
-  title={githubConnected ? `Synced to @${githubUsername}` : 'GitHub disconnect'}
+  title={githubConnected ? `Synced to @${githubUsername}` : 'GitHub disconnected'}
   >
-  <GithubIcon className="w-3.5 h-3.5" />
-  <span className="max-w-[90px] truncate">
+  <GithubIcon className="w-3.5 h-3.5 shrink-0" />
+  <span className="max-w-[80px] truncate">
   {githubConnected ? `@${githubUsername || currentUser?.displayName || 'User'}` : 'Offline'}
   </span>
-  <span className={`w-1.5 h-1.5 rounded-full ${githubConnected ? 'bg-green-500 animate-pulse' : 'bg-zinc-650'}`} />
+  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${githubConnected ? 'bg-green-500 status-dot-online' : 'bg-zinc-700'}`} />
   </div>
  
   {/* Profile / Notification center */}
-  <div className="flex items-center gap-2.5">
+  <div className="flex items-center gap-2">
   <NotificationCenter />
   <button 
   onClick={handleLogout}
   title="Log Out"
-  className="p-2 text-zinc-400 hover:text-white bg-zinc-950 border border-zinc-800 rounded-lg cursor-pointer transition-colors"
+  className="p-1.5 text-zinc-500 hover:text-white bg-transparent border border-zinc-800/80 hover:border-zinc-700 rounded-lg cursor-pointer transition-all duration-150"
   >
-  <FiLogOut className="w-4 h-4" />
+  <FiLogOut className="w-3.5 h-3.5" />
   </button>
-  <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-800 p-0.5 flex items-center justify-center cursor-pointer overflow-hidden shadow-inner">
+  <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700/60 flex items-center justify-center cursor-pointer overflow-hidden ring-1 ring-transparent hover:ring-zinc-600 transition-all duration-150">
      <img src={avatarToShow} alt="Avatar" className="w-full h-full rounded-[6px] object-cover" />
   </div>
   </div>
