@@ -54,15 +54,15 @@ export const LoginScreen: React.FC = () => {
         photoURL: result.user.photoURL,
       });
     } else {
-      if (result.code === 'auth/account-exists-with-different-credential') {
-        const failureResult = result as AuthFailure;
+      const errorResult = result as AuthFailure;
+      if (errorResult.code === 'auth/account-exists-with-different-credential') {
         setLinkingState({
-          message: failureResult.message,
-          pendingCredential: failureResult.pendingCredential,
-          existingEmail: failureResult.existingEmail || '',
+          message: errorResult.message,
+          pendingCredential: errorResult.pendingCredential,
+          existingEmail: errorResult.existingEmail || '',
         });
       } else {
-        setError(result.message);
+        setError(errorResult.message);
       }
     }
     setLoading(null);
@@ -85,15 +85,15 @@ export const LoginScreen: React.FC = () => {
         photoURL: result.user.photoURL,
       });
     } else {
-      if (result.code === 'auth/account-exists-with-different-credential') {
-        const failureResult = result as AuthFailure;
+      const errorResult = result as AuthFailure;
+      if (errorResult.code === 'auth/account-exists-with-different-credential') {
         setLinkingState({
-          message: failureResult.message,
-          pendingCredential: failureResult.pendingCredential,
-          existingEmail: failureResult.existingEmail || '',
+          message: errorResult.message,
+          pendingCredential: errorResult.pendingCredential,
+          existingEmail: errorResult.existingEmail || '',
         });
       } else {
-        setError(result.message);
+        setError(errorResult.message);
       }
     }
     setLoading(null);
