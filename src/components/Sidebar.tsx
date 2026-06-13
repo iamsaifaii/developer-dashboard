@@ -7,7 +7,6 @@ import {
  FiCalendar, 
  FiClock, 
  FiSettings, 
- FiTerminal,
  FiPlay,
  FiPause,
  FiRotateCcw,
@@ -18,6 +17,13 @@ import {
 
 import { TrelloIcon, GithubIcon } from './BrandIcons';
 import { FiChevronLeft, FiChevronRight, FiSkipForward, FiCircle } from 'react-icons/fi';
+
+const DevFlowLogo = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M8 8C11 8 13 16 16 16C18.2091 16 20 14.2091 20 12C20 9.79086 18.2091 8 16 8C13 8 11 16 8 16C5.79086 16 4 14.2091 4 12C4 9.79086 5.79086 8 8 8Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="16" cy="12" r="2.5" fill="currentColor"/>
+  </svg>
+);
 
 export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollapsed?: boolean; onToggleCollapse?: () => void }> = ({ isOpen, onClose, isCollapsed = false, onToggleCollapse }) => {
  const navigate = useNavigate();
@@ -75,14 +81,14 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  onClick={onClose} 
  />
  )}
- <aside className={`${isCollapsed ? 'w-20 bg-[#161434]' : 'w-64 bg-[#0a0a0c]'} h-screen fixed left-0 top-0 border-r border-zinc-900 flex flex-col justify-between z-50 transition-all duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+ <aside className={`${isCollapsed ? 'w-20 bg-[#161434]' : 'w-60 bg-[#0a0a0c]'} h-screen fixed left-0 top-0 border-r border-zinc-900 flex flex-col justify-between z-50 transition-all duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
  
  {/* Top Section: Collapse Toggle & Brand */}
  <div className={`pt-5 pb-4 border-b border-zinc-900 relative flex ${isCollapsed ? 'flex-col items-center px-0' : 'items-center justify-between px-5'}`}>
  {!isCollapsed && (
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-sm shrink-0">
- <FiTerminal className="w-5 h-5 text-zinc-300" />
+ <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-sm shrink-0 text-zinc-300">
+ <DevFlowLogo className="w-5 h-5" />
  </div>
  <div>
  <h1 className="text-sm font-bold tracking-tight text-white leading-tight">

@@ -248,7 +248,7 @@ function App() {
  />
 
  {/* Main Content Area */}
- <div className={`flex-1 pl-0 ${isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'} flex flex-col h-screen overflow-hidden w-full transition-all duration-300 ease-in-out`}>
+ <div className={`flex-1 pl-0 ${isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-60'} flex flex-col h-screen overflow-hidden w-full transition-all duration-300 ease-in-out`}>
  {/* Workspace Top Header */}
  <Header 
  onQuickTaskClick={() => setIsQuickTaskOpen(true)} 
