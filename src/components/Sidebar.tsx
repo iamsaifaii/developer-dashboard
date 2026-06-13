@@ -18,17 +18,6 @@ import {
 import { TrelloIcon, GithubIcon } from './BrandIcons';
 import { FiChevronLeft, FiChevronRight, FiSkipForward, FiCircle } from 'react-icons/fi';
 
-const DevFlowLogo = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <mask id="cutout">
-      <rect width="24" height="24" fill="white" />
-      <path d="M10 2H16C21.5228 2 26 6.47715 26 12C26 17.5228 21.5228 22 16 22H10V2Z" fill="black" />
-    </mask>
-    <path d="M4 4H12C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20H4V4Z" fill="currentColor" mask="url(#cutout)" />
-    <path d="M13 6H15C18.3137 6 21 8.68629 21 12C21 15.3137 18.3137 18 15 18H13V6Z" fill="currentColor" />
-  </svg>
-);
-
 export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollapsed?: boolean; onToggleCollapse?: () => void }> = ({ isOpen, onClose, isCollapsed = false, onToggleCollapse }) => {
  const navigate = useNavigate();
  const location = useLocation();
@@ -86,26 +75,26 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  <aside className={`${isCollapsed ? 'w-20 bg-[#161434]' : 'w-60 bg-[#0a0a0c]'} h-screen fixed left-0 top-0 border-r border-zinc-900 flex flex-col justify-between z-50 transition-all duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
  
  {/* Top Section: Collapse Toggle & Brand */}
- <div className={`pt-5 pb-4 border-b border-zinc-900 relative flex ${isCollapsed ? 'flex-col items-center px-0' : 'items-center justify-between px-5'}`}>
- {!isCollapsed && (
+ <div className={`pt-5 pb-4 border-b border-zinc-900 relative flex ${isCollapsed ? 'flex-col items-center gap-4 px-0' : 'items-center justify-between px-5'}`}>
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-sm shrink-0 text-zinc-300">
- <DevFlowLogo className="w-6 h-6" />
+ <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-sm shrink-0">
+ <img src="/icon.svg" alt="DevFlow Logo" className="w-6 h-6 object-contain" />
  </div>
+ {!isCollapsed && (
  <div>
  <h1 className="text-sm font-bold tracking-tight text-white leading-tight">
  DevFlow
  </h1>
  <p className="text-[10px] text-zinc-600 font-mono mt-0.5">v1.0.0 · 2026</p>
  </div>
- </div>
  )}
+ </div>
  
  {/* Collapse Toggle Button */}
  {onToggleCollapse && (
    <button 
      onClick={onToggleCollapse}
-     className={`flex items-center justify-center w-8 h-8 rounded-lg border border-zinc-800 bg-[#0f0f11] text-zinc-500 hover:text-white hover:bg-zinc-800 cursor-pointer transition-colors z-50 ${isCollapsed ? 'mt-2' : ''}`}
+     className={`flex items-center justify-center w-8 h-8 rounded-lg border border-zinc-800 bg-[#0f0f11] text-zinc-500 hover:text-white hover:bg-zinc-800 cursor-pointer transition-colors z-50 shrink-0`}
      title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
    >
      {isCollapsed ? <FiChevronRight className="w-4 h-4" /> : <FiChevronLeft className="w-4 h-4" />}
