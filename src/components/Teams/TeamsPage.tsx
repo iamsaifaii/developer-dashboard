@@ -19,7 +19,7 @@ export const TeamsPage: React.FC = () => {
         <button
           id="create-team-btn"
           onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold rounded-xl cursor-pointer transition-colors shadow-lg shadow-indigo-900/30"
+          className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-zinc-200 text-black text-sm font-bold rounded-xl cursor-pointer transition-colors shadow-lg shadow-black/30"
         >
           <FiPlus className="w-4 h-4" />
           Create Team
@@ -31,10 +31,10 @@ export const TeamsPage: React.FC = () => {
         <div className="flex flex-col items-center justify-center text-center py-20">
           {/* Hero illustration */}
           <div className="relative mb-8">
-            <div className="w-28 h-28 rounded-3xl bg-gradient-to-br from-indigo-950/80 to-violet-950/50 border border-indigo-800/40 flex items-center justify-center shadow-2xl shadow-indigo-900/30">
-              <FiUsers className="w-12 h-12 text-indigo-400" />
+            <div className="w-28 h-28 rounded-3xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-2xl shadow-black/50">
+              <FiUsers className="w-12 h-12 text-white" />
             </div>
-            <div className="absolute -top-2 -right-2 w-8 h-8 rounded-xl bg-violet-700 border border-violet-600 flex items-center justify-center text-sm shadow-lg">
+            <div className="absolute -top-2 -right-2 w-8 h-8 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-sm shadow-lg text-white">
               ⚡
             </div>
           </div>
@@ -50,7 +50,7 @@ export const TeamsPage: React.FC = () => {
             <button
               id="create-team-hero-btn"
               onClick={() => setShowCreate(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl cursor-pointer transition-colors shadow-lg shadow-indigo-900/40 text-sm"
+              className="flex items-center gap-2 px-6 py-3 bg-white hover:bg-zinc-200 text-black font-bold rounded-xl cursor-pointer transition-colors shadow-lg shadow-black/40 text-sm"
             >
               <FiPlus className="w-4 h-4" />
               Create Team
@@ -75,11 +75,11 @@ export const TeamsPage: React.FC = () => {
       ) : (
         <div>
           {/* Active workspace strip */}
-          <div className="flex items-center gap-3 mb-6 p-3 bg-indigo-950/20 border border-indigo-900/30 rounded-xl">
-            <FiUserCheck className="w-4 h-4 text-indigo-400 shrink-0" />
+          <div className="flex items-center gap-3 mb-6 p-3 bg-zinc-900/50 border border-zinc-800/50 rounded-xl">
+            <FiUserCheck className="w-4 h-4 text-zinc-400 shrink-0" />
             <div className="flex-1">
               <span className="text-xs text-zinc-400">Active workspace: </span>
-              <span className="text-xs font-bold text-indigo-300">
+              <span className="text-xs font-bold text-white">
                 {activeWorkspace === 'personal'
                   ? 'Personal'
                   : teams.find(t => t.id === activeWorkspace)?.name || 'Unknown'}

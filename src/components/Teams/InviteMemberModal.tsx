@@ -67,8 +67,8 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, on
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-indigo-950 border border-indigo-800/50 flex items-center justify-center">
-              <FiMail className="w-4 h-4 text-indigo-400" />
+            <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+              <FiMail className="w-4 h-4 text-white" />
             </div>
             <div>
               <h2 className="text-sm font-bold text-white">Invite to {team.name}</h2>
@@ -102,7 +102,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, on
               </button>
               <button
                 onClick={handleClose}
-                className="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold cursor-pointer transition-colors"
+                className="flex-1 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-sm font-bold cursor-pointer transition-colors"
               >
                 Done
               </button>
@@ -123,15 +123,15 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, on
                   onChange={(e) => { setEmail(e.target.value); setError(null); }}
                   placeholder="colleague@company.com"
                   autoComplete="off"
-                  className="w-full bg-black border border-zinc-800 rounded-xl pl-9 pr-3 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-700 focus:ring-1 focus:ring-indigo-700/30 transition-colors"
+                  className="w-full bg-black border border-zinc-800 rounded-xl pl-9 pr-3 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-colors"
                 />
               </div>
             </div>
 
             {/* How it works */}
-            <div className="bg-indigo-950/20 border border-indigo-900/30 rounded-xl p-3 flex gap-3">
-              <FiSend className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-              <p className="text-[11px] text-indigo-300/80 leading-relaxed">
+            <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-xl p-3 flex gap-3">
+              <FiSend className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
                 They'll receive an email with a magic link. Clicking it takes them directly to DevFlow — they log in and are instantly added to <strong>{team.name}</strong>.
               </p>
             </div>
@@ -173,7 +173,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, on
                 id="invite-submit-btn"
                 type="submit"
                 disabled={isLoading || !email.trim()}
-                className="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-bold cursor-pointer transition-colors flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 rounded-xl bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black text-sm font-bold cursor-pointer transition-colors flex items-center justify-center gap-2"
               >
                 {isLoading ? <FiLoader className="w-4 h-4 animate-spin" /> : <FiSend className="w-4 h-4" />}
                 {isLoading ? 'Sending...' : 'Send Invite'}

@@ -53,8 +53,8 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({ isOpen, onClos
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-indigo-950 border border-indigo-800/50 flex items-center justify-center">
-              <FiUsers className="w-4 h-4 text-indigo-400" />
+            <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+              <FiUsers className="w-4 h-4 text-white" />
             </div>
             <div>
               <h2 className="text-sm font-bold text-white">Create a Team</h2>
@@ -82,7 +82,7 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({ isOpen, onClos
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Frontend Squad"
               maxLength={60}
-              className="w-full bg-black border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-700 focus:ring-1 focus:ring-indigo-700/30 transition-colors"
+              className="w-full bg-black border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-colors"
             />
           </div>
 
@@ -97,7 +97,7 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({ isOpen, onClos
               placeholder="What does this team work on?"
               rows={3}
               maxLength={200}
-              className="w-full bg-black border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-700 focus:ring-1 focus:ring-indigo-700/30 transition-colors resize-none"
+              className="w-full bg-black border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-colors resize-none"
             />
           </div>
 
@@ -119,7 +119,7 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({ isOpen, onClos
               id="create-team-submit"
               type="submit"
               disabled={isLoading || !name.trim()}
-              className="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-bold cursor-pointer transition-colors flex items-center justify-center gap-2"
+              className="flex-1 py-2.5 rounded-xl bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black text-sm font-bold cursor-pointer transition-colors flex items-center justify-center gap-2"
             >
               {isLoading ? <FiLoader className="w-4 h-4 animate-spin" /> : null}
               {isLoading ? 'Creating...' : 'Create Team'}

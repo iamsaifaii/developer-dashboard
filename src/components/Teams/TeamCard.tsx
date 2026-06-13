@@ -18,12 +18,12 @@ export const TeamCard: React.FC<TeamCardProps> = ({ team, isActive, onActivate }
   const isAdmin = team.createdBy === currentUser?.uid;
 
   const avatarColors = [
-    'bg-indigo-900/60 text-indigo-300',
-    'bg-violet-900/60 text-violet-300',
-    'bg-blue-900/60 text-blue-300',
-    'bg-emerald-900/60 text-emerald-300',
-    'bg-amber-900/60 text-amber-300',
-    'bg-pink-900/60 text-pink-300',
+    'bg-zinc-800 text-zinc-300',
+    'bg-zinc-900 text-zinc-400',
+    'bg-black border-zinc-700 text-zinc-200',
+    'bg-neutral-800 text-neutral-300',
+    'bg-stone-800 text-stone-300',
+    'bg-gray-800 text-gray-300',
   ];
 
   const handleDelete = async () => {
@@ -47,16 +47,16 @@ export const TeamCard: React.FC<TeamCardProps> = ({ team, isActive, onActivate }
       <div
         className={`group relative bg-[#0a0a0a] border rounded-2xl p-5 transition-all duration-200 cursor-pointer ${
           isActive
-            ? 'border-indigo-700/70 ring-1 ring-indigo-700/20 shadow-[0_0_24px_rgba(79,70,229,0.12)]'
+            ? 'border-zinc-500 ring-1 ring-zinc-500/20 shadow-[0_0_24px_rgba(255,255,255,0.05)]'
             : 'border-zinc-800 hover:border-zinc-700 hover:shadow-lg hover:shadow-black/40'
         }`}
         onClick={onActivate}
       >
         {/* Active indicator */}
         {isActive && (
-          <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 bg-indigo-900/50 border border-indigo-700/50 rounded-full">
-            <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-            <span className="text-[10px] font-bold text-indigo-400">Active</span>
+          <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 bg-zinc-900 border border-zinc-800 rounded-full">
+            <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            <span className="text-[10px] font-bold text-white">Active</span>
           </div>
         )}
 
@@ -99,15 +99,15 @@ export const TeamCard: React.FC<TeamCardProps> = ({ team, isActive, onActivate }
 
         {/* Team header */}
         <div className="flex items-start gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-indigo-950/60 border border-indigo-800/30 flex items-center justify-center shrink-0">
-            <FiUsers className="w-5 h-5 text-indigo-400" />
+          <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
+            <FiUsers className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-bold text-white truncate">{team.name}</h3>
             {team.description && (
               <p className="text-xs text-zinc-500 mt-0.5 truncate">{team.description}</p>
             )}
-            <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-bold text-indigo-400 bg-indigo-950/40 border border-indigo-900/40 px-1.5 py-0.5 rounded-full">
+            <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-bold text-zinc-300 bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded-full">
               {isAdmin ? '👑 Admin' : '🤝 Member'}
             </span>
           </div>
@@ -141,7 +141,7 @@ export const TeamCard: React.FC<TeamCardProps> = ({ team, isActive, onActivate }
             <button
               id={`invite-btn-${team.id}`}
               onClick={(e) => { e.stopPropagation(); setShowInvite(true); }}
-              className="flex items-center gap-1.5 px-2.5 py-1 bg-indigo-600/20 hover:bg-indigo-600/40 border border-indigo-700/30 hover:border-indigo-600/60 text-indigo-400 rounded-lg text-[11px] font-bold cursor-pointer transition-all"
+              className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-300 rounded-lg text-[11px] font-bold cursor-pointer transition-all"
             >
               <FiMail className="w-3 h-3" /> Invite
             </button>

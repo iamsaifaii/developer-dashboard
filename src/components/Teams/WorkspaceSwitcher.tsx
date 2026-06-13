@@ -26,7 +26,7 @@ export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({ isCollapse
         {activeWorkspace === 'personal' ? (
           <FiUser className="w-4 h-4" />
         ) : (
-          <FiUsers className="w-4 h-4 text-indigo-400" />
+          <FiUsers className="w-4 h-4 text-white" />
         )}
       </button>
     );
@@ -42,11 +42,11 @@ export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({ isCollapse
         <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
           activeWorkspace === 'personal'
             ? 'bg-zinc-800'
-            : 'bg-indigo-950/60 border border-indigo-800/40'
+            : 'bg-zinc-900 border border-zinc-800'
         }`}>
           {activeWorkspace === 'personal'
             ? <FiUser className="w-3.5 h-3.5 text-zinc-400" />
-            : <FiUsers className="w-3.5 h-3.5 text-indigo-400" />
+            : <FiUsers className="w-3.5 h-3.5 text-white" />
           }
         </div>
         <div className="flex-1 min-w-0 text-left">
@@ -76,7 +76,7 @@ export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({ isCollapse
                 <p className="text-xs font-bold text-white">Personal</p>
                 <p className="text-[10px] text-zinc-500">Your private workspace</p>
               </div>
-              {activeWorkspace === 'personal' && <FiCheck className="w-3.5 h-3.5 text-indigo-400 shrink-0" />}
+              {activeWorkspace === 'personal' && <FiCheck className="w-3.5 h-3.5 text-white shrink-0" />}
             </button>
 
             {teams.length > 0 && (
@@ -89,14 +89,14 @@ export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({ isCollapse
                     onClick={() => { setActiveWorkspace(team.id); setIsOpen(false); }}
                     className="w-full flex items-center gap-2.5 px-3 py-2.5 hover:bg-zinc-800 cursor-pointer transition-colors"
                   >
-                    <div className="w-6 h-6 rounded-lg bg-indigo-950/60 border border-indigo-800/30 flex items-center justify-center shrink-0">
-                      <FiUsers className="w-3.5 h-3.5 text-indigo-400" />
+                    <div className="w-6 h-6 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
+                      <FiUsers className="w-3.5 h-3.5 text-white" />
                     </div>
                     <div className="flex-1 text-left min-w-0">
                       <p className="text-xs font-bold text-white truncate">{team.name}</p>
                       <p className="text-[10px] text-zinc-500">{team.members.length} member{team.members.length !== 1 ? 's' : ''}</p>
                     </div>
-                    {activeWorkspace === team.id && <FiCheck className="w-3.5 h-3.5 text-indigo-400 shrink-0" />}
+                    {activeWorkspace === team.id && <FiCheck className="w-3.5 h-3.5 text-white shrink-0" />}
                   </button>
                 ))}
               </div>

@@ -98,11 +98,11 @@ export const JoinTeamPage: React.FC = () => {
     return (
       <div>
         {/* Banner above login screen */}
-        <div className="fixed top-0 left-0 right-0 z-50 bg-indigo-950 border-b border-indigo-800/60 px-4 py-3 flex items-center gap-3 justify-center shadow-lg">
-          <FiUsers className="w-4 h-4 text-indigo-400" />
-          <p className="text-sm text-indigo-200">
+        <div className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-zinc-800/60 px-4 py-3 flex items-center gap-3 justify-center shadow-lg">
+          <FiUsers className="w-4 h-4 text-white" />
+          <p className="text-sm text-zinc-300">
             <strong className="text-white">{team?.name || 'A team'}</strong> has invited you to collaborate.{' '}
-            <span className="text-indigo-300">Log in to accept your invitation.</span>
+            <span className="text-zinc-400">Log in to accept your invitation.</span>
           </p>
         </div>
         <div className="pt-14">
@@ -117,7 +117,7 @@ export const JoinTeamPage: React.FC = () => {
     <div className="min-h-screen bg-[#09090b] flex items-center justify-center p-4">
       {/* Background glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-indigo-900/10 rounded-full blur-[100px]" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-zinc-900/10 rounded-full blur-[100px]" />
       </div>
 
       <div className="relative z-10 w-full max-w-md">
@@ -133,7 +133,7 @@ export const JoinTeamPage: React.FC = () => {
           {/* ─── Loading ─────────────────────────────────────────────── */}
           {pageState === 'loading' && (
             <div className="p-10 text-center">
-              <FiLoader className="w-8 h-8 text-indigo-400 animate-spin mx-auto mb-4" />
+              <FiLoader className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
               <p className="text-zinc-400 text-sm">Validating your invitation…</p>
             </div>
           )}
@@ -142,17 +142,17 @@ export const JoinTeamPage: React.FC = () => {
           {pageState === 'valid' && team && invite && currentUser && (
             <>
               {/* Header */}
-              <div className="px-8 pt-8 pb-6 border-b border-zinc-800/60 text-center bg-gradient-to-b from-indigo-950/20 to-transparent">
-                <div className="w-16 h-16 rounded-2xl bg-indigo-950/60 border border-indigo-800/40 flex items-center justify-center mx-auto mb-4">
-                  <FiUsers className="w-8 h-8 text-indigo-400" />
+              <div className="px-8 pt-8 pb-6 border-b border-zinc-800/60 text-center bg-gradient-to-b from-zinc-900/20 to-transparent">
+                <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto mb-4">
+                  <FiUsers className="w-8 h-8 text-white" />
                 </div>
                 <h1 className="text-white font-bold text-xl mb-1">You're invited!</h1>
                 <p className="text-zinc-400 text-sm">
                   <strong className="text-zinc-200">{invite.invitedByName}</strong> has invited you to join
                 </p>
-                <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-indigo-950/50 border border-indigo-800/50 rounded-xl">
-                  <FiUsers className="w-4 h-4 text-indigo-400" />
-                  <span className="text-indigo-200 font-bold text-sm">{team.name}</span>
+                <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl">
+                  <FiUsers className="w-4 h-4 text-zinc-400" />
+                  <span className="text-zinc-200 font-bold text-sm">{team.name}</span>
                 </div>
                 {team.description && (
                   <p className="text-zinc-500 text-xs mt-3 leading-relaxed">{team.description}</p>
@@ -167,7 +167,7 @@ export const JoinTeamPage: React.FC = () => {
                       <div
                         key={m.uid}
                         title={m.displayName || m.email}
-                        className="w-8 h-8 rounded-full border-2 border-[#0a0a0a] bg-indigo-900/60 flex items-center justify-center text-xs font-bold text-indigo-300"
+                        className="w-8 h-8 rounded-full border-2 border-[#0a0a0a] bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-300"
                         style={{ zIndex: 4 - i }}
                       >
                         {m.photoURL
@@ -194,7 +194,7 @@ export const JoinTeamPage: React.FC = () => {
                   <button
                     id="accept-invite-btn"
                     onClick={handleAccept}
-                    className="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold cursor-pointer transition-colors shadow-lg shadow-indigo-900/40 flex items-center justify-center gap-2"
+                    className="flex-1 py-3 rounded-xl bg-white hover:bg-zinc-200 text-black text-sm font-bold cursor-pointer transition-colors shadow-lg shadow-black/40 flex items-center justify-center gap-2"
                   >
                     <FiCheckCircle className="w-4 h-4" />
                     Join Team
@@ -207,7 +207,7 @@ export const JoinTeamPage: React.FC = () => {
           {/* ─── Accepting ────────────────────────────────────────────── */}
           {pageState === 'accepting' && (
             <div className="p-10 text-center">
-              <FiLoader className="w-8 h-8 text-indigo-400 animate-spin mx-auto mb-4" />
+              <FiLoader className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
               <p className="text-white font-bold text-sm mb-1">Joining team…</p>
               <p className="text-zinc-500 text-xs">Setting up your workspace access</p>
             </div>
@@ -239,14 +239,14 @@ export const JoinTeamPage: React.FC = () => {
           {/* ─── Already member ───────────────────────────────────────── */}
           {pageState === 'already_member' && team && (
             <div className="p-10 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-indigo-950/50 border border-indigo-800/40 flex items-center justify-center mx-auto mb-4">
-                <FiUsers className="w-8 h-8 text-indigo-400" />
+              <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto mb-4">
+                <FiUsers className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-white font-bold text-sm mb-2">You're already a member!</h2>
               <p className="text-zinc-500 text-xs mb-6">You already have access to <strong className="text-zinc-300">{team.name}</strong>.</p>
               <button
                 onClick={() => navigate('/teams')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold cursor-pointer transition-colors"
+                className="px-5 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-sm font-bold cursor-pointer transition-colors"
               >
                 Go to Teams
               </button>
