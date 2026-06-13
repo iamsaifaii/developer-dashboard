@@ -56,73 +56,75 @@ interface HeaderProps {
  };
 
  return (
-  <header className="h-[60px] border-b border-zinc-900 px-5 flex items-center justify-between bg-[#080809]/95 backdrop-blur-md sticky top-0 z-20">
-  <div className="flex items-center gap-3">
+  <header className="h-16 border-b border-[#222] px-6 flex items-center justify-between bg-black sticky top-0 z-20 transition-all duration-300">
+  <div className="flex items-center gap-4">
   <button 
   onClick={onOpenSidebar}
-  className="lg:hidden p-2 rounded-lg hover:bg-zinc-800/80 text-zinc-500 hover:text-white transition-colors cursor-pointer"
+  className="lg:hidden p-2 rounded-md hover:bg-[#222] text-[#ccc] hover:text-white transition-colors duration-200 cursor-pointer flex items-center justify-center"
   >
-  <FiMenu className="w-4.5 h-4.5" />
+  <FiMenu className="w-5 h-5" />
   </button>
   {/* Dynamic Title */}
-  <div className="hidden sm:block">
-  <h2 className="text-[13px] font-bold tracking-tight text-white leading-none">{getTitle()}</h2>
-  <p className="text-[10px] text-zinc-600 mt-1 leading-none">
-  {getGreeting()}, <span className="text-zinc-400 font-semibold">{currentUser?.displayName || settings.userName}</span>
+  <div className="hidden sm:flex flex-col justify-center">
+  <h2 className="text-sm font-semibold tracking-wide text-white leading-tight">{getTitle()}</h2>
+  <p className="text-xs text-[#ccc] mt-0.5 leading-none">
+  {getGreeting()}, <span className="text-white font-medium">{currentUser?.displayName || settings.userName}</span>
   </p>
   </div>
   </div>
  
   {/* Header Actions */}
-  <div className="flex items-center gap-2.5">
+  <div className="flex items-center gap-4">
   {/* Search Bar (Desktop) */}
-  <GlobalSearch />
+  <div className="hidden md:flex items-center">
+    <GlobalSearch />
+  </div>
   
   {/* Mobile Search Icon */}
-  <div className="md:hidden">
+  <div className="md:hidden flex items-center">
     <GlobalSearch isMobile={true} />
   </div>
  
   {/* Quick Task Button */}
   <button
   onClick={onQuickTaskClick}
-  className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold bg-white hover:bg-zinc-200 text-black rounded-lg cursor-pointer transition-all duration-200 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] btn-press"
+  className="flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold bg-white hover:bg-[#e0e0e0] text-black rounded-md cursor-pointer transition-colors duration-200"
   >
-  <FiPlus className="w-3.5 h-3.5" />
+  <FiPlus className="w-4 h-4" />
   <span className="hidden sm:inline">New Task</span>
   </button>
  
   {/* Divider */}
-  <div className="hidden md:block h-5 w-px bg-zinc-800/60" />
+  <div className="hidden md:block h-6 w-[1px] bg-[#333]" />
  
   {/* GitHub Status Indicator */}
   <div 
-  className={`hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-[10px] font-medium transition-colors ${
+  className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md border text-xs font-medium transition-colors duration-200 ${
   githubConnected 
-  ? 'bg-zinc-900/80 border-zinc-800 text-zinc-300' 
-  : 'bg-zinc-950 border-zinc-900 text-zinc-600'
+  ? 'bg-[#111] border-[#333] text-white' 
+  : 'bg-black border-[#222] text-[#ccc]'
   }`}
   title={githubConnected ? `Synced to @${githubUsername}` : 'GitHub disconnected'}
   >
-  <GithubIcon className="w-3.5 h-3.5 shrink-0" />
-  <span className="max-w-[80px] truncate">
+  <GithubIcon className="w-4 h-4 shrink-0" />
+  <span className="max-w-[100px] truncate">
   {githubConnected ? `@${githubUsername || currentUser?.displayName || 'User'}` : 'Offline'}
   </span>
-  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${githubConnected ? 'bg-green-500 status-dot-online' : 'bg-zinc-700'}`} />
+  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${githubConnected ? 'bg-white' : 'bg-[#444]'}`} />
   </div>
  
   {/* Profile / Notification center */}
-  <div className="flex items-center gap-2">
+  <div className="flex items-center gap-3">
   <NotificationCenter />
   <button 
   onClick={handleLogout}
   title="Log Out"
-  className="p-1.5 text-zinc-500 hover:text-white bg-transparent border border-zinc-800/80 hover:border-zinc-700 rounded-lg cursor-pointer transition-all duration-150"
+  className="p-2 text-[#ccc] hover:text-white bg-transparent hover:bg-[#222] border border-transparent rounded-md cursor-pointer transition-colors duration-200 flex items-center justify-center"
   >
-  <FiLogOut className="w-3.5 h-3.5" />
+  <FiLogOut className="w-4 h-4" />
   </button>
-  <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700/60 flex items-center justify-center cursor-pointer overflow-hidden ring-1 ring-transparent hover:ring-zinc-600 transition-all duration-150">
-     <img src={avatarToShow} alt="Avatar" className="w-full h-full rounded-[6px] object-cover" />
+  <div className="w-9 h-9 rounded-full bg-[#111] border border-[#333] flex items-center justify-center cursor-pointer overflow-hidden hover:border-white transition-colors duration-200 shrink-0">
+     <img src={avatarToShow} alt="Avatar" className="w-full h-full object-cover" />
   </div>
   </div>
   </div>
