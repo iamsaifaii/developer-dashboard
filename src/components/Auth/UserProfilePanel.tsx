@@ -47,12 +47,12 @@ export const UserProfilePanel: React.FC = () => {
     setLoadingAction('name');
     const result = await updateDisplayName(firebaseUser, nameInput.trim());
     setLoadingAction(null);
-    if (result.ok) {
-      showToast('success', 'Display name updated.');
-      setEditingName(false);
-    } else {
-      showToast('error', result.message || 'Failed to update name.');
+    if (!result.ok) {
+      showToast('error', (result as any).message || 'Failed to update name.');
+      return;
     }
+    showToast('success', 'Display name updated.');
+    setEditingName(false);
   }
 
   async function handleLinkGitHub() {
@@ -91,14 +91,14 @@ export const UserProfilePanel: React.FC = () => {
     setLoadingAction(`unlink-${provider}`);
     const result = await unlinkProvider(firebaseUser, provider);
     setLoadingAction(null);
-    if (result.ok) {
-      const updated = linkedProviders.filter(p => p !== provider);
-      setLinkedProviders(updated);
-      if (provider === 'github.com') setGithubToken(null);
-      showToast('success', `${provider === 'github.com' ? 'GitHub' : 'Google'} unlinked.`);
-    } else {
-      showToast('error', result.message || 'Failed to unlink.');
+    if (!result.ok) {
+      showToast('error', (result as any).message || 'Failed to unlink.');
+      return;
     }
+    const updated = linkedProviders.filter(p => p !== provider);
+    setLinkedProviders(updated);
+    if (provider === 'github.com') setGithubToken(null);
+    showToast('success', `${provider === 'github.com' ? 'GitHub' : 'Google'} unlinked.`);
   }
 
   async function handleSignOut() {
