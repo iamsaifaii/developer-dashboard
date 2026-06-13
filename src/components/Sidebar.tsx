@@ -17,7 +17,7 @@ import {
 
 
 import { TrelloIcon, GithubIcon } from './BrandIcons';
-import { FiChevronsLeft, FiChevronsRight } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollapsed?: boolean; onToggleCollapse?: () => void }> = ({ isOpen, onClose, isCollapsed = false, onToggleCollapse }) => {
  const navigate = useNavigate();
@@ -34,15 +34,15 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  } = useStore();
 
  const menuItems = [
- { id: 'dashboard', label: 'Home', icon: FiLayout },
- { id: 'kanban', label: 'Planner', icon: TrelloIcon },
- { id: 'notes', label: 'Docs', icon: FiFileText },
+ { id: 'dashboard', label: 'Dashboard', icon: FiLayout },
+ { id: 'kanban', label: 'Kanban Board', icon: TrelloIcon },
+ { id: 'notes', label: 'Notes System', icon: FiFileText },
  { id: 'calendar', label: 'Calendar', icon: FiCalendar },
- { id: 'pomodoro', label: 'Focus', icon: FiClock },
- { id: 'goals', label: 'Goals', icon: FiTarget },
- { id: 'whiteboard', label: 'Whiteboa..', icon: FiPenTool },
- { id: 'github', label: 'GitHub', icon: GithubIcon },
- { id: 'settings', label: 'More', icon: FiSettings },
+ { id: 'pomodoro', label: 'Pomodoro', icon: FiClock },
+ { id: 'goals', label: 'Goals & Habits', icon: FiTarget },
+ { id: 'whiteboard', label: 'Whiteboard', icon: FiPenTool },
+ { id: 'github', label: 'GitHub Sync', icon: GithubIcon },
+ { id: 'settings', label: 'Settings', icon: FiSettings },
  ];
 
  // Helper to format remaining seconds into mm:ss
@@ -69,41 +69,37 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  onClick={onClose} 
  />
  )}
- <aside className={`${isCollapsed ? 'w-[88px]' : 'w-64'} h-screen fixed left-0 top-0 bg-[#161434] flex flex-col justify-between z-50 transition-all duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+ <aside className={`${isCollapsed ? 'w-20' : 'w-64'} h-screen fixed left-0 top-0 bg-[#080809] border-r border-zinc-900 flex flex-col justify-between z-50 transition-all duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+ {/* Brand Header */}
+ <div className={`pt-5 pb-4 border-b border-zinc-900 relative ${isCollapsed ? 'px-0 flex flex-col items-center' : 'px-5'}`}>
+ <div className={`flex items-center gap-2.5 ${isCollapsed ? 'justify-center w-full' : ''}`}>
+ <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm shrink-0">
+ <FiTerminal className="w-4 h-4 text-black" />
+ </div>
+ {!isCollapsed && (
+ <div>
+ <h1 className="text-sm font-black tracking-tight text-white leading-none">
+ DevFlow
+ </h1>
+ <p className="text-[9px] text-zinc-600 font-mono mt-0.5">v1.0.0 · 2026</p>
+ </div>
+ )}
+ </div>
  
- {/* Top Section: Collapse Toggle & Brand */}
- <div className={`pt-6 pb-2 flex flex-col items-center shrink-0`}>
-   {onToggleCollapse && (
-     <button 
-       onClick={onToggleCollapse}
-       className="flex items-center justify-center w-10 h-10 rounded-full text-white hover:bg-white/10 cursor-pointer transition-colors mb-2"
-       title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-     >
-       {isCollapsed ? <FiChevronsRight className="w-5 h-5" /> : <FiChevronsLeft className="w-5 h-5" />}
-     </button>
-   )}
-   
-   {/* Horizontal Divider exactly like screenshot */}
-   <div className="w-8 h-[2px] bg-white/10 rounded-full my-2" />
-
-   {/* Expanded Brand Name (only visible when expanded) */}
-   {!isCollapsed && (
-     <div className="flex items-center gap-2.5 mt-4 mb-2 px-6 w-full">
-       <div className="w-8 h-8 rounded-xl bg-white flex items-center justify-center shadow-sm shrink-0">
-         <FiTerminal className="w-4 h-4 text-[#161434]" />
-       </div>
-       <div>
-         <h1 className="text-sm font-black tracking-tight text-white leading-none">
-           DevFlow
-         </h1>
-         <p className="text-[9px] text-white/50 font-mono mt-0.5">v1.0.0</p>
-       </div>
-     </div>
-   )}
+ {/* Collapse Toggle Button */}
+ {onToggleCollapse && (
+   <button 
+     onClick={onToggleCollapse}
+     className={`absolute ${isCollapsed ? 'bottom-[-12px] right-1/2 translate-x-1/2' : 'top-1/2 -right-3 -translate-y-1/2'} hidden lg:flex items-center justify-center w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700 cursor-pointer shadow-md transition-colors z-50`}
+     title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+   >
+     {isCollapsed ? <FiChevronRight className="w-3.5 h-3.5" /> : <FiChevronLeft className="w-3.5 h-3.5" />}
+   </button>
+ )}
  </div>
 
  {/* Navigation List */}
- <nav className={`flex-1 overflow-y-auto overflow-x-hidden py-2 custom-scrollbar ${isCollapsed ? 'px-2 flex flex-col items-center space-y-3' : 'px-4 space-y-1.5'}`}>
+ <nav className={`flex-1 space-y-0.5 overflow-y-auto py-3 ${isCollapsed ? 'px-2 flex flex-col items-center' : 'px-2.5'}`}>
  {menuItems.map((item) => {
  const Icon = item.icon;
  const isActive = currentPath === item.id;
@@ -112,34 +108,19 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  key={item.id}
  onClick={() => { navigate(item.id === 'dashboard' ? '/' : `/${item.id}`); onClose(); }}
  title={isCollapsed ? item.label : undefined}
- className={`
-   group cursor-pointer transition-all duration-200 relative flex
-   ${isCollapsed 
-     ? 'flex-col items-center justify-center w-[68px] h-[68px] rounded-[22px] gap-1.5' 
-     : 'flex-row items-center w-full h-12 rounded-[18px] px-4 gap-3.5'
-   }
-   ${isActive
-     ? 'bg-white shadow-[0_4px_20px_rgba(255,255,255,0.15)]'
-     : 'hover:bg-white/10'
-   }
- `}
+ className={`w-full flex items-center ${isCollapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'} rounded-xl group cursor-pointer transition-all duration-150 relative ${
+ isActive
+ ? 'bg-white/8 text-white font-semibold nav-item-active'
+ : 'text-zinc-500 hover:text-zinc-200 hover:bg-white/5'
+ }`}
  >
- <Icon className={`
-   shrink-0 transition-colors duration-200 
-   ${isCollapsed ? 'w-6 h-6' : 'w-5 h-5'}
-   ${isActive ? 'text-[#161434]' : 'text-white/90 group-hover:text-white'}
- `} />
- <span className={`
-   font-bold tracking-tight transition-colors duration-200
-   ${isCollapsed ? 'text-[11px]' : 'text-[13px]'}
-   ${isActive ? 'text-[#161434]' : 'text-white/90 group-hover:text-white'}
- `}>
-   {item.label}
- </span>
- 
+ <Icon className={`w-4 h-4 shrink-0 transition-colors duration-150 ${
+ isActive ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-300'
+ }`} />
+ {!isCollapsed && <span className="text-xs tracking-wide">{item.label}</span>}
  {item.id === 'pomodoro' && timerStatus === 'running' && (
  <span className={`${isCollapsed ? 'absolute top-2 right-2' : 'ml-auto flex items-center gap-1'}`}>
- <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+ <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
  </span>
  )}
  </button>
@@ -148,29 +129,29 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  </nav>
 
  {/* Footer Pomodoro Mini-Widget */}
- <div className={`p-4 mt-auto shrink-0 ${isCollapsed ? 'flex justify-center' : ''}`}>
- <div className={`rounded-[22px] ${isCollapsed ? 'w-[68px] h-[68px] bg-white/5 flex items-center justify-center p-0' : 'border border-white/10 bg-white/5 flex flex-col p-4 gap-3'}`}>
+ <div className="p-3 border-t border-zinc-900">
+ <div className={`rounded-xl border border-zinc-800/80 bg-zinc-950/60 flex flex-col ${isCollapsed ? 'p-2 items-center gap-2' : 'p-3.5 gap-3'}`}>
  {/* Header Row */}
  <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between w-full'}`}>
- <div className={`flex items-center gap-2 ${isCollapsed ? 'hidden' : ''}`}>
- <FiClock className={`w-3.5 h-3.5 ${timerStatus === 'running' ? 'text-white' : 'text-white/50'}`} />
- <span className="text-[10px] font-bold tracking-widest uppercase text-white/70">
+ <div className={`flex items-center gap-1.5 ${isCollapsed ? 'hidden' : ''}`}>
+ <FiClock className={`w-3 h-3 ${timerStatus === 'running' ? 'text-white' : 'text-zinc-500'}`} />
+ <span className="text-[9px] font-bold tracking-widest uppercase text-zinc-400">
  {getTimerLabel()}
  </span>
  </div>
  {!isCollapsed && (
- <span className="text-xs font-bold font-mono text-white tabular-nums">
+ <span className="text-xs font-bold font-mono text-zinc-200 tabular-nums">
  {formatTime(secondsLeft)}
  </span>
  )}
  {isCollapsed && (
-   <FiClock className={`w-6 h-6 ${timerStatus === 'running' ? 'text-white animate-pulse' : 'text-white/50'}`} title={`${getTimerLabel()}: ${formatTime(secondsLeft)}`} />
+   <FiClock className={`w-4 h-4 ${timerStatus === 'running' ? 'text-white' : 'text-zinc-500'}`} title={`${getTimerLabel()}: ${formatTime(secondsLeft)}`} />
  )}
  </div>
 
  {/* Progress Bar */}
  {!isCollapsed && (
- <div className="w-full h-1 bg-black/40 rounded-full overflow-hidden">
+ <div className="w-full h-[3px] bg-zinc-900 rounded-full overflow-hidden">
  <div 
  className="h-full bg-white rounded-full transition-all duration-1000 ease-linear"
  style={{ width: `${progressPct}%` }}
@@ -179,36 +160,34 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  )}
 
  {/* Mini controls */}
- {!isCollapsed && (
- <div className="flex items-center justify-center gap-2.5 mt-1">
+ <div className={`flex items-center justify-center gap-2 ${isCollapsed ? 'flex-col w-full' : ''}`}>
  {timerStatus === 'running' ? (
  <button 
  onClick={() => setTimerStatus('paused')}
- className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-black/40 hover:bg-black/60 text-white cursor-pointer transition-colors text-[11px] font-semibold"
+ className={`flex items-center justify-center ${isCollapsed ? 'w-8 h-8 rounded-full' : 'gap-1 px-3 py-1 rounded-lg'} bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white cursor-pointer transition-colors text-[10px] font-semibold`}
  title="Pause"
  >
- <FiPause className="w-3.5 h-3.5" />
- <span>Pause</span>
+ <FiPause className="w-3 h-3" />
+ {!isCollapsed && <span>Pause</span>}
  </button>
  ) : (
  <button 
  onClick={() => setTimerStatus('running')}
- className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-white hover:bg-zinc-200 text-[#161434] cursor-pointer transition-colors text-[11px] font-bold"
+ className={`flex items-center justify-center ${isCollapsed ? 'w-8 h-8 rounded-full' : 'gap-1 px-3 py-1 rounded-lg'} bg-white hover:bg-zinc-200 text-black cursor-pointer transition-colors text-[10px] font-bold`}
  title="Start"
  >
- <FiPlay className="w-3.5 h-3.5 fill-[#161434] stroke-none ml-0.5" />
- <span>Start</span>
+ <FiPlay className={`w-3 h-3 fill-black stroke-none ${isCollapsed ? 'ml-0.5' : ''}`} />
+ {!isCollapsed && <span>Start</span>}
  </button>
  )}
  <button 
  onClick={resetTimer}
- className="p-2 rounded-xl hover:bg-white/10 text-white/70 hover:text-white cursor-pointer transition-colors"
+ className={`flex items-center justify-center ${isCollapsed ? 'w-8 h-8 rounded-full' : 'p-1.5 rounded-lg'} hover:bg-zinc-800 text-zinc-600 hover:text-zinc-400 cursor-pointer transition-colors`}
  title="Reset"
  >
- <FiRotateCcw className="w-3.5 h-3.5" />
+ <FiRotateCcw className="w-3 h-3" />
  </button>
  </div>
- )}
  </div>
  </div>
  </aside>
