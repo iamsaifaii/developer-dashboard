@@ -50,7 +50,7 @@ export async function getTeam(teamId: string): Promise<Team | null> {
 // ─── Invite ──────────────────────────────────────────────────────────────────
 export async function inviteMember(
   teamId: string,
-  teamName: string,
+  _teamName: string,
   inviteeEmail: string,
   inviter: { uid: string; displayName: string | null; email: string | null }
 ): Promise<void> {
