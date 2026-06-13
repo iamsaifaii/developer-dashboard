@@ -1,20 +1,9 @@
-import {
-  doc,
-  collection,
-  setDoc,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-  onSnapshot,
-  arrayUnion,
-  arrayRemove,
-} from 'firebase/firestore';
-import { db } from '../lib/firebase';
 import type { Team, TeamMember, TeamInvite } from '../types';
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
+// Mock storage
+let mockTeams: Team[] = [];
 
-/** Generate a cryptographically random invite token */
+// ─── Helpers ────────────────────────────────────────────────────────────────
 function generateToken(): string {
   const array = new Uint8Array(32);
   crypto.getRandomValues(array);
@@ -22,13 +11,11 @@ function generateToken(): string {
 }
 
 // ─── Team CRUD ───────────────────────────────────────────────────────────────
-
 export async function createTeam(
   name: string,
   description: string,
   currentUser: { uid: string; email: string | null; displayName: string | null; photoURL: string | null }
 ): Promise<Team> {
-  const teamRef = doc(collection(db, 'teams'));
   const adminMember: TeamMember = {
     uid: currentUser.uid,
     email: currentUser.email || '',
@@ -39,7 +26,7 @@ export async function createTeam(
   };
 
   const team: Team = {
-    id: teamRef.id,
+    id: `team-${Date.now()}`,
     name,
     description,
     createdAt: new Date().toISOString(),
@@ -48,28 +35,19 @@ export async function createTeam(
     invites: [],
   };
 
-  await setDoc(teamRef, team);
+  mockTeams.push(team);
   return team;
 }
 
 export async function deleteTeam(teamId: string): Promise<void> {
-  await deleteDoc(doc(db, 'teams', teamId));
+  mockTeams = mockTeams.filter((t) => t.id !== teamId);
 }
 
 export async function getTeam(teamId: string): Promise<Team | null> {
-  const snap = await getDoc(doc(db, 'teams', teamId));
-  if (!snap.exists()) return null;
-  return { id: snap.id, ...snap.data() } as Team;
+  return mockTeams.find((t) => t.id === teamId) || null;
 }
 
 // ─── Invite ──────────────────────────────────────────────────────────────────
-
-/**
- * Sends an invite to an email address:
- * 1. Generates a secure token
- * 2. Stores the invite in Firestore under the team doc
- * 3. Calls the Express backend to dispatch the actual email
- */
 export async function inviteMember(
   teamId: string,
   teamName: string,
@@ -86,47 +64,19 @@ export async function inviteMember(
     token,
   };
 
-  // 1. Always save invite to Firestore first
-  await updateDoc(doc(db, 'teams', teamId), {
-    invites: arrayUnion(invite),
-  });
+  const team = mockTeams.find((t) => t.id === teamId);
+  if (team) {
+    team.invites.push(invite);
+  }
 
-  // 2. Build the magic link
   const clientUrl = window.location.origin;
   const inviteLink = `${clientUrl}/join?token=${token}&teamId=${teamId}`;
-
-  // 3. Call the Vercel serverless function /api/invite
-  //    - In production: runs on Vercel automatically
-  //    - Locally: run `vercel dev` or just use the copy-link fallback
-  try {
-    const res = await fetch('/api/invite', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        to: inviteeEmail.toLowerCase().trim(),
-        inviterName: inviter.displayName || inviter.email || 'A teammate',
-        teamName,
-        inviteLink,
-      }),
-    });
-
-    if (!res.ok) {
-      // Surface invite link for manual sharing
-      throw new Error(`__LINK__${inviteLink}`);
-    }
-  } catch (fetchErr: any) {
-    // Network error (localhost without vercel dev) — show copy-link fallback
-    if (fetchErr.message?.startsWith('__LINK__')) throw fetchErr;
-    throw new Error(`__LINK__${inviteLink}`);
-  }
+  
+  // Show copy-link fallback immediately since we removed backend
+  throw new Error(`__LINK__${inviteLink}`);
 }
 
 // ─── Accept / Decline ────────────────────────────────────────────────────────
-
-/**
- * Validates the invite token and returns the team if valid.
- * Used on the /join page to show team details before accepting.
- */
 export async function validateInviteToken(
   teamId: string,
   token: string
@@ -142,9 +92,6 @@ export async function validateInviteToken(
   return { team, invite };
 }
 
-/**
- * Accepts the invite: adds the user to members[], updates invite status to 'accepted'
- */
 export async function acceptInvite(
   teamId: string,
   token: string,
@@ -155,9 +102,8 @@ export async function acceptInvite(
 
   const { team, invite } = result;
 
-  // Guard: don't add if already a member
   if (team.members.some((m) => m.uid === user.uid)) {
-    return team; // already a member
+    return team;
   }
 
   const newMember: TeamMember = {
@@ -169,96 +115,61 @@ export async function acceptInvite(
     joinedAt: new Date().toISOString(),
   };
 
-  // Remove old invite, add updated one
-  const updatedInvites = team.invites.map((inv) =>
-    inv.token === token ? { ...inv, status: 'accepted' as const } : inv
-  );
+  invite.status = 'accepted';
+  team.members.push(newMember);
 
-  await updateDoc(doc(db, 'teams', teamId), {
-    members: arrayUnion(newMember),
-    invites: updatedInvites,
-  });
-
-  return { ...team, members: [...team.members, newMember], invites: updatedInvites };
+  return team;
 }
 
-/**
- * Declines the invite — updates status only, user is NOT added to members
- */
 export async function declineInvite(
   teamId: string,
   token: string
 ): Promise<void> {
   const result = await validateInviteToken(teamId, token);
   if (!result) return;
-
-  const { team } = result;
-  const updatedInvites = team.invites.map((inv) =>
-    inv.token === token ? { ...inv, status: 'declined' as const } : inv
-  );
-
-  await updateDoc(doc(db, 'teams', teamId), {
-    invites: updatedInvites,
-  });
+  result.invite.status = 'declined';
 }
 
 // ─── Remove Member ───────────────────────────────────────────────────────────
-
 export async function removeMember(teamId: string, member: TeamMember): Promise<void> {
-  await updateDoc(doc(db, 'teams', teamId), {
-    members: arrayRemove(member),
-  });
+  const team = mockTeams.find((t) => t.id === teamId);
+  if (team) {
+    team.members = team.members.filter((m) => m.uid !== member.uid);
+  }
 }
 
-// ─── Real-time subscription ──────────────────────────────────────────────────
-
-/**
- * Subscribes to all teams where the user is a member.
- * Returns unsubscribe function.
- */
+// ─── Real-time subscription (Mocked) ──────────────────────────────────────────
 export function subscribeToMyTeams(
   uid: string,
   callback: (teams: Team[]) => void
 ): () => void {
-  // Firestore array-contains on objects requires exact match of ALL fields,
-  // which is not possible here. Instead, we subscribe to ALL teams and filter client-side.
-  // The security rules ensure we only get teams we're a member of.
-  const allTeamsRef = collection(db, 'teams');
-
-  return onSnapshot(allTeamsRef, (snap) => {
-    const teams: Team[] = [];
-    snap.forEach((d) => {
-      const data = d.data() as Team;
-      const isMember = data.members?.some((m) => m.uid === uid);
-      if (isMember) {
-        teams.push({ ...data, id: d.id });
-      }
-    });
-    callback(teams);
-  });
+  // Mock immediate callback and periodic poll for simplicity
+  const check = () => {
+    const myTeams = mockTeams.filter((t) => t.members.some((m) => m.uid === uid));
+    callback([...myTeams]);
+  };
+  check();
+  const interval = setInterval(check, 1000);
+  return () => clearInterval(interval);
 }
 
-/**
- * Subscribes to teams where the user has a pending invite (matched by email).
- * Returns unsubscribe function.
- */
 export function subscribeToPendingInvites(
   email: string,
   callback: (invites: { team: Team; invite: TeamInvite }[]) => void
 ): () => void {
-  const allTeamsRef = collection(db, 'teams');
-
-  return onSnapshot(allTeamsRef, (snap) => {
+  const check = () => {
     const pending: { team: Team; invite: TeamInvite }[] = [];
-    snap.forEach((d) => {
-      const data = d.data() as Team;
+    mockTeams.forEach((data) => {
       const invite = data.invites?.find(
         (inv) => inv.email === email.toLowerCase() && inv.status === 'pending'
       );
       if (invite) {
-        pending.push({ team: { ...data, id: d.id }, invite });
+        pending.push({ team: data, invite });
       }
     });
-    callback(pending);
-  });
+    callback([...pending]);
+  };
+  check();
+  const interval = setInterval(check, 1000);
+  return () => clearInterval(interval);
 }
