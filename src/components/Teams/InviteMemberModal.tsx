@@ -48,11 +48,10 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, on
       setEmail('');
     } catch (err: any) {
       const msg: string = err.message || 'Failed to send invitation.';
-      // If the error contains an invite link (EmailJS not configured),
-      // extract the link and show the copy-link fallback instead of a hard error.
-      const linkMatch = msg.match(/(https?:\/\/[^\s]+)/);
-      if (linkMatch) {
-        setInviteLink(linkMatch[1]);
+      // If the service returned a link (API not available locally),
+      // show the copy-link UI instead of a hard error
+      if (msg.startsWith('__LINK__')) {
+        setInviteLink(msg.replace('__LINK__', '').split(' ')[0]);
         setError(null);
       } else {
         setError(msg);

@@ -11,7 +11,6 @@ import {
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import type { Team, TeamMember, TeamInvite } from '../types';
-import emailjs from '@emailjs/browser';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -87,50 +86,38 @@ export async function inviteMember(
     token,
   };
 
-  // 1. Save invite to Firestore first (always succeeds)
+  // 1. Always save invite to Firestore first
   await updateDoc(doc(db, 'teams', teamId), {
     invites: arrayUnion(invite),
   });
 
-  // 2. Build the magic invite link
+  // 2. Build the magic link
   const clientUrl = window.location.origin;
   const inviteLink = `${clientUrl}/join?token=${token}&teamId=${teamId}`;
 
-  // 3. Send email via EmailJS (runs entirely in the browser — no backend needed)
-  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-  const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-  if (!serviceId || !templateId || !publicKey) {
-    // EmailJS not configured — invite is saved, but no email is sent.
-    // Show a helpful error so the user knows what to do.
-    throw new Error(
-      'Email not sent: EmailJS is not configured. ' +
-      'Please add VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, and VITE_EMAILJS_PUBLIC_KEY to your .env file. ' +
-      'Sign up free at https://emailjs.com — the invite link was saved and can be shared manually: ' +
-      inviteLink
-    );
-  }
-
+  // 3. Call the Vercel serverless function /api/invite
+  //    - In production: runs on Vercel automatically
+  //    - Locally: run `vercel dev` or just use the copy-link fallback
   try {
-    await emailjs.send(
-      serviceId,
-      templateId,
-      {
-        to_email: inviteeEmail.toLowerCase().trim(),
-        to_name: inviteeEmail.split('@')[0],
-        from_name: inviter.displayName || inviter.email || 'A teammate',
-        team_name: teamName,
-        invite_link: inviteLink,
-        reply_to: inviter.email || '',
-      },
-      publicKey
-    );
-  } catch (err: any) {
-    console.error('EmailJS send error:', err);
-    throw new Error(
-      err?.text || err?.message || 'Failed to send invite email. Please check your EmailJS configuration.'
-    );
+    const res = await fetch('/api/invite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: inviteeEmail.toLowerCase().trim(),
+        inviterName: inviter.displayName || inviter.email || 'A teammate',
+        teamName,
+        inviteLink,
+      }),
+    });
+
+    if (!res.ok) {
+      // Surface invite link for manual sharing
+      throw new Error(`__LINK__${inviteLink}`);
+    }
+  } catch (fetchErr: any) {
+    // Network error (localhost without vercel dev) — show copy-link fallback
+    if (fetchErr.message?.startsWith('__LINK__')) throw fetchErr;
+    throw new Error(`__LINK__${inviteLink}`);
   }
 }
 
