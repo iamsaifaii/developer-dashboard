@@ -60,13 +60,13 @@ export const UserProfilePanel: React.FC = () => {
     setLoadingAction('link-github');
     const result = await linkGitHub(firebaseUser);
     setLoadingAction(null);
-    if (result.ok) {
-      setLinkedProviders(result.providerIds);
-      if (result.githubToken) setGithubToken(result.githubToken);
-      showToast('success', 'GitHub account linked successfully.');
-    } else {
-      showToast('error', result.message);
+    if (!result.ok) {
+      showToast('error', (result as any).message);
+      return;
     }
+    setLinkedProviders(result.providerIds);
+    if (result.githubToken) setGithubToken(result.githubToken);
+    showToast('success', 'GitHub account linked successfully.');
   }
 
   async function handleLinkGoogle() {
@@ -74,12 +74,12 @@ export const UserProfilePanel: React.FC = () => {
     setLoadingAction('link-google');
     const result = await linkGoogle(firebaseUser);
     setLoadingAction(null);
-    if (result.ok) {
-      setLinkedProviders(result.providerIds);
-      showToast('success', 'Google account linked successfully.');
-    } else {
-      showToast('error', result.message);
+    if (!result.ok) {
+      showToast('error', (result as any).message);
+      return;
     }
+    setLinkedProviders(result.providerIds);
+    showToast('success', 'Google account linked successfully.');
   }
 
   async function handleUnlink(provider: 'github.com' | 'google.com') {
