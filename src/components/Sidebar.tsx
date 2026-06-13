@@ -78,33 +78,33 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  )}
  <aside className={`${isCollapsed ? 'w-20 bg-indigo-950' : 'w-60 bg-black'} h-screen fixed left-0 top-0 border-r border-zinc-900 flex flex-col justify-between z-50 transition-all duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
  
- {/* Top Section: Collapse Toggle & Brand */}
- <div className={`h-16 shrink-0 border-b border-zinc-800 relative flex ${isCollapsed ? 'flex-col items-center justify-center gap-1.5 px-0' : 'items-center justify-between px-4'}`}>
- <div className="flex items-center gap-3">
- <div className="w-8 h-8 rounded-lg bg-black border border-zinc-800 flex items-center justify-center shadow-sm shrink-0">
- <img src="/icon.svg" alt="DevFlow Logo" className="w-5 h-5 object-contain" />
- </div>
- {!isCollapsed && (
- <div>
- <h1 className="text-sm font-bold tracking-tight text-white leading-tight">
- DevFlow
- </h1>
- <p className="text-[10px] text-zinc-600 font-mono mt-0.5">v1.0.0 · 2026</p>
- </div>
- )}
- </div>
- 
- {/* Collapse Toggle Button */}
- {onToggleCollapse && (
-   <button 
-     onClick={onToggleCollapse}
-     className={`flex items-center justify-center w-8 h-8 rounded-lg border border-zinc-800 bg-[#0a0a0a] text-zinc-400 hover:text-white hover:bg-zinc-900 cursor-pointer transition-colors z-50 shrink-0`}
-     title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-   >
-     {isCollapsed ? <FiChevronRight className="w-4 h-4" /> : <FiChevronLeft className="w-4 h-4" />}
-   </button>
- )}
- </div>
+  {/* Top Section: Collapse Toggle & Brand */}
+  <div className={`h-16 shrink-0 border-b border-zinc-800 relative flex items-center ${isCollapsed ? 'justify-center px-0' : 'justify-between px-4'}`}>
+  <div className="flex items-center gap-3">
+  <div className="w-8 h-8 rounded-lg bg-black border border-zinc-800 flex items-center justify-center shadow-sm shrink-0">
+  <img src="/icon.svg" alt="DevFlow Logo" className="w-5 h-5 object-contain" />
+  </div>
+  {!isCollapsed && (
+  <div>
+  <h1 className="text-sm font-bold tracking-tight text-white leading-tight">
+  DevFlow
+  </h1>
+  <p className="text-[10px] text-zinc-600 font-mono mt-0.5">v1.0.0 · 2026</p>
+  </div>
+  )}
+  </div>
+  
+  {/* Collapse Toggle Button */}
+  {onToggleCollapse && (
+    <button 
+      onClick={onToggleCollapse}
+      className="absolute top-4 -right-4 flex items-center justify-center w-8 h-8 rounded-full border border-zinc-700 bg-black text-zinc-400 hover:text-white hover:bg-zinc-800 cursor-pointer transition-all duration-300 z-50 shadow-md"
+      title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+    >
+      {isCollapsed ? <FiChevronRight className="w-4 h-4 ml-0.5" /> : <FiChevronLeft className="w-4 h-4 mr-0.5" />}
+    </button>
+  )}
+  </div>
 
  {/* Navigation List */}
  <div className={`flex-1 overflow-y-auto overflow-x-hidden py-4 custom-scrollbar ${isCollapsed ? 'px-2 flex flex-col items-center space-y-2' : 'px-4'}`}>
