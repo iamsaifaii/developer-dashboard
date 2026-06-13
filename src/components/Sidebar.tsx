@@ -79,10 +79,10 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  <aside className={`${isCollapsed ? 'w-20 bg-indigo-950' : 'w-60 bg-black'} h-screen fixed left-0 top-0 border-r border-zinc-900 flex flex-col justify-between z-50 transition-all duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
  
  {/* Top Section: Collapse Toggle & Brand */}
- <div className={`py-1.5 border-b border-zinc-800 relative flex ${isCollapsed ? 'flex-col items-center gap-1.5 px-0' : 'items-center justify-between px-3'}`}>
- <div className="flex items-center gap-2">
- <div className="w-6 h-6 rounded-md bg-black border border-zinc-800 flex items-center justify-center shadow-sm shrink-0">
- <img src="/icon.svg" alt="DevFlow Logo" className="w-3.5 h-3.5 object-contain" />
+ <div className={`h-16 shrink-0 border-b border-zinc-800 relative flex ${isCollapsed ? 'flex-col items-center justify-center gap-1.5 px-0' : 'items-center justify-between px-4'}`}>
+ <div className="flex items-center gap-3">
+ <div className="w-8 h-8 rounded-lg bg-black border border-zinc-800 flex items-center justify-center shadow-sm shrink-0">
+ <img src="/icon.svg" alt="DevFlow Logo" className="w-5 h-5 object-contain" />
  </div>
  {!isCollapsed && (
  <div>
