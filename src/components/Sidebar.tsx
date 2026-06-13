@@ -20,8 +20,12 @@ import { FiChevronLeft, FiChevronRight, FiSkipForward, FiCircle } from 'react-ic
 
 const DevFlowLogo = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <path d="M8 8C11 8 13 16 16 16C18.2091 16 20 14.2091 20 12C20 9.79086 18.2091 8 16 8C13 8 11 16 8 16C5.79086 16 4 14.2091 4 12C4 9.79086 5.79086 8 8 8Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <circle cx="16" cy="12" r="2.5" fill="currentColor"/>
+    <mask id="cutout">
+      <rect width="24" height="24" fill="white" />
+      <path d="M10 2H16C21.5228 2 26 6.47715 26 12C26 17.5228 21.5228 22 16 22H10V2Z" fill="black" />
+    </mask>
+    <path d="M4 4H12C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20H4V4Z" fill="currentColor" mask="url(#cutout)" />
+    <path d="M13 6H15C18.3137 6 21 8.68629 21 12C21 15.3137 18.3137 18 15 18H13V6Z" fill="currentColor" />
   </svg>
 );
 
@@ -37,23 +41,21 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  setTimerStatus, 
  resetTimer,
  settings,
- tasks,
- githubIssues,
  totalSessionsCompleted
  } = useStore();
 
  const workspaceItems = [
  { id: 'dashboard', label: 'Dashboard', icon: FiLayout },
- { id: 'kanban', label: 'Kanban Board', icon: TrelloIcon, badge: tasks?.length || 0 },
- { id: 'notes', label: 'Notes', icon: FiFileText, badge: 3 },
- { id: 'calendar', label: 'Calendar', icon: FiCalendar, badge: 2 },
+ { id: 'kanban', label: 'Kanban Board', icon: TrelloIcon },
+ { id: 'notes', label: 'Notes', icon: FiFileText },
+ { id: 'calendar', label: 'Calendar', icon: FiCalendar },
  ];
 
  const toolsItems = [
  { id: 'pomodoro', label: 'Pomodoro', icon: FiClock },
  { id: 'goals', label: 'Goals & Habits', icon: FiTarget },
  { id: 'whiteboard', label: 'Whiteboard', icon: FiPenTool },
- { id: 'github', label: 'GitHub Sync', icon: GithubIcon, alert: githubIssues?.length > 0 },
+ { id: 'github', label: 'GitHub Sync', icon: GithubIcon },
  { id: 'settings', label: 'Settings', icon: FiSettings },
  ];
 
@@ -88,7 +90,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  {!isCollapsed && (
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-sm shrink-0 text-zinc-300">
- <DevFlowLogo className="w-5 h-5" />
+ <DevFlowLogo className="w-6 h-6" />
  </div>
  <div>
  <h1 className="text-sm font-bold tracking-tight text-white leading-tight">
@@ -144,12 +146,6 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
    <Icon className={`shrink-0 transition-colors duration-200 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} ${isActive ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-400'}`} />
    
    {!isCollapsed && <span className="text-[13px] tracking-wide">{item.label}</span>}
-   
-   {!isCollapsed && typeof item.badge === 'number' && item.badge > 0 && (
-     <span className={`ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold border ${isActive ? 'bg-zinc-700 border-zinc-600 text-white' : 'bg-zinc-900 border-zinc-800 text-zinc-400'}`}>
-       {item.badge}
-     </span>
-   )}
    </button>
    );
    })}
@@ -185,12 +181,6 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
    <Icon className={`shrink-0 transition-colors duration-200 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} ${isActive ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-400'}`} />
    
    {!isCollapsed && <span className="text-[13px] tracking-wide">{item.label}</span>}
-   
-   {!isCollapsed && item.alert && (
-     <span className="ml-auto w-5 h-5 rounded-full bg-red-950/40 border border-red-900/50 flex items-center justify-center text-red-500 text-[10px] font-bold">
-       !
-     </span>
-   )}
 
    {item.id === 'pomodoro' && timerStatus === 'running' && isCollapsed && (
      <span className="absolute top-2 right-2 flex items-center gap-1">
