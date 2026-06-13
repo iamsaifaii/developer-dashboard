@@ -26,22 +26,22 @@ const parseMarkdown = (text: string): string => {
  .replace(/>/g, '&gt;');
 
  // Code blocks (```lang ... ```)
- html = html.replace(/```(?:[a-zA-Z0-9]+)?\n([\s\S]*?)\n```/g, '<pre class="bg-white dark:bg-black/80 border border-neutral-200 dark:border-neutral-800/80 rounded-lg p-3 text-xs text-neutral-700 dark:text-neutral-300 my-3 overflow-x-auto"><code>$1</code></pre>');
+ html = html.replace(/```(?:[a-zA-Z0-9]+)?\n([\s\S]*?)\n```/g, '<pre class="bg-neutral-100 dark:bg-[#080809] border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 text-sm font-mono text-neutral-800 dark:text-neutral-300 my-4 overflow-x-auto leading-relaxed shadow-sm"><code>$1</code></pre>');
 
  // Inline code (`code`)
- html = html.replace(/`([^`]+)`/g, '<code class="bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 px-1 py-0.5 rounded text-xs text-neutral-700 dark:text-neutral-300">$1</code>');
+ html = html.replace(/`([^`]+)`/g, '<code class="bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-neutral-800 px-1.5 py-0.5 rounded-md text-sm font-mono text-pink-600 dark:text-pink-400">$1</code>');
 
  // Headers
- html = html.replace(/^# (.*?)$/gm, '<h1 class="text-lg font-bold tracking-tight text-black dark:text-white mt-4 mb-2 ">$1</h1>');
- html = html.replace(/^## (.*?)$/gm, '<h2 class="text-md font-bold tracking-tight text-black dark:text-white mt-3 mb-1.5 ">$1</h2>');
- html = html.replace(/^### (.*?)$/gm, '<h3 class="text-sm font-bold tracking-tight text-black dark:text-white mt-2.5 mb-1 ">$1</h3>');
+ html = html.replace(/^# (.*?)$/gm, '<h1 class="text-2xl md:text-3xl font-bold tracking-tight text-black dark:text-white mt-8 mb-4">$1</h1>');
+ html = html.replace(/^## (.*?)$/gm, '<h2 class="text-xl md:text-2xl font-bold tracking-tight text-black dark:text-white mt-6 mb-3">$1</h2>');
+ html = html.replace(/^### (.*?)$/gm, '<h3 class="text-lg md:text-xl font-bold tracking-tight text-black dark:text-white mt-5 mb-2">$1</h3>');
 
  // Checkboxes
- html = html.replace(/^- \[ \] (.*?)$/gm, '<li class="list-none flex items-center gap-2 text-neutral-700 dark:text-neutral-300 my-1"><input type="checkbox" disabled class="rounded border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 w-3.5 h-3.5 cursor-not-allowed"> <span>$1</span></li>');
- html = html.replace(/^- \[x\] (.*?)$/gm, '<li class="list-none flex items-center gap-2 text-neutral-500 my-1"><input type="checkbox" disabled checked class="rounded border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 w-3.5 h-3.5 cursor-not-allowed"> <span class="line-through">$1</span></li>');
+ html = html.replace(/^- \[ \] (.*?)$/gm, '<li class="list-none flex items-center gap-3 text-neutral-700 dark:text-neutral-300 my-2 text-[15px]"><input type="checkbox" disabled class="rounded border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 w-4 h-4 cursor-not-allowed mt-0.5"> <span>$1</span></li>');
+ html = html.replace(/^- \[x\] (.*?)$/gm, '<li class="list-none flex items-center gap-3 text-neutral-500 my-2 text-[15px]"><input type="checkbox" disabled checked class="rounded border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 w-4 h-4 cursor-not-allowed mt-0.5"> <span class="line-through">$1</span></li>');
 
  // Unordered lists
- html = html.replace(/^- (.*?)$/gm, '<li class="list-disc ml-5 text-neutral-700 dark:text-neutral-300 my-0.5">$1</li>');
+ html = html.replace(/^- (.*?)$/gm, '<li class="list-disc ml-6 text-neutral-700 dark:text-neutral-300 my-1.5 text-[15px] leading-relaxed">$1</li>');
 
  // Bold
  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-black dark:text-white">$1</strong>');
@@ -52,7 +52,7 @@ const parseMarkdown = (text: string): string => {
  if (/^\s*<(h[1-6]|pre|li|ul|ol)/i.test(p)) {
  return p;
  }
- return `<p class="text-neutral-700 dark:text-neutral-300 leading-relaxed text-xs my-2">${p.replace(/\n/g, '<br>')}</p>`;
+ return `<p class="text-neutral-700 dark:text-neutral-300 leading-relaxed text-[15px] md:text-base my-3.5">${p.replace(/\n/g, '<br>')}</p>`;
  }).join('\n');
 
  return html;
@@ -372,14 +372,14 @@ export const NotesManager: React.FC = () => {
  <div
  key={note.id}
  onClick={() => setSelectedNoteId(note.id)}
- className={`p-3 rounded-xl border  cursor-pointer text-left relative group ${
+ className={`p-4 rounded-xl border cursor-pointer text-left relative group transition-all duration-200 ${
  selectedNoteId === note.id
- ? 'bg-neutral-100 dark:bg-neutral-800 border-neutral-600 shadow-md shadow-neutral-900/5'
- : 'bg-white dark:bg-black/20 border-neutral-200 dark:border-neutral-850 hover:border-neutral-200 dark:border-neutral-800'
+ ? 'bg-neutral-100 dark:bg-neutral-800 border-neutral-500 shadow-sm shadow-neutral-900/10 scale-[1.01]'
+ : 'bg-white dark:bg-black/20 border-neutral-200 dark:border-neutral-850 hover:border-neutral-300 dark:hover:border-neutral-700'
  }`}
  >
  <div className="flex items-start justify-between">
- <h4 className="text-xs font-semibold text-black dark:text-white truncate max-w-[80%]">
+ <h4 className="text-sm font-bold text-black dark:text-white truncate max-w-[85%]">
  {note.title || 'Untitled Note'}
  </h4>
  <button
@@ -387,21 +387,21 @@ export const NotesManager: React.FC = () => {
  e.stopPropagation();
  handleDeleteNote(note.id);
  }}
- className="opacity-0 group-hover:opacity-100 p-0.5 text-neutral-500 hover:text-neutral-400 rounded cursor-pointer"
+ className="opacity-0 group-hover:opacity-100 p-1 text-neutral-500 hover:text-red-500 rounded cursor-pointer transition-all"
  title="Delete Note"
  >
- <FiTrash2 className="w-3.5 h-3.5" />
+ <FiTrash2 className="w-4 h-4" />
  </button>
  </div>
- <p className="text-xxs text-neutral-500 dark:text-neutral-400 line-clamp-2 mt-1.5">
- {note.content.replace(/[#*`\-]/g, '').substring(0, 75)}
+ <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 mt-2 leading-relaxed">
+ {note.content.replace(/[#*`\-]/g, '').substring(0, 100)}
  </p>
- <div className="flex items-center gap-1.5 mt-2.5 overflow-x-hidden">
- <span className="text-[9px] font-bold text-neutral-500 bg-white dark:bg-black/80 px-1 py-0.5 rounded">
+ <div className="flex items-center gap-2 mt-3 overflow-x-hidden">
+ <span className="text-[10px] font-bold text-neutral-600 dark:text-neutral-400 bg-neutral-200 dark:bg-neutral-800 px-1.5 py-0.5 rounded-md">
  {note.folder}
  </span>
  {note.tags.slice(0, 2).map(tag => (
- <span key={tag} className="text-[9px] text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 px-1 py-0.5 rounded">
+ <span key={tag} className="text-[10px] font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 px-1.5 py-0.5 rounded-md">
  #{tag}
  </span>
  ))}
@@ -510,42 +510,42 @@ export const NotesManager: React.FC = () => {
  </div>
 
  {/* Note Fields Input */}
- <div className="p-4 border-b border-neutral-200 dark:border-neutral-850 flex gap-4 bg-white dark:bg-black/10">
+ <div className="p-6 border-b border-neutral-200 dark:border-neutral-850 flex flex-col md:flex-row gap-4 bg-white dark:bg-black/10 transition-colors">
  <div className="flex-1">
  <input 
  type="text" 
  value={activeNote.title}
  onChange={(e) => handleUpdateNoteTitle(e.target.value)}
  placeholder="Note Title" 
- className="w-full text-sm font-semibold bg-transparent border-b border-transparent hover:border-neutral-200 dark:border-neutral-800 focus:border-neutral-500 focus:outline-none text-black dark:text-white py-1 px-0"
+ className="w-full text-xl md:text-2xl font-bold bg-transparent border-b-2 border-transparent hover:border-neutral-200 dark:border-neutral-800 focus:border-neutral-500 focus:outline-none text-black dark:text-white py-2 px-0 transition-all placeholder-neutral-400"
  />
  </div>
 
- <div className="w-1/3 flex items-center gap-1.5">
- <FiTag className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
+ <div className="w-full md:w-1/3 flex items-center gap-2 border-b-2 border-transparent hover:border-neutral-200 dark:border-neutral-800 focus-within:border-neutral-500 transition-all py-2">
+ <FiTag className="w-4 h-4 text-neutral-500 shrink-0" />
  <input 
  type="text" 
  value={activeNote.tags.join(', ')}
  onChange={(e) => handleUpdateNoteTags(e.target.value)}
  placeholder="tags, separated, by, commas" 
- className="w-full text-xxs bg-transparent border-b border-transparent hover:border-neutral-200 dark:border-neutral-800 focus:border-neutral-500 focus:outline-none text-neutral-700 dark:text-neutral-300 py-1 px-0"
+ className="w-full text-sm bg-transparent focus:outline-none text-neutral-700 dark:text-neutral-300 px-0 placeholder-neutral-500"
  />
  </div>
  </div>
 
  {/* Note Body editor / Preview panel */}
- <div className="flex-1 p-4 overflow-y-auto">
+ <div className="flex-1 p-6 md:p-10 overflow-y-auto bg-white dark:bg-[#0a0a0c]">
  {editorTab === 'write' ? (
  <textarea
  id="note-textarea"
  value={activeNote.content}
  onChange={(e) => handleUpdateNoteContent(e.target.value)}
  placeholder="Type note body here in markdown format..."
- className="w-full h-full bg-transparent text-xs text-neutral-800 dark:text-neutral-200 placeholder-neutral-650 resize-none focus:outline-none leading-relaxed"
+ className="w-full h-full bg-transparent text-[15px] md:text-base text-neutral-800 dark:text-neutral-200 placeholder-neutral-500 resize-none focus:outline-none leading-loose"
  />
  ) : (
  <div 
- className="prose prose-invert max-w-none text-left"
+ className="prose prose-invert max-w-4xl text-left"
  dangerouslySetInnerHTML={{ __html: parseMarkdown(activeNote.content) }}
  />
  )}
