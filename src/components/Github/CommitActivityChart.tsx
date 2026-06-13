@@ -55,21 +55,21 @@ export const CommitActivityChart: React.FC<Props> = ({ weeklyActivity }) => {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+        <span className="text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
           <FiActivity className="w-3.5 h-3.5" />
           <span>Weekly Commit Activity · Last 12 Weeks</span>
         </span>
         <div className="flex items-center gap-3 text-[10px]">
-          <span className="text-zinc-500">
-            This week: <span className="font-bold text-zinc-300">{thisWeek}</span>
+          <span className="text-neutral-500 dark:text-zinc-500">
+            This week: <span className="font-bold text-neutral-700 dark:text-zinc-300">{thisWeek}</span>
           </span>
-          <span className="text-zinc-500">
-            Total: <span className="font-bold text-zinc-300">{totalCommits}</span>
+          <span className="text-neutral-500 dark:text-zinc-500">
+            Total: <span className="font-bold text-neutral-700 dark:text-zinc-300">{totalCommits}</span>
           </span>
         </div>
       </div>
 
-      <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-xl overflow-x-auto">
+      <div className="p-4 bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 rounded-xl overflow-x-auto">
         <svg
           width={totalSvgW}
           height={totalSvgH}

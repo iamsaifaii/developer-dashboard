@@ -146,6 +146,15 @@ function App() {
     return () => clearInterval(interval);
   }, [currentUser, checkOverdueTasks]);
 
+  // Handle Theme Toggling
+  useEffect(() => {
+    if (settings.themeMode === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
+  }, [settings.themeMode]);
+
  // 1. Global Pomodoro Clock Loop
  useEffect(() => {
  let interval: any = null;

@@ -16,7 +16,8 @@ import {
  FiCode,
  FiList,
  FiCheckSquare,
- FiFilter
+ FiFilter,
+ FiChevronLeft
 } from 'react-icons/fi';
 // Custom Markdown Parser
 const parseMarkdown = (text: string): string => {
@@ -44,7 +45,7 @@ const parseMarkdown = (text: string): string => {
  html = html.replace(/^- (.*?)$/gm, '<li class="list-disc ml-6 text-neutral-700 dark:text-neutral-300 my-1.5 text-[15px] leading-relaxed">$1</li>');
 
  // Bold
- html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-black dark:text-white">$1</strong>');
+ html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-black dark:text-black dark:text-white">$1</strong>');
 
  // Paragraphs
  const paragraphs = html.split(/\n\n+/);
@@ -222,10 +223,10 @@ export const NotesManager: React.FC = () => {
  };
 
  return (
- <div className="flex flex-col md:grid md:grid-cols-4 gap-6 h-[calc(100vh-8.5rem)]">
+ <div className="flex flex-col md:grid md:grid-cols-4 gap-4 md:gap-6 h-[calc(100vh-8.5rem)]">
  
  {/* 1. Folders Column */}
- <div className="h-48 md:h-auto md:col-span-1 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl p-4 flex flex-col shadow-xl overflow-y-auto">
+ <div className={`md:col-span-1 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl p-4 shadow-xl overflow-y-auto ${selectedNoteId ? 'hidden md:flex flex-col h-auto' : 'flex flex-col shrink-0 h-48 md:h-auto'}`}>
  <div>
  <div className="flex items-center justify-between mb-4">
  <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">Notebooks</span>
@@ -303,7 +304,7 @@ export const NotesManager: React.FC = () => {
  </div>
 
  {/* 2. Notes List Column */}
- <div className="h-64 md:h-auto md:col-span-1 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl p-4 flex flex-col gap-4 shadow-xl">
+ <div className={`md:col-span-1 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl p-4 gap-4 shadow-xl ${selectedNoteId ? 'hidden md:flex flex-col h-auto' : 'flex flex-col flex-1 min-h-0'}`}>
  {/* Search & Filters */}
  <div className="space-y-3">
    <div className="flex items-center gap-2">
@@ -321,7 +322,7 @@ export const NotesManager: React.FC = () => {
        onClick={() => setShowFilters(!showFilters)}
        className={`p-2 rounded-lg border transition-colors ${
          showFilters 
-           ? 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 text-black dark:text-white' 
+           ? 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 text-black dark:text-black dark:text-white' 
            : 'bg-white dark:bg-black/40 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-900'
        }`}
        title="Advanced Filters"
@@ -422,18 +423,25 @@ export const NotesManager: React.FC = () => {
  </div>
 
  {/* 3. Editor Column */}
- <div className={`flex-1 md:col-span-2 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl flex flex-col shadow-xl overflow-hidden ${!selectedNoteId ? 'max-md:hidden' : ''}`}>
+ <div className={`md:col-span-2 glass-panel border border-neutral-200 dark:border-neutral-800/80 rounded-2xl shadow-xl overflow-hidden ${!selectedNoteId ? 'hidden md:flex flex-col flex-1' : 'flex flex-col flex-1'}`}>
  {activeNote ? (
  <>
  {/* Editor Toolbar */}
- <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-850 bg-white dark:bg-black/20 flex items-center justify-between">
- <div className="flex items-center gap-3">
- <div className="flex bg-white dark:bg-black/60 p-0.5 rounded-lg border border-neutral-300 dark:border-black">
+ <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-850 bg-white dark:bg-black/20 flex flex-wrap items-center justify-between gap-2">
+ <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1 -mb-1">
+ <button
+  onClick={() => setSelectedNoteId(null)}
+  className="md:hidden flex items-center gap-1 px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white rounded-md cursor-pointer mr-1"
+ >
+  <FiChevronLeft className="w-4 h-4" />
+  <span className="text-xs font-bold">Back</span>
+ </button>
+ <div className="flex shrink-0 bg-white dark:bg-black/60 p-0.5 rounded-lg border border-neutral-300 dark:border-black">
  <button
  onClick={() => setEditorTab('write')}
  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xxs font-bold cursor-pointer ${
  editorTab === 'write'
- ? 'bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white'
+ ? 'bg-neutral-100 dark:bg-neutral-800 text-black dark:text-black dark:text-white'
  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:text-neutral-200'
  }`}
  >
@@ -444,7 +452,7 @@ export const NotesManager: React.FC = () => {
  onClick={() => setEditorTab('preview')}
  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xxs font-bold cursor-pointer ${
  editorTab === 'preview'
- ? 'bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white'
+ ? 'bg-neutral-100 dark:bg-neutral-800 text-black dark:text-black dark:text-white'
  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:text-neutral-200'
  }`}
  >

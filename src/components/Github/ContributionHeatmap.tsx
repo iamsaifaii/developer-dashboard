@@ -75,17 +75,17 @@ export const ContributionHeatmap: React.FC<Props> = ({ commits }) => {
   return (
     <div className="text-left space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+        <span className="text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
           <FiCalendar className="w-3.5 h-3.5" />
           <span>Contribution Graph · Past 365 Days</span>
         </span>
-        <span className="text-[10px] font-semibold text-zinc-500">
+        <span className="text-[10px] font-semibold text-neutral-500 dark:text-zinc-500">
           {totalContributions.toLocaleString()} contributions
         </span>
       </div>
 
       {/* SVG Heatmap */}
-      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl overflow-x-auto select-none relative">
+      <div className="p-3 bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 rounded-xl overflow-x-auto select-none relative">
         <svg
           width={totalW}
           height={totalH}
@@ -152,7 +152,7 @@ export const ContributionHeatmap: React.FC<Props> = ({ commits }) => {
         {/* Tooltip */}
         {tooltip && (
           <div
-            className="fixed z-50 px-2.5 py-1.5 rounded-lg text-[10px] font-medium text-zinc-100 bg-zinc-800 shadow-xl pointer-events-none border border-zinc-700"
+            className="fixed z-50 px-2.5 py-1.5 rounded-lg text-[10px] font-medium text-zinc-100 bg-neutral-100 dark:bg-zinc-800 shadow-xl pointer-events-none border border-neutral-300 dark:border-zinc-700"
             style={{ left: tooltip.x - 40, top: tooltip.y - 42 }}
           >
             <span className="font-bold">{tooltip.count} commit{tooltip.count !== 1 ? 's' : ''}</span>

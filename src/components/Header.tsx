@@ -101,7 +101,7 @@ interface HeaderProps {
   <div 
   className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md border text-xs font-medium transition-colors duration-200 ${
   githubConnected 
-  ? 'bg-[#111] border-[#333] text-white' 
+  ? 'bg-[#111] border-[#333] text-black dark:text-white' 
   : 'bg-black border-[#222] text-[#ccc]'
   }`}
   title={githubConnected ? `Synced to @${githubUsername}` : 'GitHub disconnected'}

@@ -10,7 +10,7 @@ interface Props {
 const StatusBadge: React.FC<{ merged: boolean; state: string }> = ({ merged, state }) => {
   if (merged) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-zinc-800 text-zinc-300 border border-zinc-700">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-neutral-100 dark:bg-zinc-800 text-neutral-700 dark:text-zinc-300 border border-neutral-300 dark:border-zinc-700">
         <FiCheckCircle className="w-2.5 h-2.5" />
         Merged
       </span>
@@ -18,14 +18,14 @@ const StatusBadge: React.FC<{ merged: boolean; state: string }> = ({ merged, sta
   }
   if (state === 'closed') {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-zinc-800 text-zinc-400 border border-zinc-700">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-neutral-100 dark:bg-zinc-800 text-neutral-600 dark:text-zinc-400 border border-neutral-300 dark:border-zinc-700">
         <FiXCircle className="w-2.5 h-2.5" />
         Closed
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-zinc-800 text-zinc-200 border border-zinc-700">
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-neutral-100 dark:bg-zinc-800 text-zinc-200 border border-neutral-300 dark:border-zinc-700">
       <FiGitPullRequest className="w-2.5 h-2.5" />
       Open
     </span>
@@ -124,10 +124,10 @@ export const PRAnalyticsCard: React.FC<Props> = ({ prs, analytics }) => {
             { label: 'Merged', count: mergedCount, color: '#71717a' },
             { label: 'Closed', count: closedCount, color: '#3f3f46' },
           ].map(item => (
-            <div key={item.label} className="flex items-center justify-between px-2.5 py-1.5 rounded-lg border border-zinc-800 bg-zinc-950">
+            <div key={item.label} className="flex items-center justify-between px-2.5 py-1.5 rounded-lg border border-neutral-200 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-950">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
-                <span className="text-[10px] font-semibold text-zinc-400">{item.label}</span>
+                <span className="text-[10px] font-semibold text-neutral-600 dark:text-zinc-400">{item.label}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-bold text-zinc-200">{item.count}</span>
@@ -145,16 +145,16 @@ export const PRAnalyticsCard: React.FC<Props> = ({ prs, analytics }) => {
       {/* PR List */}
       <div className="space-y-2 max-h-[220px] overflow-y-auto">
         {prs.length === 0 ? (
-          <p className="text-xs text-zinc-500 italic text-center py-4">No pull requests found.</p>
+          <p className="text-xs text-neutral-500 dark:text-zinc-500 italic text-center py-4">No pull requests found.</p>
         ) : (
           prs.map(pr => (
             <div
               key={pr.id}
-              className="p-2.5 rounded-xl border border-zinc-800 bg-zinc-950 flex items-center justify-between gap-3 group hover:bg-zinc-900 transition-colors"
+              className="p-2.5 rounded-xl border border-neutral-200 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-950 flex items-center justify-between gap-3 group hover:bg-white dark:bg-zinc-900 transition-colors"
             >
               <div className="min-w-0 flex-1 space-y-0.5">
                 <p className="text-xs font-medium text-zinc-200 truncate">{pr.title}</p>
-                <p className="text-[9px] text-zinc-500">{pr.repoName} · #{pr.number}</p>
+                <p className="text-[9px] text-neutral-500 dark:text-zinc-500">{pr.repoName} · #{pr.number}</p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <StatusBadge merged={pr.merged} state={pr.state} />
@@ -162,7 +162,7 @@ export const PRAnalyticsCard: React.FC<Props> = ({ prs, analytics }) => {
                   href={pr.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="opacity-0 group-hover:opacity-100 p-1 rounded border border-zinc-700 text-zinc-400 hover:text-zinc-200 transition-all"
+                  className="opacity-0 group-hover:opacity-100 p-1 rounded border border-neutral-300 dark:border-zinc-700 text-neutral-600 dark:text-zinc-400 hover:text-zinc-200 transition-all"
                 >
                   <FiExternalLink className="w-3 h-3" />
                 </a>

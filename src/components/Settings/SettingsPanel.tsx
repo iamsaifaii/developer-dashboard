@@ -54,7 +54,7 @@ export const SettingsPanel: React.FC = () => {
 
       {showSaveAlert && (
         <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-neutral-900 border border-neutral-800 text-neutral-100 text-xxs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-xl z-50 pointer-events-none">
-          <FiCheckCircle className="w-4 h-4 text-white" />
+          <FiCheckCircle className="w-4 h-4 text-black dark:text-white" />
           <span>Settings saved!</span>
         </div>
       )}
