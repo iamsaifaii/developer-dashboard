@@ -20,6 +20,7 @@ export const SettingsPanel: React.FC = () => {
   const [workTime, setWorkTime] = useState(settings.pomodoroWorkTime);
   const [shortBreak, setShortBreak] = useState(settings.pomodoroShortBreak);
   const [longBreak, setLongBreak] = useState(settings.pomodoroLongBreak);
+  const [themeMode, setThemeMode] = useState(settings.themeMode);
   const [notificationPreferences, setNotificationPreferences] = useState(
     settings.notificationPreferences || {
       taskDue: true, taskOverdue: true, pomodoroComplete: true, focusReminder: true, githubCommits: true, githubPRs: true, systemUpdates: true
@@ -33,8 +34,8 @@ export const SettingsPanel: React.FC = () => {
       pomodoroWorkTime: Number(workTime),
       pomodoroShortBreak: Number(shortBreak),
       pomodoroLongBreak: Number(longBreak),
-      themeMode: 'dark',
-      colorScheme: 'dark',
+      themeMode: themeMode,
+      colorScheme: themeMode === 'glass' ? 'dark' : themeMode,
       notificationPreferences
     });
     setShowSaveAlert(true);
@@ -126,15 +127,26 @@ export const SettingsPanel: React.FC = () => {
 
           {/* Card 3: Theme Aesthetics */}
           <div className="glass-panel rounded-2xl p-6 shadow-xl space-y-4">
-            <div className="flex items-center gap-2.5 text-xs font-bold text-neutral-350 uppercase tracking-wider mb-2">
+            <div className="flex items-center gap-2.5 text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2">
               <FiSliders className="w-4 h-4" />
               <span>Theme Aesthetics</span>
             </div>
 
-            <div className="p-4 bg-neutral-900 border border-neutral-850 rounded-xl space-y-2">
-              <p className="text-xs font-bold text-neutral-200">Exclusive Flat Dark Theme Active</p>
-              <p className="text-[10px] text-neutral-500 leading-normal">
-                DevFlow is configured to run exclusively in high-contrast monochromatic dark mode. Color scheme controls have been disabled to ensure design consistency and eliminate visual fatigue.
+            <div className="p-4 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl space-y-4">
+              <div>
+                <label className="text-[9px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider block mb-1">Color Mode</label>
+                <select
+                  value={themeMode}
+                  onChange={(e) => setThemeMode(e.target.value as any)}
+                  className="w-full text-xs px-3.5 py-2 rounded-xl bg-white dark:bg-black/60 border border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 focus:outline-none focus:border-neutral-500 cursor-pointer"
+                >
+                  <option value="dark">Dark Mode</option>
+                  <option value="light">Light Mode</option>
+                  <option value="glass">Glass Mode (Legacy)</option>
+                </select>
+              </div>
+              <p className="text-[10px] text-neutral-500 dark:text-neutral-500 leading-normal">
+                Choose between the crisp Light Mode or the high-contrast Monochromatic Dark Mode.
               </p>
             </div>
           </div>
