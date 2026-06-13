@@ -17,7 +17,7 @@ const STAGE_ADVANCE_MAP: Record<string, { target: string; label: string; styles:
   'todo': {
     target: 'in-progress',
     label: 'In Progress',
-    styles: 'border-blue-500/30 text-blue-400 bg-blue-500/10 hover:bg-blue-500/20'
+    styles: 'border-blue-500/30 text-blue-400 bg-[#ededed]/10 hover:bg-[#ededed]/20'
   },
   'in-progress': {
     target: 'review',
@@ -85,14 +85,14 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
         );
       }
       return (
-        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded border border-emerald-500/20 bg-zinc-900 text-[9px] font-bold text-emerald-400 shadow-sm shrink-0">
+        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded border border-emerald-500/20 bg-black text-[9px] font-bold text-emerald-400 shadow-sm shrink-0">
           <FiCalendar className="w-3 h-3 text-emerald-400" />
           <span>{formatDate(task.dueDate)}</span>
         </div>
       );
     }
     return (
-      <div className="p-1.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-500 shadow-sm shrink-0 flex items-center justify-center">
+      <div className="p-1.5 rounded border border-zinc-800 bg-black text-zinc-400 shadow-sm shrink-0 flex items-center justify-center">
         <FiCalendar className="w-3 h-3" />
       </div>
     );
@@ -102,7 +102,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
     if (task.priority === 'urgent' || task.priority === 'high') {
       const isUrgent = task.priority === 'urgent';
       return (
-        <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded border bg-zinc-900 text-[9px] font-bold shadow-sm shrink-0 ${isUrgent ? 'text-red-400 border-red-500/30' : 'text-yellow-400 border-yellow-500/30'
+        <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded border bg-black text-[9px] font-bold shadow-sm shrink-0 ${isUrgent ? 'text-red-400 border-red-500/30' : 'text-yellow-400 border-yellow-500/30'
           }`}>
           <FiFlag className={`w-3 h-3 ${isUrgent ? 'text-red-400 fill-red-400/20' : 'text-yellow-400 fill-yellow-400/20'}`} />
           <span>{isUrgent ? 'Urgent' : 'High'}</span>
@@ -112,8 +112,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
 
     // Medium / Low priority (just a flag in a box)
     return (
-      <div className="p-1.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-500 shadow-sm shrink-0 flex items-center justify-center">
-        <FiFlag className="w-3 h-3 text-zinc-500" />
+      <div className="p-1.5 rounded border border-zinc-800 bg-black text-zinc-400 shadow-sm shrink-0 flex items-center justify-center">
+        <FiFlag className="w-3 h-3 text-zinc-400" />
       </div>
     );
   };
@@ -172,7 +172,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
           if (!hasAttachments && !hasDescription) return null;
 
           return (
-            <div className="flex items-center gap-3 text-zinc-500 text-[10px] font-medium">
+            <div className="flex items-center gap-3 text-zinc-400 text-[10px] font-medium">
               {hasAttachments && (
                 <span className="flex items-center gap-1.5">
                   <FiPaperclip className="w-3 h-3" />
@@ -190,7 +190,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
 
         {/* Subtask Status */}
         {task.subtasks.length > 0 && (
-          <div className="flex items-center gap-1.5 text-[9px] font-bold text-zinc-500 uppercase tracking-widest mt-0.5">
+          <div className="flex items-center gap-1.5 text-[9px] font-bold text-zinc-400 uppercase tracking-widest mt-0.5">
             <FiGitBranch className="w-3 h-3 text-zinc-600" />
             <span>{task.subtasks.filter(st => st.isCompleted).length} / {task.subtasks.length} Subtasks</span>
           </div>
@@ -212,7 +212,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
           {renderPriorityPill()}
 
           {/* Tag Pill */}
-          <div className="p-1.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-500 hover:text-zinc-400 transition-colors shadow-sm cursor-pointer shrink-0 flex items-center justify-center">
+          <div className="p-1.5 rounded border border-zinc-800 bg-black text-zinc-400 hover:text-zinc-400 transition-colors shadow-sm cursor-pointer shrink-0 flex items-center justify-center">
             <FiTag className="w-3 h-3" />
           </div>
 
@@ -223,7 +223,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
                 e.stopPropagation();
                 deleteTask(task.id);
               }}
-              className="p-1.5 text-zinc-500 hover:text-red-400 hover:bg-zinc-900 rounded-lg cursor-pointer transition-colors"
+              className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-black rounded-lg cursor-pointer transition-colors"
               title="Delete Task"
             >
               <FiTrash2 className="w-3.5 h-3.5" />

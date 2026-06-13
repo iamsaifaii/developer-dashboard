@@ -62,7 +62,7 @@ export const SettingsPanel: React.FC = () => {
     <div className="max-w-5xl mx-auto relative text-left h-[calc(100vh-8.5rem)] flex flex-col md:flex-row gap-6">
 
       {showSaveAlert && (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-zinc-900 border border-zinc-800 text-zinc-100 text-xxs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-xl z-50 pointer-events-none panel-in">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-black border border-zinc-800 text-zinc-100 text-xxs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-xl z-50 pointer-events-none panel-in">
           <FiCheckCircle className="w-4 h-4 text-emerald-400" />
           <span>Settings saved!</span>
         </div>
@@ -70,7 +70,7 @@ export const SettingsPanel: React.FC = () => {
 
       {/* Sidebar Navigation */}
       <div className="w-full md:w-64 shrink-0 glass-panel border border-zinc-800/80 rounded-2xl p-4 flex flex-col gap-2 shadow-xl overflow-y-auto h-auto md:h-full">
-        <div className="text-xs font-bold text-zinc-500 uppercase tracking-widest px-2 mb-2 mt-1">
+        <div className="text-xs font-bold text-zinc-400 uppercase tracking-widest px-2 mb-2 mt-1">
           Settings Menu
         </div>
         {tabs.map((tab) => {
@@ -130,7 +130,7 @@ export const SettingsPanel: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 {/* Work Time */}
                 <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col items-center gap-3">
-                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">Focus Time</label>
+                  <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-center">Focus Time</label>
                   <div className="flex items-center gap-3 w-full">
                     <button type="button" onClick={() => setWorkTime(Math.max(1, workTime - 1))} className="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center cursor-pointer transition-colors font-mono font-bold">-</button>
                     <input 
@@ -138,17 +138,17 @@ export const SettingsPanel: React.FC = () => {
                       min="1" max="60"
                       value={workTime}
                       onChange={(e) => setWorkTime(Number(e.target.value))}
-                      className="flex-1 text-lg px-2 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 text-center font-bold"
+                      className="flex-1 text-lg px-2 py-1.5 rounded-lg bg-black border border-zinc-800 text-white focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 text-center font-bold"
                       required
                     />
                     <button type="button" onClick={() => setWorkTime(Math.min(60, workTime + 1))} className="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center cursor-pointer transition-colors font-mono font-bold">+</button>
                   </div>
-                  <span className="text-[10px] text-zinc-500">minutes</span>
+                  <span className="text-[10px] text-zinc-400">minutes</span>
                 </div>
 
                 {/* Short Break */}
                 <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col items-center gap-3">
-                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">Short Break</label>
+                  <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-center">Short Break</label>
                   <div className="flex items-center gap-3 w-full">
                     <button type="button" onClick={() => setShortBreak(Math.max(1, shortBreak - 1))} className="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center cursor-pointer transition-colors font-mono font-bold">-</button>
                     <input 
@@ -156,17 +156,17 @@ export const SettingsPanel: React.FC = () => {
                       min="1" max="30"
                       value={shortBreak}
                       onChange={(e) => setShortBreak(Number(e.target.value))}
-                      className="flex-1 text-lg px-2 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 text-center font-bold"
+                      className="flex-1 text-lg px-2 py-1.5 rounded-lg bg-black border border-zinc-800 text-white focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 text-center font-bold"
                       required
                     />
                     <button type="button" onClick={() => setShortBreak(Math.min(30, shortBreak + 1))} className="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center cursor-pointer transition-colors font-mono font-bold">+</button>
                   </div>
-                  <span className="text-[10px] text-zinc-500">minutes</span>
+                  <span className="text-[10px] text-zinc-400">minutes</span>
                 </div>
 
                 {/* Long Break */}
                 <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col items-center gap-3">
-                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">Long Break</label>
+                  <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-center">Long Break</label>
                   <div className="flex items-center gap-3 w-full">
                     <button type="button" onClick={() => setLongBreak(Math.max(1, longBreak - 1))} className="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center cursor-pointer transition-colors font-mono font-bold">-</button>
                     <input 
@@ -174,16 +174,16 @@ export const SettingsPanel: React.FC = () => {
                       min="1" max="60"
                       value={longBreak}
                       onChange={(e) => setLongBreak(Number(e.target.value))}
-                      className="flex-1 text-lg px-2 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 text-center font-bold"
+                      className="flex-1 text-lg px-2 py-1.5 rounded-lg bg-black border border-zinc-800 text-white focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 text-center font-bold"
                       required
                     />
                     <button type="button" onClick={() => setLongBreak(Math.min(60, longBreak + 1))} className="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center cursor-pointer transition-colors font-mono font-bold">+</button>
                   </div>
-                  <span className="text-[10px] text-zinc-500">minutes</span>
+                  <span className="text-[10px] text-zinc-400">minutes</span>
                 </div>
               </div>
               
-              <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-200 flex items-start gap-3">
+              <div className="p-4 rounded-xl bg-[#ededed]/10 border border-blue-500/20 text-xs text-blue-200 flex items-start gap-3">
                 <FiClock className="w-4 h-4 mt-0.5 shrink-0" />
                 <p>Changing Pomodoro clock parameters will reset your active timer intervals if a timer is currently idle.</p>
               </div>
@@ -219,7 +219,7 @@ export const SettingsPanel: React.FC = () => {
                           ...prev, [key]: e.target.checked
                         }))}
                       />
-                      <div className={`block w-11 h-6 rounded-full transition-colors ${notificationPreferences[key as keyof typeof notificationPreferences] ? 'bg-blue-500' : 'bg-zinc-800'}`}></div>
+                      <div className={`block w-11 h-6 rounded-full transition-colors ${notificationPreferences[key as keyof typeof notificationPreferences] ? 'bg-[#ededed]' : 'bg-zinc-800'}`}></div>
                       <div className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ${notificationPreferences[key as keyof typeof notificationPreferences] ? 'transform translate-x-5' : ''}`}></div>
                     </div>
                   </label>
@@ -264,7 +264,7 @@ export const SettingsPanel: React.FC = () => {
                       <FiRotateCcw className="w-4 h-4" />
                       <span>Factory Reset Workspace</span>
                     </div>
-                    <p className="text-xs text-zinc-500 leading-relaxed max-w-md">
+                    <p className="text-xs text-zinc-400 leading-relaxed max-w-md">
                       This will permanently wipe local storage, restoring all default templates, notes, and Pomodoro history. This action cannot be undone.
                     </p>
                   </div>

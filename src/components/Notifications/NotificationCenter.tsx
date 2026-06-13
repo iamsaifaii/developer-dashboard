@@ -57,19 +57,19 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = () => {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-zinc-400 hover:text-white bg-zinc-950 border border-zinc-800 rounded-lg cursor-pointer relative transition-colors"
+        className="p-2 text-zinc-400 hover:text-white bg-black border border-zinc-800 rounded-lg cursor-pointer relative transition-colors"
       >
         <FiBell className="w-4 h-4" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-[9px] font-bold text-white flex items-center justify-center border border-zinc-900">
+          <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-[9px] font-bold text-white flex items-center justify-center border border-zinc-800">
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 max-h-[400px] bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl flex flex-col z-50 overflow-hidden">
-          <div className="p-3 border-b border-zinc-800 flex items-center justify-between bg-zinc-950/50">
+        <div className="absolute right-0 mt-2 w-80 max-h-[400px] bg-black border border-zinc-700 rounded-xl shadow-2xl flex flex-col z-50 overflow-hidden">
+          <div className="p-3 border-b border-zinc-800 flex items-center justify-between bg-black/50">
             <h3 className="text-sm font-semibold text-white">Notifications</h3>
             {unreadCount > 0 && (
               <button 
@@ -83,7 +83,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = () => {
           
           <div className="flex-1 overflow-y-auto overflow-x-hidden">
             {(!notifications || notifications.length === 0) ? (
-              <div className="p-8 text-center text-zinc-500 flex flex-col items-center gap-2">
+              <div className="p-8 text-center text-zinc-400 flex flex-col items-center gap-2">
                 <FiBell className="w-8 h-8 opacity-20" />
                 <p className="text-sm">You're all caught up!</p>
               </div>
@@ -92,7 +92,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = () => {
                 {notifications.map((notification: AppNotification) => (
                   <div 
                     key={notification.id} 
-                    className={`p-3 border-b border-zinc-800/50 hover:bg-zinc-800/50 transition-colors group flex gap-3 ${notification.isRead ? 'opacity-60' : 'bg-blue-500/5'}`}
+                    className={`p-3 border-b border-zinc-800/50 hover:bg-zinc-900/50 transition-colors group flex gap-3 ${notification.isRead ? 'opacity-60' : 'bg-[#ededed]/5'}`}
                   >
                     <div className="mt-1 flex-shrink-0">
                       {getIconForCategory(notification.category)}
@@ -102,7 +102,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = () => {
                         <p className={`text-sm truncate ${notification.isRead ? 'text-zinc-300' : 'text-white font-medium'}`}>
                           {notification.title}
                         </p>
-                        <span className="text-[10px] text-zinc-500 whitespace-nowrap">
+                        <span className="text-[10px] text-zinc-400 whitespace-nowrap">
                           {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
                         </span>
                       </div>

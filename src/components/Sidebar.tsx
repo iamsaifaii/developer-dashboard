@@ -72,12 +72,12 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  onClick={onClose} 
  />
  )}
- <aside className={`${isCollapsed ? 'w-20 bg-[#161434]' : 'w-60 bg-[#0a0a0c]'} h-screen fixed left-0 top-0 border-r border-zinc-900 flex flex-col justify-between z-50 transition-all duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+ <aside className={`${isCollapsed ? 'w-20 bg-black' : 'w-60 bg-black'} h-screen fixed left-0 top-0 border-r border-zinc-800 flex flex-col justify-between z-50 transition-all duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
  
  {/* Top Section: Collapse Toggle & Brand */}
- <div className={`pt-5 pb-4 border-b border-zinc-900 relative flex ${isCollapsed ? 'flex-col items-center gap-4 px-0' : 'items-center justify-between px-5'}`}>
+ <div className={`pt-5 pb-4 border-b border-zinc-800 relative flex ${isCollapsed ? 'flex-col items-center gap-4 px-0' : 'items-center justify-between px-5'}`}>
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-sm shrink-0">
+ <div className="w-10 h-10 rounded-xl bg-black border border-zinc-800 flex items-center justify-center shadow-sm shrink-0">
  <img src="/icon.svg" alt="DevFlow Logo" className="w-6 h-6 object-contain" />
  </div>
  {!isCollapsed && (
@@ -94,7 +94,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  {onToggleCollapse && (
    <button 
      onClick={onToggleCollapse}
-     className={`flex items-center justify-center w-8 h-8 rounded-lg border border-zinc-800 bg-[#0f0f11] text-zinc-500 hover:text-white hover:bg-zinc-800 cursor-pointer transition-colors z-50 shrink-0`}
+     className={`flex items-center justify-center w-8 h-8 rounded-lg border border-zinc-800 bg-[#0a0a0a] text-zinc-400 hover:text-white hover:bg-zinc-900 cursor-pointer transition-colors z-50 shrink-0`}
      title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
    >
      {isCollapsed ? <FiChevronRight className="w-4 h-4" /> : <FiChevronLeft className="w-4 h-4" />}
@@ -128,11 +128,11 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
      }
      ${isActive
        ? 'bg-zinc-800/80 text-white font-bold'
-       : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-300 font-medium'
+       : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-300 font-medium'
      }
    `}
    >
-   <Icon className={`shrink-0 transition-colors duration-200 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} ${isActive ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-400'}`} />
+   <Icon className={`shrink-0 transition-colors duration-200 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} ${isActive ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-400'}`} />
    
    {!isCollapsed && <span className="text-[13px] tracking-wide">{item.label}</span>}
    </button>
@@ -163,11 +163,11 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
      }
      ${isActive
        ? 'bg-zinc-800/80 text-white font-bold'
-       : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-300 font-medium'
+       : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-300 font-medium'
      }
    `}
    >
-   <Icon className={`shrink-0 transition-colors duration-200 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} ${isActive ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-400'}`} />
+   <Icon className={`shrink-0 transition-colors duration-200 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} ${isActive ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-400'}`} />
    
    {!isCollapsed && <span className="text-[13px] tracking-wide">{item.label}</span>}
 
@@ -183,18 +183,18 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  </div>
 
  {/* Footer Pomodoro Widget */}
- <div className={`p-4 mt-auto shrink-0 border-t border-zinc-900 ${isCollapsed ? 'flex justify-center p-2' : ''}`}>
+ <div className={`p-4 mt-auto shrink-0 border-t border-zinc-800 ${isCollapsed ? 'flex justify-center p-2' : ''}`}>
  
  {isCollapsed ? (
    <button 
      onClick={() => setTimerStatus(timerStatus === 'running' ? 'paused' : 'running')}
-     className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-colors ${timerStatus === 'running' ? 'bg-zinc-800 border-zinc-700' : 'bg-zinc-900 border-zinc-800 hover:bg-zinc-800'}`}
+     className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-colors ${timerStatus === 'running' ? 'bg-zinc-800 border-zinc-700' : 'bg-black border-zinc-800 hover:bg-zinc-900'}`}
      title={timerStatus === 'running' ? 'Pause Pomodoro' : 'Start Pomodoro'}
    >
      {timerStatus === 'running' ? <FiPause className="w-5 h-5 text-white" /> : <FiPlay className="w-5 h-5 text-zinc-400 ml-1" />}
    </button>
  ) : (
-   <div className="rounded-2xl border border-zinc-800/80 bg-[#0c0c0e] p-4 flex flex-col gap-4 shadow-lg relative overflow-hidden">
+   <div className="rounded-2xl border border-zinc-800/80 bg-black p-4 flex flex-col gap-4 shadow-lg relative overflow-hidden">
      {/* Subtle gradient glow */}
      <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/10 to-transparent pointer-events-none" />
      
@@ -203,11 +203,11 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
        <div className="flex flex-col gap-1">
          <div className="flex items-center gap-1.5">
            <FiCircle className={`w-2 h-2 fill-current ${timerStatus === 'running' ? 'text-zinc-400' : 'text-zinc-600'}`} />
-           <span className="text-[9px] font-bold tracking-widest uppercase text-zinc-500">
+           <span className="text-[9px] font-bold tracking-widest uppercase text-zinc-400">
              {getTimerLabel()}
            </span>
          </div>
-         <div className="text-[10px] text-zinc-500 font-medium">
+         <div className="text-[10px] text-zinc-400 font-medium">
            Deep work · Session {(totalSessionsCompleted % 4) + 1} of 4
          </div>
        </div>
@@ -239,7 +239,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
        {timerStatus === 'running' ? (
          <button 
            onClick={() => setTimerStatus('paused')}
-           className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-zinc-700 hover:border-zinc-500 bg-zinc-900 hover:bg-zinc-800 text-white cursor-pointer transition-colors text-xs font-bold"
+           className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-zinc-700 hover:border-zinc-500 bg-black hover:bg-zinc-900 text-white cursor-pointer transition-colors text-xs font-bold"
          >
            <FiPause className="w-3.5 h-3.5" />
            <span>Pause</span>
@@ -247,7 +247,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
        ) : (
          <button 
            onClick={() => setTimerStatus('running')}
-           className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-zinc-700 hover:border-zinc-500 bg-[#121214] hover:bg-zinc-800 text-white cursor-pointer transition-colors text-xs font-bold"
+           className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-zinc-700 hover:border-zinc-500 bg-black hover:bg-zinc-900 text-white cursor-pointer transition-colors text-xs font-bold"
          >
            <FiPlay className="w-3.5 h-3.5" />
            <span>Start</span>
@@ -255,14 +255,14 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
        )}
        <button 
          onClick={resetTimer}
-         className="p-2.5 rounded-xl border border-zinc-800 hover:border-zinc-600 bg-[#121214] hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 cursor-pointer transition-colors"
+         className="p-2.5 rounded-xl border border-zinc-800 hover:border-zinc-600 bg-black hover:bg-zinc-900 text-zinc-400 hover:text-zinc-300 cursor-pointer transition-colors"
          title="Reset"
        >
          <FiRotateCcw className="w-4 h-4" />
        </button>
        <button 
          onClick={() => { /* Implement skip logic if needed */ resetTimer(); }}
-         className="p-2.5 rounded-xl border border-zinc-800 hover:border-zinc-600 bg-[#121214] hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 cursor-pointer transition-colors"
+         className="p-2.5 rounded-xl border border-zinc-800 hover:border-zinc-600 bg-black hover:bg-zinc-900 text-zinc-400 hover:text-zinc-300 cursor-pointer transition-colors"
          title="Skip Session"
        >
          <FiSkipForward className="w-4 h-4" />

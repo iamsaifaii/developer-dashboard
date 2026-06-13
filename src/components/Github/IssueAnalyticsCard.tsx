@@ -43,11 +43,11 @@ export const IssueAnalyticsCard: React.FC<Props> = ({ issues, analytics }) => {
             className={`p-2.5 rounded-xl border text-center cursor-pointer transition-all ${
               tab === t.id
                 ? 'border-zinc-600 bg-zinc-800'
-                : 'border-zinc-800 bg-zinc-950 hover:bg-zinc-900'
+                : 'border-zinc-800 bg-black hover:bg-black'
             }`}
           >
             <div className="text-lg font-bold text-zinc-200">{t.count}</div>
-            <div className="text-[9px] font-semibold text-zinc-500 uppercase tracking-wider">{t.label}</div>
+            <div className="text-[9px] font-semibold text-zinc-400 uppercase tracking-wider">{t.label}</div>
           </button>
         ))}
       </div>
@@ -55,7 +55,7 @@ export const IssueAnalyticsCard: React.FC<Props> = ({ issues, analytics }) => {
       {/* Issue list */}
       <div className="space-y-2 max-h-[280px] overflow-y-auto">
         {displayList.length === 0 ? (
-          <div className="p-6 text-center flex flex-col items-center gap-2 text-zinc-500">
+          <div className="p-6 text-center flex flex-col items-center gap-2 text-zinc-400">
             <FiCheckCircle className="w-6 h-6 opacity-30" />
             <p className="text-xs italic">
               {tab === 'open' ? 'No open issues! 🎉' : tab === 'bugs' ? 'No bugs tracked! 🐛' : 'No closed issues.'}
@@ -65,7 +65,7 @@ export const IssueAnalyticsCard: React.FC<Props> = ({ issues, analytics }) => {
           displayList.map(issue => (
             <div
               key={issue.id}
-              className="p-2.5 rounded-xl border border-zinc-800 bg-zinc-950 hover:bg-zinc-900 transition-colors group"
+              className="p-2.5 rounded-xl border border-zinc-800 bg-black hover:bg-black transition-colors group"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0 space-y-1">
@@ -74,7 +74,7 @@ export const IssueAnalyticsCard: React.FC<Props> = ({ issues, analytics }) => {
                     <p className="text-xs font-medium text-zinc-200 truncate">{issue.title}</p>
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap pl-4">
-                    <span className="text-[9px] text-zinc-500">{issue.repoName} · #{issue.number}</span>
+                    <span className="text-[9px] text-zinc-400">{issue.repoName} · #{issue.number}</span>
                     {(issue.labels || []).slice(0, 3).map(label => (
                       <span
                         key={label}

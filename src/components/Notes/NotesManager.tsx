@@ -542,7 +542,7 @@ export const NotesManager: React.FC = () => {
  </div>
 
  {/* Note Body editor / Preview panel */}
- <div className="flex-1 p-6 md:p-10 overflow-y-auto bg-white dark:bg-[#0a0a0c]">
+ <div className="flex-1 p-6 md:p-10 overflow-y-auto bg-white dark:bg-black">
  {editorTab === 'write' ? (
  <textarea
  id="note-textarea"

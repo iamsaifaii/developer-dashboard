@@ -46,19 +46,19 @@ export const RepoAnalyticsCard: React.FC<Props> = ({ repos }) => {
     <div className="space-y-3">
       {/* Summary row */}
       <div className="flex items-center gap-3 flex-wrap">
-        <div className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-500">
+        <div className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-400">
           <FiStar className="w-3 h-3 text-zinc-400" />
           <span className="text-zinc-300">{totalStars.toLocaleString()}</span>
           <span>total stars</span>
         </div>
         <div className="w-px h-3 bg-zinc-800" />
-        <div className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-500">
+        <div className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-400">
           <FiCopy className="w-3 h-3 text-zinc-400" />
           <span className="text-zinc-300">{totalForks.toLocaleString()}</span>
           <span>total forks</span>
         </div>
         <div className="w-px h-3 bg-zinc-800" />
-        <div className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-500">
+        <div className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-400">
           <FiGitBranch className="w-3 h-3 text-zinc-400" />
           <span className="text-zinc-300">{repos.length}</span>
           <span>repositories</span>
@@ -71,23 +71,23 @@ export const RepoAnalyticsCard: React.FC<Props> = ({ repos }) => {
         value={search}
         onChange={e => setSearch(e.target.value)}
         placeholder="Filter repositories..."
-        className="w-full px-3 py-1.5 text-xs bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+        className="w-full px-3 py-1.5 text-xs bg-black border border-zinc-800 rounded-lg text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
       />
 
       {/* Repo list */}
       <div className="space-y-2 max-h-[320px] overflow-y-auto">
         {sorted.length === 0 ? (
-          <p className="text-xs text-zinc-500 italic text-center py-6">No repositories found.</p>
+          <p className="text-xs text-zinc-400 italic text-center py-6">No repositories found.</p>
         ) : (
           sorted.map(repo => (
             <div
               key={repo.name}
-              className="p-3 rounded-xl border border-zinc-800 bg-zinc-950 hover:bg-zinc-900 transition-colors group"
+              className="p-3 rounded-xl border border-zinc-800 bg-black hover:bg-black transition-colors group"
             >
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div className="flex-1 min-w-0 space-y-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <FiGitBranch className="w-3 h-3 shrink-0 text-zinc-500" />
+                    <FiGitBranch className="w-3 h-3 shrink-0 text-zinc-400" />
                     <span className="text-xs font-semibold text-zinc-200 truncate">
                       {repo.name}
                     </span>
@@ -103,12 +103,12 @@ export const RepoAnalyticsCard: React.FC<Props> = ({ repos }) => {
                           className="w-2 h-2 rounded-full"
                           style={{ backgroundColor: getLangColor(repo.language) }}
                         />
-                        <span className="text-[9px] text-zinc-500">{repo.language}</span>
+                        <span className="text-[9px] text-zinc-400">{repo.language}</span>
                       </span>
                     )}
                   </div>
                   {repo.description && (
-                    <p className="text-[10px] text-zinc-500 leading-relaxed line-clamp-1">
+                    <p className="text-[10px] text-zinc-400 leading-relaxed line-clamp-1">
                       {repo.description}
                     </p>
                   )}
@@ -116,7 +116,7 @@ export const RepoAnalyticsCard: React.FC<Props> = ({ repos }) => {
 
                 <div className="flex items-center gap-3 shrink-0">
                   {/* Stats */}
-                  <div className="flex items-center gap-2.5 text-[10px] text-zinc-500">
+                  <div className="flex items-center gap-2.5 text-[10px] text-zinc-400">
                     <span className="flex items-center gap-0.5">
                       <FiStar className="w-3 h-3 text-zinc-400" />
                       {repo.stars}
@@ -138,7 +138,7 @@ export const RepoAnalyticsCard: React.FC<Props> = ({ repos }) => {
                       href={repo.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="opacity-0 group-hover:opacity-100 p-1 rounded-md border border-zinc-700 hover:bg-zinc-800 text-zinc-400 transition-all"
+                      className="opacity-0 group-hover:opacity-100 p-1 rounded-md border border-zinc-700 hover:bg-zinc-900 text-zinc-400 transition-all"
                       title="Open on GitHub"
                     >
                       <FiExternalLink className="w-3 h-3" />

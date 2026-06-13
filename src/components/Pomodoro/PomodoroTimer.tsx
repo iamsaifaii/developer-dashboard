@@ -68,7 +68,7 @@ export const PomodoroTimer: React.FC = () => {
         {/* Chime sound test shortcut */}
         <button 
           onClick={handleTestChime}
-          className="absolute top-5 right-5 p-2 text-zinc-500 hover:text-white bg-transparent border border-zinc-800 hover:border-zinc-700 rounded-lg cursor-pointer flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest transition-all duration-200"
+          className="absolute top-5 right-5 p-2 text-zinc-400 hover:text-white bg-transparent border border-zinc-800 hover:border-zinc-700 rounded-lg cursor-pointer flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest transition-all duration-200"
           title="Test audio chime"
         >
           <FiVolume2 className="w-3.5 h-3.5" />
@@ -84,7 +84,7 @@ export const PomodoroTimer: React.FC = () => {
               className={`px-5 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-all duration-200 ${
                 timerMode === mode
                   ? 'bg-zinc-800 text-white shadow-sm'
-                  : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900'
+                  : 'text-zinc-400 hover:text-zinc-300 hover:bg-black'
               }`}
             >
               {mode === 'work' ? 'Focus Mode' : mode === 'shortBreak' ? 'Short Break' : 'Long Break'}
@@ -144,7 +144,7 @@ export const PomodoroTimer: React.FC = () => {
               {formatTime(secondsLeft)}
             </span>
 
-            <span className="text-[10px] text-zinc-500 mt-3 tracking-widest uppercase font-bold flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 px-3 py-1 rounded-full">
+            <span className="text-[10px] text-zinc-400 mt-3 tracking-widest uppercase font-bold flex items-center gap-1.5 bg-black border border-zinc-800 px-3 py-1 rounded-full">
               {timerStatus === 'running' && <span className="w-1.5 h-1.5 rounded-full bg-green-500 status-dot-online" />}
               {timerStatus === 'running' ? 'Focusing' : timerStatus === 'paused' ? 'Paused' : 'Ready'}
             </span>
@@ -190,7 +190,7 @@ export const PomodoroTimer: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="flex items-start justify-between relative z-10">
             <div>
-              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Focus Sessions</p>
+              <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Focus Sessions</p>
               <h3 className="text-4xl font-black text-white mt-1 tracking-tighter">{totalSessionsCompleted}</h3>
             </div>
             <div className="p-3.5 rounded-xl bg-[#080809] border border-zinc-800 text-zinc-300 shadow-sm">
@@ -212,7 +212,7 @@ export const PomodoroTimer: React.FC = () => {
             "Studies show that developers work best in focused sprints. Use the Pomodoro timer to block out email, Slack, and pull request reviews, letting your brain dive deep into complex state logic and algorithms."
           </p>
           <div className="h-px bg-zinc-800 my-5" />
-          <div className="space-y-3 text-[10px] text-zinc-500 font-bold tracking-widest">
+          <div className="space-y-3 text-[10px] text-zinc-400 font-bold tracking-widest">
             <div className="flex justify-between items-center bg-[#080809] border border-zinc-800/50 px-3 py-2 rounded-lg">
               <span>WORK STATE</span>
               <span className="text-white">{settings.pomodoroWorkTime}m</span>

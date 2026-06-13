@@ -701,7 +701,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
           <button
             type="button"
             onClick={handleSubmit}
-            className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-xs font-bold rounded-lg text-white cursor-pointer transition-colors shadow-lg shadow-blue-900/30"
+            className="px-5 py-2 bg-blue-600 hover:bg-[#ededed] text-xs font-bold rounded-lg text-white cursor-pointer transition-colors shadow-lg shadow-blue-900/30"
           >
             {task ? 'Save Changes' : 'Create Task'}
           </button>

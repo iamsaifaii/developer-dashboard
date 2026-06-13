@@ -124,7 +124,7 @@ export const PRAnalyticsCard: React.FC<Props> = ({ prs, analytics }) => {
             { label: 'Merged', count: mergedCount, color: '#71717a' },
             { label: 'Closed', count: closedCount, color: '#3f3f46' },
           ].map(item => (
-            <div key={item.label} className="flex items-center justify-between px-2.5 py-1.5 rounded-lg border border-zinc-800 bg-zinc-950">
+            <div key={item.label} className="flex items-center justify-between px-2.5 py-1.5 rounded-lg border border-zinc-800 bg-black">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
                 <span className="text-[10px] font-semibold text-zinc-400">{item.label}</span>
@@ -145,16 +145,16 @@ export const PRAnalyticsCard: React.FC<Props> = ({ prs, analytics }) => {
       {/* PR List */}
       <div className="space-y-2 max-h-[220px] overflow-y-auto">
         {prs.length === 0 ? (
-          <p className="text-xs text-zinc-500 italic text-center py-4">No pull requests found.</p>
+          <p className="text-xs text-zinc-400 italic text-center py-4">No pull requests found.</p>
         ) : (
           prs.map(pr => (
             <div
               key={pr.id}
-              className="p-2.5 rounded-xl border border-zinc-800 bg-zinc-950 flex items-center justify-between gap-3 group hover:bg-zinc-900 transition-colors"
+              className="p-2.5 rounded-xl border border-zinc-800 bg-black flex items-center justify-between gap-3 group hover:bg-black transition-colors"
             >
               <div className="min-w-0 flex-1 space-y-0.5">
                 <p className="text-xs font-medium text-zinc-200 truncate">{pr.title}</p>
-                <p className="text-[9px] text-zinc-500">{pr.repoName} · #{pr.number}</p>
+                <p className="text-[9px] text-zinc-400">{pr.repoName} · #{pr.number}</p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <StatusBadge merged={pr.merged} state={pr.state} />

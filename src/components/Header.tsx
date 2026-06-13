@@ -56,18 +56,18 @@ interface HeaderProps {
  };
 
  return (
-  <header className="h-16 border-b border-[#222] px-6 flex items-center justify-between bg-black sticky top-0 z-20 transition-all duration-300">
+  <header className="h-16 border-b border-zinc-800 px-6 flex items-center justify-between bg-black sticky top-0 z-20 transition-all duration-300">
   <div className="flex items-center gap-4">
   <button 
   onClick={onOpenSidebar}
-  className="lg:hidden p-2 rounded-md hover:bg-[#222] text-[#ccc] hover:text-white transition-colors duration-200 cursor-pointer flex items-center justify-center"
+  className="lg:hidden p-2 rounded-md hover:bg-[#0a0a0a] text-[#888888] hover:text-white transition-colors duration-200 cursor-pointer flex items-center justify-center"
   >
   <FiMenu className="w-5 h-5" />
   </button>
   {/* Dynamic Title */}
   <div className="hidden sm:flex flex-col justify-center">
   <h2 className="text-sm font-semibold tracking-wide text-white leading-tight">{getTitle()}</h2>
-  <p className="text-xs text-[#ccc] mt-0.5 leading-none">
+  <p className="text-xs text-[#888888] mt-0.5 leading-none">
   {getGreeting()}, <span className="text-white font-medium">{currentUser?.displayName || settings.userName}</span>
   </p>
   </div>
@@ -101,8 +101,8 @@ interface HeaderProps {
   <div 
   className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md border text-xs font-medium transition-colors duration-200 ${
   githubConnected 
-  ? 'bg-[#111] border-[#333] text-white' 
-  : 'bg-black border-[#222] text-[#ccc]'
+  ? 'bg-black border-zinc-800 text-white' 
+  : 'bg-black border-zinc-800 text-[#888888]'
   }`}
   title={githubConnected ? `Synced to @${githubUsername}` : 'GitHub disconnected'}
   >
@@ -119,11 +119,11 @@ interface HeaderProps {
   <button 
   onClick={handleLogout}
   title="Log Out"
-  className="p-2 text-[#ccc] hover:text-white bg-transparent hover:bg-[#222] border border-transparent rounded-md cursor-pointer transition-colors duration-200 flex items-center justify-center"
+  className="p-2 text-[#888888] hover:text-white bg-transparent hover:bg-[#0a0a0a] border border-transparent rounded-md cursor-pointer transition-colors duration-200 flex items-center justify-center"
   >
   <FiLogOut className="w-4 h-4" />
   </button>
-  <div className="w-9 h-9 rounded-full bg-[#111] border border-[#333] flex items-center justify-center cursor-pointer overflow-hidden hover:border-white transition-colors duration-200 shrink-0">
+  <div className="w-9 h-9 rounded-full bg-black border border-zinc-800 flex items-center justify-center cursor-pointer overflow-hidden hover:border-white transition-colors duration-200 shrink-0">
      <img src={avatarToShow} alt="Avatar" className="w-full h-full object-cover" />
   </div>
   </div>

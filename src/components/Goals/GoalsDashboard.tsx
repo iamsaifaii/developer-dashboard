@@ -33,7 +33,7 @@ export const GoalsDashboard: React.FC = () => {
                     </div>
                     <div className="w-full h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-blue-500" 
+                        className="h-full bg-[#ededed]" 
                         style={{ width: `${Math.min((goal.current / goal.target) * 100, 100)}%` }} 
                       />
                     </div>
