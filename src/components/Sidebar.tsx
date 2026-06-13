@@ -72,7 +72,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  onClick={onClose} 
  />
  )}
- <aside className={`${isCollapsed ? 'w-20 bg-black' : 'w-60 bg-black'} h-screen fixed left-0 top-0 border-r border-zinc-800 flex flex-col justify-between z-50 transition-all duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+ <aside className={`${isCollapsed ? 'w-20 bg-purple-500' : 'w-60 bg-black'} h-screen fixed left-0 top-0 border-r border-zinc-900 flex flex-col justify-between z-50 transition-all duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
  
  {/* Top Section: Collapse Toggle & Brand */}
  <div className={`pt-5 pb-4 border-b border-zinc-800 relative flex ${isCollapsed ? 'flex-col items-center gap-4 px-0' : 'items-center justify-between px-5'}`}>
