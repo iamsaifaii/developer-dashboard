@@ -139,7 +139,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
    
    {!isCollapsed && <span className="text-[13px] tracking-wide">{item.label}</span>}
    
-   {!isCollapsed && item.badge > 0 && (
+   {!isCollapsed && typeof item.badge === 'number' && item.badge > 0 && (
      <span className={`ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold border ${isActive ? 'bg-zinc-700 border-zinc-600 text-white' : 'bg-zinc-900 border-zinc-800 text-zinc-400'}`}>
        {item.badge}
      </span>
