@@ -22,7 +22,7 @@ interface SmartReminder {
 }
 
 export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
- const { tasks, events, githubCommits, timerStatus, secondsLeft, totalSessionsCompleted, settings } = useStore();
+ const { tasks, events, githubCommits, timerStatus, secondsLeft, totalSessionsCompleted, settings, githubUsername } = useStore();
  const [reminders, setReminders] = useState<SmartReminder[]>([]);
 
  // 1. Fetch smart reminders from the backend
@@ -79,7 +79,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
  Supercharge Your<br/>Sprint Workspace
  </h2>
  <p className="text-xs text-zinc-400 leading-relaxed font-medium">
- Your automated velocity dashboard is active and synced to <span className="text-white font-bold px-1 py-0.5 rounded bg-zinc-800/50 border border-zinc-800 mx-0.5">@{settings.githubUsername || 'your account'}</span>. Complete tasks, focus sessions, and GitHub commits to increase your productivity index!
+ Your automated velocity dashboard is active and synced to <span className="text-white font-bold px-1 py-0.5 rounded bg-zinc-800/50 border border-zinc-800 mx-0.5">@{githubUsername || settings.githubUsername || 'your account'}</span>. Complete tasks, focus sessions, and GitHub commits to increase your productivity index!
  </p>
  </div>
 

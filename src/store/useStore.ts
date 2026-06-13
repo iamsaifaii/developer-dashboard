@@ -116,7 +116,7 @@ interface State {
 export const useStore = create<State>()((set, get) => {
   const defaultSettings: DeveloperSettings = {
     userName: 'Alex Developer',
-    githubUsername: 'alexdev-codes',
+    githubUsername: '',
     pomodoroWorkTime: 25,
     pomodoroShortBreak: 5,
     pomodoroLongBreak: 15,
