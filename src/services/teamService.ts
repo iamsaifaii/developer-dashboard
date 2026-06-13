@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import type { Team, TeamMember, TeamInvite } from '../types';
+import emailjs from '@emailjs/browser';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -86,30 +87,50 @@ export async function inviteMember(
     token,
   };
 
-  // 1. Save invite to Firestore
+  // 1. Save invite to Firestore first (always succeeds)
   await updateDoc(doc(db, 'teams', teamId), {
     invites: arrayUnion(invite),
   });
 
-  // 2. Dispatch email via Express backend
+  // 2. Build the magic invite link
   const clientUrl = window.location.origin;
   const inviteLink = `${clientUrl}/join?token=${token}&teamId=${teamId}`;
 
-  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-  const res = await fetch(`${apiBase}/api/invite/send`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      to: inviteeEmail.toLowerCase().trim(),
-      inviterName: inviter.displayName || inviter.email || 'A teammate',
-      teamName,
-      inviteLink,
-    }),
-  });
+  // 3. Send email via EmailJS (runs entirely in the browser — no backend needed)
+  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Email send failed' }));
-    throw new Error(err.error || 'Failed to send invite email');
+  if (!serviceId || !templateId || !publicKey) {
+    // EmailJS not configured — invite is saved, but no email is sent.
+    // Show a helpful error so the user knows what to do.
+    throw new Error(
+      'Email not sent: EmailJS is not configured. ' +
+      'Please add VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, and VITE_EMAILJS_PUBLIC_KEY to your .env file. ' +
+      'Sign up free at https://emailjs.com — the invite link was saved and can be shared manually: ' +
+      inviteLink
+    );
+  }
+
+  try {
+    await emailjs.send(
+      serviceId,
+      templateId,
+      {
+        to_email: inviteeEmail.toLowerCase().trim(),
+        to_name: inviteeEmail.split('@')[0],
+        from_name: inviter.displayName || inviter.email || 'A teammate',
+        team_name: teamName,
+        invite_link: inviteLink,
+        reply_to: inviter.email || '',
+      },
+      publicKey
+    );
+  } catch (err: any) {
+    console.error('EmailJS send error:', err);
+    throw new Error(
+      err?.text || err?.message || 'Failed to send invite email. Please check your EmailJS configuration.'
+    );
   }
 }
 

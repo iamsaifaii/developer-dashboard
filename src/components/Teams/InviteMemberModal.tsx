@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiX, FiMail, FiLoader, FiSend, FiAlertTriangle } from 'react-icons/fi';
+import { FiX, FiMail, FiLoader, FiSend, FiAlertTriangle, FiCopy, FiCheck, FiLink } from 'react-icons/fi';
 import { inviteMember } from '../../services/teamService';
 import { useStore } from '../../store/useStore';
 import type { Team } from '../../types';
@@ -16,6 +16,8 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, on
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [inviteLink, setInviteLink] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
 
@@ -35,6 +37,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, on
 
     setIsLoading(true);
     setError(null);
+    setInviteLink(null);
     try {
       await inviteMember(team.id, team.name, trimmed, {
         uid: currentUser.uid,
@@ -44,16 +47,34 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, on
       setSuccess(true);
       setEmail('');
     } catch (err: any) {
-      setError(err.message || 'Failed to send invitation.');
+      const msg: string = err.message || 'Failed to send invitation.';
+      // If the error contains an invite link (EmailJS not configured),
+      // extract the link and show the copy-link fallback instead of a hard error.
+      const linkMatch = msg.match(/(https?:\/\/[^\s]+)/);
+      if (linkMatch) {
+        setInviteLink(linkMatch[1]);
+        setError(null);
+      } else {
+        setError(msg);
+      }
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleCopy = () => {
+    if (!inviteLink) return;
+    navigator.clipboard.writeText(inviteLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleClose = () => {
     setEmail('');
     setError(null);
     setSuccess(false);
+    setInviteLink(null);
+    setCopied(false);
     onClose();
   };
 
@@ -72,7 +93,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, on
             </div>
             <div>
               <h2 className="text-sm font-bold text-white">Invite to {team.name}</h2>
-              <p className="text-[11px] text-zinc-500">They'll receive a magic link by email</p>
+              <p className="text-[11px] text-zinc-500">Send a magic link by email</p>
             </div>
           </div>
           <button
@@ -84,14 +105,15 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, on
           </button>
         </div>
 
+        {/* ── SUCCESS STATE ─────────────────────────────────── */}
         {success ? (
           <div className="text-center py-8">
-            <div className="w-14 h-14 rounded-2xl bg-emerald-950/50 border border-emerald-800/50 flex items-center justify-center mx-auto mb-4">
+            <div className="w-14 h-14 rounded-2xl bg-emerald-950/30 border border-emerald-800/40 flex items-center justify-center mx-auto mb-4">
               <FiSend className="w-6 h-6 text-emerald-400" />
             </div>
             <h3 className="text-white font-bold text-sm mb-2">Invitation Sent!</h3>
             <p className="text-zinc-500 text-xs leading-relaxed mb-6">
-              A magic link email has been sent. When they click it, they'll be taken directly to DevFlow to log in and join <strong className="text-zinc-300">{team.name}</strong>.
+              A magic link email has been sent. When they click it, they'll log in and instantly join <strong className="text-zinc-300">{team.name}</strong>.
             </p>
             <div className="flex gap-3">
               <button
@@ -108,6 +130,58 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, on
               </button>
             </div>
           </div>
+
+        /* ── COPY LINK FALLBACK (EmailJS not configured) ─────── */
+        ) : inviteLink ? (
+          <div className="space-y-4">
+            <div className="flex items-start gap-3 p-3 bg-amber-950/20 border border-amber-900/30 rounded-xl">
+              <FiLink className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-xs font-bold text-amber-300 mb-0.5">Email not configured yet</p>
+                <p className="text-[11px] text-amber-500/80 leading-relaxed">
+                  The invite was saved. Copy this magic link and share it directly with your teammate.
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest block mb-1.5">Magic Invite Link</label>
+              <div className="flex gap-2">
+                <input
+                  readOnly
+                  value={inviteLink}
+                  className="flex-1 bg-black border border-zinc-800 rounded-xl px-3 py-2.5 text-[11px] text-zinc-400 focus:outline-none truncate"
+                />
+                <button
+                  id="copy-invite-link-btn"
+                  onClick={handleCopy}
+                  className="px-3 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold cursor-pointer transition-colors flex items-center gap-1.5 shrink-0"
+                >
+                  {copied ? <FiCheck className="w-3.5 h-3.5" /> : <FiCopy className="w-3.5 h-3.5" />}
+                  {copied ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
+            </div>
+
+            <p className="text-[10px] text-zinc-600 leading-relaxed">
+              To enable automatic email delivery, add your{' '}
+              <a href="https://emailjs.com" target="_blank" rel="noopener noreferrer" className="text-zinc-400 underline hover:text-white">
+                EmailJS
+              </a>{' '}
+              keys to <code className="text-zinc-500 bg-zinc-900 px-1 py-0.5 rounded">.env</code>
+            </p>
+
+            <div className="flex gap-3 pt-1">
+              <button onClick={() => setInviteLink(null)} className="flex-1 py-2.5 rounded-xl border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-900 text-sm font-medium cursor-pointer transition-colors">
+                Back
+              </button>
+              <button onClick={handleClose} className="flex-1 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-sm font-bold cursor-pointer transition-colors">
+                Done
+              </button>
+            </div>
+          </div>
+
+        /* ── MAIN FORM ─────────────────────────────────────── */
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -132,18 +206,18 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, on
             <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-xl p-3 flex gap-3">
               <FiSend className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
               <p className="text-[11px] text-zinc-400 leading-relaxed">
-                They'll receive an email with a magic link. Clicking it takes them directly to DevFlow — they log in and are instantly added to <strong>{team.name}</strong>.
+                They'll receive a magic link. Clicking it takes them directly to DevFlow — they log in and are instantly added to <strong>{team.name}</strong>.
               </p>
             </div>
 
             {error && (
-              <div className="flex items-center gap-2 px-3 py-2 bg-red-950/30 border border-red-900/50 rounded-lg">
-                <FiAlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0" />
-                <span className="text-red-400 text-xs">{error}</span>
+              <div className="flex items-start gap-2 px-3 py-2 bg-red-950/30 border border-red-900/50 rounded-lg">
+                <FiAlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                <span className="text-red-400 text-xs leading-relaxed">{error}</span>
               </div>
             )}
 
-            {/* Current pending invites */}
+            {/* Pending invites */}
             {team.invites.filter(i => i.status === 'pending').length > 0 && (
               <div>
                 <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-1.5">Pending Invites</p>
