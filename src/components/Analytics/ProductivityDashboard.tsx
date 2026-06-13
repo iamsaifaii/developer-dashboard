@@ -126,11 +126,11 @@ export const ProductivityDashboard: React.FC = () => {
   {/* Metric 1: Tasks Done */}
   <div className="glass-panel rounded-2xl p-5 flex items-center justify-between">
    <div className="text-left space-y-1">
-   <span className="text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider block">Tasks Completed</span>
-   <h3 className="text-2xl font-extrabold text-black dark:text-white">{completedTasks.length}</h3>
-   <p className="text-[10px] text-neutral-500 dark:text-zinc-500 font-medium">{activeTasksCount} tasks in pipeline</p>
+   <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">Tasks Completed</span>
+   <h3 className="text-2xl font-extrabold text-white">{completedTasks.length}</h3>
+   <p className="text-[10px] text-zinc-500 font-medium">{activeTasksCount} tasks in pipeline</p>
    </div>
-   <div className="p-3 rounded-xl bg-neutral-100 dark:bg-zinc-800 border border-neutral-300 dark:border-zinc-700 text-neutral-700 dark:text-zinc-300">
+   <div className="p-3 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-300">
    <FiCheckCircle className="w-5 h-5" />
    </div>
   </div>
@@ -138,11 +138,11 @@ export const ProductivityDashboard: React.FC = () => {
   {/* Metric 2: Focus Hours */}
   <div className="glass-panel rounded-2xl p-5 flex items-center justify-between">
    <div className="text-left space-y-1">
-   <span className="text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider block">Focus Hours Logged</span>
-   <h3 className="text-2xl font-extrabold text-black dark:text-white">{totalFocusHours}h</h3>
-   <p className="text-[10px] text-neutral-500 dark:text-zinc-500 font-medium">From {pomodoroHistory.length + 4} sessions</p>
+   <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">Focus Hours Logged</span>
+   <h3 className="text-2xl font-extrabold text-white">{totalFocusHours}h</h3>
+   <p className="text-[10px] text-zinc-500 font-medium">From {pomodoroHistory.length + 4} sessions</p>
    </div>
-   <div className="p-3 rounded-xl bg-neutral-100 dark:bg-zinc-800 border border-neutral-300 dark:border-zinc-700 text-neutral-700 dark:text-zinc-300">
+   <div className="p-3 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-300">
    <FiClock className="w-5 h-5" />
    </div>
   </div>
@@ -150,11 +150,11 @@ export const ProductivityDashboard: React.FC = () => {
   {/* Metric 3: GitHub Commits */}
   <div className="glass-panel rounded-2xl p-5 flex items-center justify-between">
    <div className="text-left space-y-1">
-   <span className="text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider block">Commits Logged</span>
-   <h3 className="text-2xl font-extrabold text-black dark:text-white">{totalCommitsCount}</h3>
-   <p className="text-[10px] text-neutral-500 dark:text-zinc-500 font-medium">Linked commit activity</p>
+   <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">Commits Logged</span>
+   <h3 className="text-2xl font-extrabold text-white">{totalCommitsCount}</h3>
+   <p className="text-[10px] text-zinc-500 font-medium">Linked commit activity</p>
    </div>
-   <div className="p-3 rounded-xl bg-neutral-100 dark:bg-zinc-800 border border-neutral-300 dark:border-zinc-700 text-neutral-700 dark:text-zinc-300">
+   <div className="p-3 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-300">
    <FiGitCommit className="w-5 h-5" />
    </div>
   </div>
@@ -162,16 +162,16 @@ export const ProductivityDashboard: React.FC = () => {
   {/* Metric 4: Productivity Index */}
   <div className="glass-panel rounded-2xl p-5 flex items-center justify-between">
    <div className="text-left space-y-1">
-   <span className="text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider block flex items-center gap-1">
+   <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block flex items-center gap-1">
     <FiZap className="w-3 h-3" />
     <span>Productivity Score</span>
    </span>
-   <h3 className="text-2xl font-extrabold text-black dark:text-white">{productivityScore}%</h3>
-   <p className="text-[10px] text-neutral-600 dark:text-zinc-400 font-semibold tracking-wide uppercase">
+   <h3 className="text-2xl font-extrabold text-white">{productivityScore}%</h3>
+   <p className="text-[10px] text-zinc-400 font-semibold tracking-wide uppercase">
     {productivityScore > 75 ? 'Hyper Focus' : productivityScore > 50 ? 'Active' : 'Steady'}
    </p>
    </div>
-   <div className="p-3 rounded-xl bg-neutral-100 dark:bg-zinc-800 border border-neutral-300 dark:border-zinc-700 text-neutral-700 dark:text-zinc-300">
+   <div className="p-3 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-300">
    <FiAward className="w-5 h-5" />
    </div>
   </div>
@@ -182,7 +182,7 @@ export const ProductivityDashboard: React.FC = () => {
   {/* Chart 1: SVG Commit Velocity */}
   <div className="lg:col-span-2 glass-panel rounded-2xl p-5 text-left space-y-4">
   <div className="flex items-center justify-between">
-   <span className="text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+   <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
    <FiTrendingUp className="w-4 h-4" />
    <span>Developer Velocity (Commits / Week)</span>
    </span>
@@ -229,7 +229,7 @@ export const ProductivityDashboard: React.FC = () => {
   {/* Chart 2: SVG Donut status breakdown */}
   <div className="lg:col-span-1 glass-panel rounded-2xl p-5 text-left flex flex-col justify-between gap-4">
   <div>
-   <span className="text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+   <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
    <FiCheckSquare className="w-4 h-4" />
    <span>Task Pipeline Breakdown</span>
    </span>
@@ -259,7 +259,7 @@ export const ProductivityDashboard: React.FC = () => {
    </svg>
    <div className="absolute inset-0 flex flex-col items-center justify-center">
     <span className="text-xl font-extrabold text-white leading-none">{tasks.length}</span>
-    <span className="text-[9px] text-neutral-500 dark:text-zinc-500 mt-0.5 uppercase tracking-wide">Tasks</span>
+    <span className="text-[9px] text-zinc-500 mt-0.5 uppercase tracking-wide">Tasks</span>
    </div>
    </div>
 
@@ -267,16 +267,16 @@ export const ProductivityDashboard: React.FC = () => {
    {donutSegments.map((seg, idx) => (
     <div key={idx} className="flex items-center gap-2">
     <span className="w-2.5 h-2.5 rounded-[3px] shrink-0" style={{ backgroundColor: seg.color }} />
-    <span className="text-neutral-500 dark:text-zinc-500 truncate max-w-[80px]">{seg.label}:</span>
+    <span className="text-zinc-500 truncate max-w-[80px]">{seg.label}:</span>
     <span className="text-white font-bold ml-auto">{seg.count}</span>
     </div>
    ))}
    </div>
   </div>
 
-  <div className="pt-3 border-t border-neutral-200 dark:border-zinc-800 flex items-center justify-between text-[10px] text-neutral-500 dark:text-zinc-500">
+  <div className="pt-3 border-t border-zinc-800 flex items-center justify-between text-[10px] text-zinc-500">
    <span>Completion Rate:</span>
-   <span className="font-bold text-neutral-700 dark:text-zinc-300">
+   <span className="font-bold text-zinc-300">
    {totalTasksCount > 0 ? Math.round((completedTasks.length / tasks.length) * 100) : 0}%
    </span>
   </div>
@@ -284,12 +284,12 @@ export const ProductivityDashboard: React.FC = () => {
 
   {/* Score Explainer Card */}
   <div className="lg:col-span-3 glass-panel rounded-2xl p-5 text-left flex items-start gap-4">
-  <div className="p-3.5 rounded-2xl bg-neutral-100 dark:bg-zinc-800 border border-neutral-300 dark:border-zinc-700 text-neutral-700 dark:text-zinc-300 shrink-0">
+  <div className="p-3.5 rounded-2xl bg-zinc-800 border border-zinc-700 text-zinc-300 shrink-0">
    <FiStar className="w-6 h-6" />
   </div>
   <div className="space-y-1">
    <h4 className="text-xs font-bold text-white uppercase tracking-wider">Dynamic Score Matrix</h4>
-   <p className="text-[10px] text-neutral-500 dark:text-zinc-500 leading-relaxed">
+   <p className="text-[10px] text-zinc-500 leading-relaxed">
    This dashboard uses hand-crafted SVG visualizers. Your Productivity Score increases as you check off tasks, move Kanban cards to "Done", sync GitHub commits, and log completed Pomodoro work sessions.
    </p>
   </div>

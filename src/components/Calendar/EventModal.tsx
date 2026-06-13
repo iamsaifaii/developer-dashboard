@@ -80,13 +80,13 @@ export const EventModal: React.FC<EventModalProps> = ({
  >
  {/* Header */}
  <div className="p-5 border-b border-neutral-200 dark:border-neutral-800/80 flex items-center justify-between">
- <h3 className="text-xs font-bold text-black dark:text-white uppercase tracking-wider flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
+ <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
  <FiStar className="w-4.5 h-4.5" />
  <span>{event ? 'Edit Calendar Event' : 'Schedule Event'}</span>
  </h3>
  <button 
  onClick={onClose}
- className="p-1 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:text-white hover:bg-neutral-100 dark:bg-neutral-800 cursor-pointer"
+ className="p-1 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-white hover:bg-neutral-100 dark:bg-neutral-800 cursor-pointer"
  >
  <FiX className="w-5 h-5" />
  </button>
@@ -187,7 +187,7 @@ export const EventModal: React.FC<EventModalProps> = ({
  </button>
  <button
  type="submit"
- className="px-4 py-1.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 text-xxs font-bold rounded-lg text-black dark:text-white cursor-pointer shadow-md shadow-neutral-900/10"
+ className="px-4 py-1.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 text-xxs font-bold rounded-lg text-white cursor-pointer shadow-md shadow-neutral-900/10"
  >
  Save Event
  </button>

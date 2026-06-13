@@ -20,7 +20,6 @@ export const SettingsPanel: React.FC = () => {
   const [workTime, setWorkTime] = useState(settings.pomodoroWorkTime);
   const [shortBreak, setShortBreak] = useState(settings.pomodoroShortBreak);
   const [longBreak, setLongBreak] = useState(settings.pomodoroLongBreak);
-  const [themeMode, setThemeMode] = useState(settings.themeMode);
   const [notificationPreferences, setNotificationPreferences] = useState(
     settings.notificationPreferences || {
       taskDue: true, taskOverdue: true, pomodoroComplete: true, focusReminder: true, githubCommits: true, githubPRs: true, systemUpdates: true
@@ -34,8 +33,8 @@ export const SettingsPanel: React.FC = () => {
       pomodoroWorkTime: Number(workTime),
       pomodoroShortBreak: Number(shortBreak),
       pomodoroLongBreak: Number(longBreak),
-      themeMode: themeMode,
-      colorScheme: themeMode === 'glass' ? 'dark' : themeMode,
+      themeMode: 'dark',
+      colorScheme: 'dark',
       notificationPreferences
     });
     setShowSaveAlert(true);
@@ -55,7 +54,7 @@ export const SettingsPanel: React.FC = () => {
 
       {showSaveAlert && (
         <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-neutral-900 border border-neutral-800 text-neutral-100 text-xxs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-xl z-50 pointer-events-none">
-          <FiCheckCircle className="w-4 h-4 text-black dark:text-white" />
+          <FiCheckCircle className="w-4 h-4 text-white" />
           <span>Settings saved!</span>
         </div>
       )}
@@ -132,21 +131,10 @@ export const SettingsPanel: React.FC = () => {
               <span>Theme Aesthetics</span>
             </div>
 
-            <div className="p-4 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl space-y-4">
-              <div>
-                <label className="text-[9px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider block mb-1">Color Mode</label>
-                <select
-                  value={themeMode}
-                  onChange={(e) => setThemeMode(e.target.value as any)}
-                  className="w-full text-xs px-3.5 py-2 rounded-xl bg-white dark:bg-black/60 border border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 focus:outline-none focus:border-neutral-500 cursor-pointer"
-                >
-                  <option value="dark">Dark Mode</option>
-                  <option value="light">Light Mode</option>
-                  <option value="glass">Glass Mode (Legacy)</option>
-                </select>
-              </div>
-              <p className="text-[10px] text-neutral-500 dark:text-neutral-500 leading-normal">
-                Choose between the crisp Light Mode or the high-contrast Monochromatic Dark Mode.
+            <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-xl space-y-2">
+              <p className="text-xs font-bold text-neutral-200">Exclusive Flat Dark Theme Active</p>
+              <p className="text-[10px] text-neutral-500 leading-normal">
+                DevFlow is configured to run exclusively in high-contrast monochromatic dark mode. Color scheme controls have been disabled to ensure design consistency and eliminate visual fatigue.
               </p>
             </div>
           </div>

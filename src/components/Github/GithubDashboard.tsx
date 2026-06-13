@@ -20,13 +20,13 @@ const TAB_CONFIG: { id: AnalyticsTab; label: string; icon: React.ReactNode }[] =
 
 // Shimmer skeleton
 const Skeleton: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <div className={`animate-pulse bg-neutral-100 dark:bg-zinc-800 rounded-lg ${className}`} />
+  <div className={`animate-pulse bg-zinc-800 rounded-lg ${className}`} />
 );
 
 const LoadingSkeleton: React.FC = () => (
   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div className="lg:col-span-2 space-y-6">
-      <div className="p-6 rounded-2xl border border-neutral-200 dark:border-zinc-800 space-y-4">
+      <div className="p-6 rounded-2xl border border-zinc-800 space-y-4">
         <div className="flex items-center gap-3">
           <Skeleton className="w-10 h-10 rounded-xl" />
           <div className="space-y-1.5">
@@ -36,11 +36,11 @@ const LoadingSkeleton: React.FC = () => (
         </div>
         <Skeleton className="w-full h-[110px]" />
       </div>
-      <div className="p-6 rounded-2xl border border-neutral-200 dark:border-zinc-800 space-y-4">
+      <div className="p-6 rounded-2xl border border-zinc-800 space-y-4">
         <Skeleton className="w-48 h-4" />
         <Skeleton className="w-full h-[120px]" />
       </div>
-      <div className="p-5 rounded-2xl border border-neutral-200 dark:border-zinc-800 space-y-3">
+      <div className="p-5 rounded-2xl border border-zinc-800 space-y-3">
         <div className="flex gap-2">
           {[1, 2, 3, 4].map(i => <Skeleton key={i} className="flex-1 h-8" />)}
         </div>
@@ -93,13 +93,13 @@ export const GithubDashboard: React.FC = () => {
   if (!githubToken) {
     return (
       <div className="max-w-md mx-auto my-16 glass-panel rounded-2xl p-8 text-center flex flex-col items-center gap-5">
-        <div className="p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 text-neutral-600 dark:text-zinc-400">
+        <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-400">
           <GithubIcon className="w-12 h-12" />
         </div>
         <div className="space-y-2">
           <h3 className="text-sm font-bold text-zinc-200">GitHub Not Connected</h3>
-          <p className="text-xs text-neutral-500 dark:text-zinc-500 max-w-[260px] leading-relaxed">
-            Sign in with <strong className="text-neutral-700 dark:text-zinc-300">Continue with GitHub</strong> to unlock your analytics dashboard, contribution heatmap, and coding activity reports.
+          <p className="text-xs text-zinc-500 max-w-[260px] leading-relaxed">
+            Sign in with <strong className="text-zinc-300">Continue with GitHub</strong> to unlock your analytics dashboard, contribution heatmap, and coding activity reports.
           </p>
         </div>
       </div>
@@ -120,7 +120,7 @@ export const GithubDashboard: React.FC = () => {
         <div className="glass-panel rounded-2xl p-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 flex items-center justify-center text-neutral-600 dark:text-zinc-400">
+              <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
                 <GithubIcon className="w-5 h-5" />
               </div>
               <div>
@@ -128,7 +128,7 @@ export const GithubDashboard: React.FC = () => {
                   @{githubUsername || currentUser?.displayName || 'GitHub User'}
                   <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-pulse" />
                 </h2>
-                <p className="text-[10px] text-neutral-500 dark:text-zinc-500">Connected · Live API sync</p>
+                <p className="text-[10px] text-zinc-500">Connected · Live API sync</p>
               </div>
             </div>
 
@@ -136,7 +136,7 @@ export const GithubDashboard: React.FC = () => {
               <button
                 onClick={handleRefresh}
                 disabled={isRefreshing}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-semibold text-neutral-600 dark:text-zinc-400 border border-neutral-200 dark:border-zinc-800 rounded-lg hover:bg-neutral-100 dark:bg-zinc-800 transition-colors cursor-pointer disabled:opacity-50"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-semibold text-zinc-400 border border-zinc-800 rounded-lg hover:bg-zinc-800 transition-colors cursor-pointer disabled:opacity-50"
                 title={lastRefreshed ? `Last refreshed: ${lastRefreshed.toLocaleTimeString()}` : 'Refresh data'}
               >
                 <FiRefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
@@ -144,7 +144,7 @@ export const GithubDashboard: React.FC = () => {
               </button>
               <button
                 onClick={disconnectGithub}
-                className="flex items-center gap-1 px-3 py-1.5 border border-neutral-200 dark:border-zinc-800 hover:border-neutral-300 dark:border-zinc-700 hover:text-zinc-200 rounded-lg text-[10px] font-semibold text-neutral-500 dark:text-zinc-500 cursor-pointer transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 border border-zinc-800 hover:border-zinc-700 hover:text-zinc-200 rounded-lg text-[10px] font-semibold text-zinc-500 cursor-pointer transition-colors"
               >
                 <FiLogOut className="w-3 h-3" />
                 <span>Disconnect</span>
@@ -167,7 +167,7 @@ export const GithubDashboard: React.FC = () => {
         <div className="glass-panel rounded-2xl p-5">
 
           {/* Tab header */}
-          <div className="flex overflow-x-auto hide-scrollbar bg-neutral-50 dark:bg-zinc-950 p-1 rounded-xl border border-neutral-200 dark:border-zinc-800 gap-1 mb-5">
+          <div className="flex overflow-x-auto hide-scrollbar bg-zinc-950 p-1 rounded-xl border border-zinc-800 gap-1 mb-5">
             {TAB_CONFIG.map(tab => {
               const countMap: Record<AnalyticsTab, number> = {
                 repos: githubRepos.length,
@@ -181,8 +181,8 @@ export const GithubDashboard: React.FC = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2 text-[10px] font-bold rounded-lg uppercase tracking-wider cursor-pointer transition-all ${
                     activeTab === tab.id
-                      ? 'bg-neutral-100 dark:bg-zinc-800 text-zinc-100 shadow-sm'
-                      : 'text-neutral-500 dark:text-zinc-500 hover:text-neutral-700 dark:text-zinc-300'
+                      ? 'bg-zinc-800 text-zinc-100 shadow-sm'
+                      : 'text-zinc-500 hover:text-zinc-300'
                   }`}
                 >
                   {tab.icon}
@@ -190,8 +190,8 @@ export const GithubDashboard: React.FC = () => {
                   {countMap[tab.id] > 0 && (
                     <span className={`px-1.5 py-0.5 rounded-full text-[8px] ${
                       activeTab === tab.id
-                        ? 'bg-zinc-700 text-neutral-700 dark:text-zinc-300'
-                        : 'bg-neutral-100 dark:bg-zinc-800 text-neutral-500 dark:text-zinc-500'
+                        ? 'bg-zinc-700 text-zinc-300'
+                        : 'bg-zinc-800 text-zinc-500'
                     }`}>
                       {countMap[tab.id]}
                     </span>
@@ -207,23 +207,23 @@ export const GithubDashboard: React.FC = () => {
             {activeTab === 'commits' && (
               <div className="space-y-2 max-h-[380px] overflow-y-auto">
                 {githubCommits.length === 0 ? (
-                  <p className="text-xs text-neutral-500 dark:text-zinc-500 italic text-center py-8">No commits in the visible event window.</p>
+                  <p className="text-xs text-zinc-500 italic text-center py-8">No commits in the visible event window.</p>
                 ) : (
                   githubCommits.map(c => (
                     <div
                       key={c.id}
-                      className="p-3 rounded-xl border border-neutral-200 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-950 flex items-center justify-between gap-3"
+                      className="p-3 rounded-xl border border-zinc-800 bg-zinc-950 flex items-center justify-between gap-3"
                     >
                       <div className="min-w-0 flex-1 space-y-0.5">
                         <p className="text-xs font-medium text-zinc-200 truncate">{c.message}</p>
-                        <div className="flex items-center gap-1.5 text-[9px] text-neutral-500 dark:text-zinc-500">
+                        <div className="flex items-center gap-1.5 text-[9px] text-zinc-500">
                           <FiGitCommit className="w-2.5 h-2.5" />
                           <span>{c.repoName}</span>
                           <span>·</span>
                           <span>@{c.author}</span>
                         </div>
                       </div>
-                      <span className="text-[9px] font-semibold text-neutral-500 dark:text-zinc-500 shrink-0 bg-white dark:bg-zinc-900 px-2 py-0.5 rounded-md border border-neutral-200 dark:border-zinc-800">
+                      <span className="text-[9px] font-semibold text-zinc-500 shrink-0 bg-zinc-900 px-2 py-0.5 rounded-md border border-zinc-800">
                         {c.date}
                       </span>
                     </div>
@@ -241,7 +241,7 @@ export const GithubDashboard: React.FC = () => {
       {/* ─── RIGHT COLUMN ─── */}
       <div className="lg:col-span-1">
         <div className="glass-panel rounded-2xl p-5">
-          <div className="flex items-center gap-2 text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider mb-4">
+          <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-4">
             <FiGrid className="w-3.5 h-3.5" />
             <span>Analytics Overview</span>
           </div>

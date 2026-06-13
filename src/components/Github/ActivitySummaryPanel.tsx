@@ -15,13 +15,13 @@ const StatCard: React.FC<{
   value: string | number;
   sub?: string;
 }> = ({ icon, label, value, sub }) => (
-  <div className="p-3 rounded-xl border border-neutral-200 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-950">
+  <div className="p-3 rounded-xl border border-zinc-800 bg-zinc-950">
     <div className="flex items-center gap-2 mb-1.5">
-      <div className="text-neutral-600 dark:text-zinc-400">{icon}</div>
-      <span className="text-[9px] font-bold uppercase tracking-wider text-neutral-500 dark:text-zinc-500">{label}</span>
+      <div className="text-zinc-400">{icon}</div>
+      <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-500">{label}</span>
     </div>
     <div className="text-xl font-bold text-zinc-200">{value}</div>
-    {sub && <div className="text-[9px] text-neutral-500 dark:text-zinc-500 mt-0.5">{sub}</div>}
+    {sub && <div className="text-[9px] text-zinc-500 mt-0.5">{sub}</div>}
   </div>
 );
 
@@ -74,12 +74,12 @@ export const ActivitySummaryPanel: React.FC<Props> = ({ analytics, githubUsernam
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-lg bg-neutral-100 dark:bg-zinc-800 flex items-center justify-center text-neutral-600 dark:text-zinc-400">
+        <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400">
           <FiTrendingUp className="w-4 h-4" />
         </div>
         <div>
           <h3 className="text-xs font-bold text-zinc-200">@{githubUsername}</h3>
-          <p className="text-[9px] text-neutral-500 dark:text-zinc-500">Activity summary</p>
+          <p className="text-[9px] text-zinc-500">Activity summary</p>
         </div>
       </div>
 
@@ -110,37 +110,37 @@ export const ActivitySummaryPanel: React.FC<Props> = ({ analytics, githubUsernam
       </div>
 
       {/* Streak section */}
-      <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-950 space-y-2">
-        <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-neutral-500 dark:text-zinc-500">
+      <div className="p-3.5 rounded-xl border border-zinc-800 bg-zinc-950 space-y-2">
+        <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-zinc-500">
           <FiAward className="w-3 h-3" />
           <span>Commit Streak</span>
         </div>
         <div className="flex items-center gap-2 sm:gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-zinc-200">{currentStreak}</div>
-            <div className="text-[9px] text-neutral-500 dark:text-zinc-500">Current</div>
+            <div className="text-[9px] text-zinc-500">Current</div>
           </div>
-          <div className="w-px h-8 bg-neutral-100 dark:bg-zinc-800" />
+          <div className="w-px h-8 bg-zinc-800" />
           <div className="text-center">
-            <div className="text-2xl font-bold text-neutral-700 dark:text-zinc-300">{longestStreak}</div>
-            <div className="text-[9px] text-neutral-500 dark:text-zinc-500">Longest</div>
+            <div className="text-2xl font-bold text-zinc-300">{longestStreak}</div>
+            <div className="text-[9px] text-zinc-500">Longest</div>
           </div>
           <div className="flex-1 ml-1">
             {currentStreak > 0 ? (
-              <p className="text-[9px] text-neutral-700 dark:text-zinc-300 font-medium leading-relaxed">
+              <p className="text-[9px] text-zinc-300 font-medium leading-relaxed">
                 🔥 {currentStreak} day{currentStreak !== 1 ? 's' : ''} streak!
               </p>
             ) : (
-              <p className="text-[9px] text-neutral-500 dark:text-zinc-500 leading-relaxed">Start committing to build a streak!</p>
+              <p className="text-[9px] text-zinc-500 leading-relaxed">Start committing to build a streak!</p>
             )}
           </div>
         </div>
       </div>
 
       {/* Weekly sparkline */}
-      <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-950 space-y-2">
+      <div className="p-3.5 rounded-xl border border-zinc-800 bg-zinc-950 space-y-2">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-neutral-500 dark:text-zinc-500">
+          <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-zinc-500">
             <FiTrendingUp className="w-3 h-3" />
             <span>Weekly Activity</span>
           </div>
@@ -168,8 +168,8 @@ export const ActivitySummaryPanel: React.FC<Props> = ({ analytics, githubUsernam
 
       {/* Language breakdown */}
       {langs.length > 0 && (
-        <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-950 space-y-2.5">
-          <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-neutral-500 dark:text-zinc-500">
+        <div className="p-3.5 rounded-xl border border-zinc-800 bg-zinc-950 space-y-2.5">
+          <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-zinc-500">
             <FiCode className="w-3 h-3" />
             <span>Languages</span>
           </div>
@@ -182,11 +182,11 @@ export const ActivitySummaryPanel: React.FC<Props> = ({ analytics, githubUsernam
                   <div className="flex items-center justify-between text-[9px]">
                     <div className="flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-                      <span className="text-neutral-700 dark:text-zinc-300 font-medium">{lang}</span>
+                      <span className="text-zinc-300 font-medium">{lang}</span>
                     </div>
-                    <span className="text-neutral-500 dark:text-zinc-500">{pct}%</span>
+                    <span className="text-zinc-500">{pct}%</span>
                   </div>
-                  <div className="w-full h-1.5 bg-neutral-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                  <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-700"
                       style={{ width: `${pct}%`, backgroundColor: color }}
@@ -200,8 +200,8 @@ export const ActivitySummaryPanel: React.FC<Props> = ({ analytics, githubUsernam
       )}
 
       {/* Repos count */}
-      <div className="flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-950">
-        <span className="text-[10px] text-neutral-500 dark:text-zinc-500">Active Repositories</span>
+      <div className="flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-zinc-800 bg-zinc-950">
+        <span className="text-[10px] text-zinc-500">Active Repositories</span>
         <span className="text-sm font-bold text-zinc-200">{repoCount}</span>
       </div>
     </div>

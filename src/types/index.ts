@@ -169,7 +169,7 @@ export interface DeveloperSettings {
  pomodoroWorkTime: number; // in minutes
  pomodoroShortBreak: number;
  pomodoroLongBreak: number;
- themeMode: 'dark' | 'glass' | 'light';
+ themeMode: 'dark' | 'glass';
  colorScheme: 'dark' | 'light' | 'system';
  avatarUrl?: string;
  bio?: string;

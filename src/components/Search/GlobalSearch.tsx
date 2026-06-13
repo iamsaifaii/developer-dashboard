@@ -127,7 +127,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
         <>
           <button 
             onClick={() => setIsOpen(true)}
-            className="p-2 text-neutral-600 dark:text-zinc-400 hover:text-white rounded-lg hover:bg-neutral-100 dark:bg-zinc-800 transition-colors"
+            className="p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800 transition-colors"
           >
             <FiSearch className="w-5 h-5" />
           </button>
@@ -135,19 +135,19 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
             <div className="fixed inset-0 pt-16 px-4 pb-4 bg-neutral-900/95 backdrop-blur-sm z-50 flex flex-col overflow-hidden">
               <div className="flex items-center gap-3 mb-4">
                 <div className="relative flex-1 flex items-center">
-                  <FiSearch className="w-4 h-4 text-neutral-600 dark:text-zinc-400 absolute left-3" />
+                  <FiSearch className="w-4 h-4 text-zinc-400 absolute left-3" />
                   <input 
                     type="text" 
                     placeholder="Search workspace..." 
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className="w-full text-sm pl-9 pr-3 py-3 rounded-xl bg-neutral-50 dark:bg-zinc-950 border border-neutral-200 dark:border-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-zinc-600 transition-colors shadow-lg"
+                    className="w-full text-sm pl-9 pr-3 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-zinc-600 transition-colors shadow-lg"
                     autoFocus
                   />
                   {query && (
                     <button 
                       onClick={() => setQuery('')}
-                      className="absolute right-3 p-1 text-neutral-500 dark:text-zinc-500 hover:text-neutral-700 dark:text-zinc-300"
+                      className="absolute right-3 p-1 text-zinc-500 hover:text-zinc-300"
                     >
                       <FiX className="w-4 h-4" />
                     </button>
@@ -155,16 +155,16 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                 </div>
                 <button 
                   onClick={() => setIsOpen(false)}
-                  className="p-2 text-neutral-600 dark:text-zinc-400 hover:text-zinc-200 font-bold text-xs bg-neutral-100 dark:bg-zinc-800 rounded-xl"
+                  className="p-2 text-zinc-400 hover:text-zinc-200 font-bold text-xs bg-zinc-800 rounded-xl"
                 >
                   Cancel
                 </button>
               </div>
 
               {q ? (
-                <div className="overflow-y-auto flex-1 p-2 space-y-4 bg-neutral-50 dark:bg-zinc-950 rounded-xl border border-neutral-200 dark:border-zinc-800 shadow-xl">
+                <div className="overflow-y-auto flex-1 p-2 space-y-4 bg-zinc-950 rounded-xl border border-zinc-800 shadow-xl">
                   {!hasResults ? (
-                    <div className="p-6 text-center text-neutral-500 dark:text-zinc-500 text-xs">
+                    <div className="p-6 text-center text-zinc-500 text-xs">
                       No results found for "{debouncedQuery}"
                     </div>
                   ) : (
@@ -172,7 +172,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       {/* Tasks */}
                       {!isCommandMode && matchedTasks.length > 0 && (
                         <div>
-                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider">
+                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <TrelloIcon className="w-3 h-3" />
                             <span>Tasks</span>
                           </div>
@@ -181,17 +181,17 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                               <button
                                 key={t.id}
                                 onClick={() => handleNavigate('/kanban')}
-                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-100 dark:bg-zinc-800 flex items-center justify-between group transition-colors"
+                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-zinc-800 flex items-center justify-between group transition-colors"
                               >
                                 <div className="min-w-0 flex-1">
                                   <div className="text-xs text-zinc-200 font-medium truncate">{t.title}</div>
-                                  <div className="text-[10px] text-neutral-500 dark:text-zinc-500 truncate flex items-center gap-1.5 mt-0.5">
+                                  <div className="text-[10px] text-zinc-500 truncate flex items-center gap-1.5 mt-0.5">
                                     <span className="uppercase">{t.priority}</span>
                                     <span>·</span>
                                     <span>{t.tags.slice(0,2).join(', ')}</span>
                                   </div>
                                 </div>
-                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-neutral-600 dark:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                               </button>
                             ))}
                           </div>
@@ -201,7 +201,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       {/* Notes */}
                       {!isCommandMode && matchedNotes.length > 0 && (
                         <div>
-                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider">
+                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <FiFileText className="w-3 h-3" />
                             <span>Notes</span>
                           </div>
@@ -210,15 +210,15 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                               <button
                                 key={n.id}
                                 onClick={() => handleNavigate('/notes')}
-                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-100 dark:bg-zinc-800 flex items-center justify-between group transition-colors"
+                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-zinc-800 flex items-center justify-between group transition-colors"
                               >
                                 <div className="min-w-0 flex-1">
                                   <div className="text-xs text-zinc-200 font-medium truncate">{n.title || 'Untitled Note'}</div>
-                                  <div className="text-[10px] text-neutral-500 dark:text-zinc-500 truncate mt-0.5">
+                                  <div className="text-[10px] text-zinc-500 truncate mt-0.5">
                                     {n.folder} folder
                                   </div>
                                 </div>
-                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-neutral-600 dark:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                               </button>
                             ))}
                           </div>
@@ -228,7 +228,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       {/* Events */}
                       {!isCommandMode && matchedEvents.length > 0 && (
                         <div>
-                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider">
+                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <FiCalendar className="w-3 h-3" />
                             <span>Events</span>
                           </div>
@@ -237,15 +237,15 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                               <button
                                 key={e.id}
                                 onClick={() => handleNavigate('/calendar')}
-                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-100 dark:bg-zinc-800 flex items-center justify-between group transition-colors"
+                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-zinc-800 flex items-center justify-between group transition-colors"
                               >
                                 <div className="min-w-0 flex-1">
                                   <div className="text-xs text-zinc-200 font-medium truncate">{e.title}</div>
-                                  <div className="text-[10px] text-neutral-500 dark:text-zinc-500 truncate mt-0.5">
+                                  <div className="text-[10px] text-zinc-500 truncate mt-0.5">
                                     {e.start}
                                   </div>
                                 </div>
-                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-neutral-600 dark:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                               </button>
                             ))}
                           </div>
@@ -255,7 +255,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       {/* Repos */}
                       {!isCommandMode && matchedRepos.length > 0 && (
                         <div>
-                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider">
+                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <GithubIcon className="w-3 h-3" />
                             <span>GitHub</span>
                           </div>
@@ -264,15 +264,15 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                               <button
                                 key={r.name}
                                 onClick={() => handleNavigate('/github')}
-                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-100 dark:bg-zinc-800 flex items-center justify-between group transition-colors"
+                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-zinc-800 flex items-center justify-between group transition-colors"
                               >
                                 <div className="min-w-0 flex-1">
                                   <div className="text-xs text-zinc-200 font-medium truncate">{r.name}</div>
-                                  <div className="text-[10px] text-neutral-500 dark:text-zinc-500 truncate mt-0.5">
+                                  <div className="text-[10px] text-zinc-500 truncate mt-0.5">
                                     {r.stars} stars · {r.forks} forks
                                   </div>
                                 </div>
-                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-neutral-600 dark:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                               </button>
                             ))}
                           </div>
@@ -282,12 +282,12 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                   )}
                 </div>
               ) : (
-                <div className="p-4 bg-neutral-50 dark:bg-zinc-950 rounded-xl border border-neutral-200 dark:border-zinc-800 shadow-xl flex-1">
-                  <div className="text-xs font-semibold text-neutral-600 dark:text-zinc-400 mb-3 px-2">Suggestions</div>
+                <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-800 shadow-xl flex-1">
+                  <div className="text-xs font-semibold text-zinc-400 mb-3 px-2">Suggestions</div>
                   <div className="flex flex-wrap gap-2 px-2">
-                    <button onClick={() => setQuery('urgent')} className="px-2.5 py-1 rounded bg-neutral-100 dark:bg-zinc-800 text-neutral-700 dark:text-zinc-300 text-[10px] font-medium hover:bg-zinc-700">#urgent</button>
-                    <button onClick={() => setQuery('bug')} className="px-2.5 py-1 rounded bg-neutral-100 dark:bg-zinc-800 text-neutral-700 dark:text-zinc-300 text-[10px] font-medium hover:bg-zinc-700">bug</button>
-                    <button onClick={() => setQuery('meeting')} className="px-2.5 py-1 rounded bg-neutral-100 dark:bg-zinc-800 text-neutral-700 dark:text-zinc-300 text-[10px] font-medium hover:bg-zinc-700">meeting</button>
+                    <button onClick={() => setQuery('urgent')} className="px-2.5 py-1 rounded bg-zinc-800 text-zinc-300 text-[10px] font-medium hover:bg-zinc-700">#urgent</button>
+                    <button onClick={() => setQuery('bug')} className="px-2.5 py-1 rounded bg-zinc-800 text-zinc-300 text-[10px] font-medium hover:bg-zinc-700">bug</button>
+                    <button onClick={() => setQuery('meeting')} className="px-2.5 py-1 rounded bg-zinc-800 text-zinc-300 text-[10px] font-medium hover:bg-zinc-700">meeting</button>
                   </div>
                 </div>
               )}
@@ -300,7 +300,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
             className="relative flex items-center"
             onClick={() => setIsOpen(true)}
           >
-            <FiSearch className="w-4 h-4 text-neutral-600 dark:text-zinc-400 absolute left-3" />
+            <FiSearch className="w-4 h-4 text-zinc-400 absolute left-3" />
             <input 
               id="global-search-input"
               type="text" 
@@ -311,12 +311,12 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                 setIsOpen(true);
               }}
               onFocus={() => setIsOpen(true)}
-              className="w-full text-xs pl-9 pr-3 py-1.5 rounded-lg bg-neutral-50 dark:bg-zinc-950 border border-neutral-200 dark:border-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-zinc-600 transition-colors"
+              className="w-full text-xs pl-9 pr-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-zinc-600 transition-colors"
             />
             {query && (
               <button 
                 onClick={(e) => { e.stopPropagation(); setQuery(''); }}
-                className="absolute right-2 p-1 text-neutral-500 dark:text-zinc-500 hover:text-neutral-700 dark:text-zinc-300"
+                className="absolute right-2 p-1 text-zinc-500 hover:text-zinc-300"
               >
                 <FiX className="w-3 h-3" />
               </button>
@@ -324,11 +324,11 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
           </div>
           
           {isOpen && (
-            <div className="absolute top-full mt-2 w-full w-[400px] right-0 md:left-0 bg-neutral-900 border border-neutral-200 dark:border-zinc-800 rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col max-h-[70vh]">
+            <div className="absolute top-full mt-2 w-full w-[400px] right-0 md:left-0 bg-neutral-900 border border-zinc-800 rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col max-h-[70vh]">
               {q ? (
                 <div className="overflow-y-auto flex-1 p-2 space-y-4">
                   {!hasResults && actionResults.length === 0 ? (
-                    <div className="p-6 text-center text-neutral-500 dark:text-zinc-500 text-xs">
+                    <div className="p-6 text-center text-zinc-500 text-xs">
                       No results found for "{debouncedQuery}"
                     </div>
                   ) : (
@@ -336,7 +336,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       {/* Actions */}
                       {actionResults.length > 0 && (
                         <div>
-                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider">
+                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <span>Actions</span>
                           </div>
                           <div className="space-y-0.5">
@@ -346,13 +346,13 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                                 <button
                                   key={a.id}
                                   onClick={() => executeAction(a.id)}
-                                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-100 dark:bg-zinc-800 flex items-center justify-between group transition-colors"
+                                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-zinc-800 flex items-center justify-between group transition-colors"
                                 >
                                   <div className="flex items-center gap-2">
-                                    <Icon className="w-4 h-4 text-neutral-500 dark:text-zinc-500" />
+                                    <Icon className="w-4 h-4 text-zinc-500" />
                                     <div className="text-xs text-zinc-200 font-medium">{a.label}</div>
                                   </div>
-                                  <span className="text-[9px] text-zinc-600 uppercase border border-neutral-300 dark:border-zinc-700 px-1.5 py-0.5 rounded">Action</span>
+                                  <span className="text-[9px] text-zinc-600 uppercase border border-zinc-700 px-1.5 py-0.5 rounded">Action</span>
                                 </button>
                               );
                             })}
@@ -363,7 +363,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       {/* Tasks */}
                       {!isCommandMode && matchedTasks.length > 0 && (
                         <div>
-                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider">
+                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <TrelloIcon className="w-3 h-3" />
                             <span>Tasks</span>
                           </div>
@@ -372,17 +372,17 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                               <button
                                 key={t.id}
                                 onClick={() => handleNavigate('/kanban')}
-                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-100 dark:bg-zinc-800 flex items-center justify-between group transition-colors"
+                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-zinc-800 flex items-center justify-between group transition-colors"
                               >
                                 <div className="min-w-0 flex-1">
                                   <div className="text-xs text-zinc-200 font-medium truncate">{t.title}</div>
-                                  <div className="text-[10px] text-neutral-500 dark:text-zinc-500 truncate flex items-center gap-1.5 mt-0.5">
+                                  <div className="text-[10px] text-zinc-500 truncate flex items-center gap-1.5 mt-0.5">
                                     <span className="uppercase">{t.priority}</span>
                                     <span>·</span>
                                     <span>{t.tags.slice(0,2).join(', ')}</span>
                                   </div>
                                 </div>
-                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-neutral-600 dark:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                               </button>
                             ))}
                           </div>
@@ -392,7 +392,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       {/* Notes */}
                       {!isCommandMode && matchedNotes.length > 0 && (
                         <div>
-                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider">
+                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <FiFileText className="w-3 h-3" />
                             <span>Notes</span>
                           </div>
@@ -401,15 +401,15 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                               <button
                                 key={n.id}
                                 onClick={() => handleNavigate('/notes')}
-                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-100 dark:bg-zinc-800 flex items-center justify-between group transition-colors"
+                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-zinc-800 flex items-center justify-between group transition-colors"
                               >
                                 <div className="min-w-0 flex-1">
                                   <div className="text-xs text-zinc-200 font-medium truncate">{n.title || 'Untitled Note'}</div>
-                                  <div className="text-[10px] text-neutral-500 dark:text-zinc-500 truncate mt-0.5">
+                                  <div className="text-[10px] text-zinc-500 truncate mt-0.5">
                                     {n.folder} folder
                                   </div>
                                 </div>
-                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-neutral-600 dark:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                               </button>
                             ))}
                           </div>
@@ -419,7 +419,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       {/* Events */}
                       {!isCommandMode && matchedEvents.length > 0 && (
                         <div>
-                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider">
+                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <FiCalendar className="w-3 h-3" />
                             <span>Events</span>
                           </div>
@@ -428,15 +428,15 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                               <button
                                 key={e.id}
                                 onClick={() => handleNavigate('/calendar')}
-                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-100 dark:bg-zinc-800 flex items-center justify-between group transition-colors"
+                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-zinc-800 flex items-center justify-between group transition-colors"
                               >
                                 <div className="min-w-0 flex-1">
                                   <div className="text-xs text-zinc-200 font-medium truncate">{e.title}</div>
-                                  <div className="text-[10px] text-neutral-500 dark:text-zinc-500 truncate mt-0.5">
+                                  <div className="text-[10px] text-zinc-500 truncate mt-0.5">
                                     {e.start}
                                   </div>
                                 </div>
-                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-neutral-600 dark:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                               </button>
                             ))}
                           </div>
@@ -446,7 +446,7 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                       {/* Repos */}
                       {!isCommandMode && matchedRepos.length > 0 && (
                         <div>
-                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-neutral-500 dark:text-zinc-500 uppercase tracking-wider">
+                          <div className="px-3 mb-1.5 flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             <GithubIcon className="w-3 h-3" />
                             <span>GitHub</span>
                           </div>
@@ -455,15 +455,15 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                               <button
                                 key={r.name}
                                 onClick={() => handleNavigate('/github')}
-                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-100 dark:bg-zinc-800 flex items-center justify-between group transition-colors"
+                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-zinc-800 flex items-center justify-between group transition-colors"
                               >
                                 <div className="min-w-0 flex-1">
                                   <div className="text-xs text-zinc-200 font-medium truncate">{r.name}</div>
-                                  <div className="text-[10px] text-neutral-500 dark:text-zinc-500 truncate mt-0.5">
+                                  <div className="text-[10px] text-zinc-500 truncate mt-0.5">
                                     {r.stars} stars · {r.forks} forks
                                   </div>
                                 </div>
-                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-neutral-600 dark:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <FiArrowRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                               </button>
                             ))}
                           </div>
@@ -474,18 +474,18 @@ export const GlobalSearch: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => 
                 </div>
               ) : (
                 <div className="p-4">
-                  <div className="text-xs font-semibold text-neutral-600 dark:text-zinc-400 mb-3 px-2">Suggestions</div>
+                  <div className="text-xs font-semibold text-zinc-400 mb-3 px-2">Suggestions</div>
                   <div className="flex flex-wrap gap-2 px-2">
-                    <button onClick={() => setQuery('urgent')} className="px-2.5 py-1 rounded bg-neutral-100 dark:bg-zinc-800 text-neutral-700 dark:text-zinc-300 text-[10px] font-medium hover:bg-zinc-700">#urgent</button>
-                    <button onClick={() => setQuery('bug')} className="px-2.5 py-1 rounded bg-neutral-100 dark:bg-zinc-800 text-neutral-700 dark:text-zinc-300 text-[10px] font-medium hover:bg-zinc-700">bug</button>
-                    <button onClick={() => setQuery('meeting')} className="px-2.5 py-1 rounded bg-neutral-100 dark:bg-zinc-800 text-neutral-700 dark:text-zinc-300 text-[10px] font-medium hover:bg-zinc-700">meeting</button>
+                    <button onClick={() => setQuery('urgent')} className="px-2.5 py-1 rounded bg-zinc-800 text-zinc-300 text-[10px] font-medium hover:bg-zinc-700">#urgent</button>
+                    <button onClick={() => setQuery('bug')} className="px-2.5 py-1 rounded bg-zinc-800 text-zinc-300 text-[10px] font-medium hover:bg-zinc-700">bug</button>
+                    <button onClick={() => setQuery('meeting')} className="px-2.5 py-1 rounded bg-zinc-800 text-zinc-300 text-[10px] font-medium hover:bg-zinc-700">meeting</button>
                   </div>
                 </div>
               )}
               
               {/* Footer */}
-              <div className="bg-neutral-50 dark:bg-zinc-950 border-t border-neutral-200 dark:border-zinc-800 p-2 text-[10px] text-neutral-500 dark:text-zinc-500 flex items-center justify-between">
-                <span>Press <kbd className="bg-neutral-100 dark:bg-zinc-800 px-1 py-0.5 rounded border border-neutral-300 dark:border-zinc-700">Esc</kbd> to close</span>
+              <div className="bg-zinc-950 border-t border-zinc-800 p-2 text-[10px] text-zinc-500 flex items-center justify-between">
+                <span>Press <kbd className="bg-zinc-800 px-1 py-0.5 rounded border border-zinc-700">Esc</kbd> to close</span>
                 <span>Search everywhere</span>
               </div>
             </div>

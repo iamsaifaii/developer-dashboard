@@ -102,10 +102,10 @@ export const LoginScreen: React.FC = () => {
   const isLoading = loading !== null;
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-[#080809] flex overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#080809] flex overflow-hidden font-sans">
 
       {/* ── LEFT PANEL: Branding ── */}
-      <div className="hidden lg:flex lg:w-[55%] flex-col justify-between p-24 bg-neutral-50 dark:bg-[#080809] text-white border-r border-neutral-200 dark:border-zinc-900 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-[55%] flex-col justify-between p-24 bg-[#080809] text-white border-r border-zinc-900 relative overflow-hidden">
         {/* Decorative background grid & glow */}
         <div className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -123,7 +123,7 @@ export const LoginScreen: React.FC = () => {
             </div>
             <span className="text-white font-black text-2xl tracking-tighter">DevFlow</span>
           </div>
-          <p className="text-neutral-500 dark:text-zinc-500 text-[11px] font-bold tracking-widest uppercase ml-1">Your developer productivity platform</p>
+          <p className="text-zinc-500 text-[11px] font-bold tracking-widest uppercase ml-1">Your developer productivity platform</p>
         </div>
 
         {/* Feature list */}
@@ -135,12 +135,12 @@ export const LoginScreen: React.FC = () => {
           <div className="space-y-5">
             {FEATURES.map(f => (
               <div key={f.title} className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 flex items-center justify-center text-neutral-700 dark:text-zinc-300 shrink-0 mt-0.5 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 shrink-0 mt-0.5 shadow-sm">
                   {f.icon}
                 </div>
                 <div>
                   <p className="text-sm font-bold text-zinc-200">{f.title}</p>
-                  <p className="text-xs text-neutral-500 dark:text-zinc-500 leading-relaxed font-medium mt-1">{f.desc}</p>
+                  <p className="text-xs text-zinc-500 leading-relaxed font-medium mt-1">{f.desc}</p>
                 </div>
               </div>
             ))}
@@ -154,7 +154,7 @@ export const LoginScreen: React.FC = () => {
       </div>
 
       {/* ── RIGHT PANEL: Sign in form ── */}
-      <div className="flex-1 flex flex-col items-center justify-center p-8 md:p-16 bg-neutral-50 dark:bg-[#080809] relative">
+      <div className="flex-1 flex flex-col items-center justify-center p-8 md:p-16 bg-[#080809] relative">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900/40 via-transparent to-transparent opacity-50" />
         
         <div className="w-full max-w-sm space-y-8 relative z-10 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
@@ -172,7 +172,7 @@ export const LoginScreen: React.FC = () => {
             <h1 className="text-3xl font-black text-white tracking-tighter">
               Welcome back
             </h1>
-            <p className="text-sm text-neutral-600 dark:text-zinc-400 font-medium">
+            <p className="text-sm text-zinc-400 font-medium">
               Sign in to access your developer workspace.
             </p>
           </div>
@@ -240,9 +240,9 @@ export const LoginScreen: React.FC = () => {
 
             {/* Divider */}
             <div className="flex items-center gap-4">
-              <div className="flex-1 h-px bg-neutral-100 dark:bg-zinc-800" />
+              <div className="flex-1 h-px bg-zinc-800" />
               <span className="text-[10px] font-bold tracking-widest uppercase text-zinc-600">or</span>
-              <div className="flex-1 h-px bg-neutral-100 dark:bg-zinc-800" />
+              <div className="flex-1 h-px bg-zinc-800" />
             </div>
 
             {/* Google */}
@@ -250,10 +250,10 @@ export const LoginScreen: React.FC = () => {
               id="btn-signin-google"
               onClick={handleGoogle}
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3.5 px-6 py-4 bg-white dark:bg-[#0a0a0a] hover:bg-white dark:bg-zinc-900 text-white font-bold text-sm rounded-xl border border-neutral-200 dark:border-zinc-800 disabled:opacity-60 transition-all shadow-sm cursor-pointer btn-press"
+              className="w-full flex items-center justify-center gap-3.5 px-6 py-4 bg-[#0a0a0a] hover:bg-zinc-900 text-white font-bold text-sm rounded-xl border border-zinc-800 disabled:opacity-60 transition-all shadow-sm cursor-pointer btn-press"
             >
               {loading === 'google' ? (
-                <div className="w-5 h-5 border-2 border-neutral-300 dark:border-zinc-700 border-t-white rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-zinc-700 border-t-white rounded-full animate-spin" />
               ) : (
                 <GoogleIcon className="w-5 h-5" />
               )}
@@ -267,7 +267,7 @@ export const LoginScreen: React.FC = () => {
               onClick={() => setRemember(!remember)}
               className={`w-4.5 h-4.5 rounded md border flex items-center justify-center transition-colors cursor-pointer ${remember
                 ? 'bg-white border-white'
-                : 'border-neutral-300 dark:border-zinc-700 bg-white dark:bg-[#0a0a0a] group-hover:border-zinc-500'
+                : 'border-zinc-700 bg-[#0a0a0a] group-hover:border-zinc-500'
                 }`}
             >
               {remember && (
@@ -276,14 +276,14 @@ export const LoginScreen: React.FC = () => {
                 </svg>
               )}
             </div>
-            <span className="text-[11px] font-medium text-neutral-500 dark:text-zinc-500 group-hover:text-neutral-700 dark:text-zinc-300 transition-colors">
+            <span className="text-[11px] font-medium text-zinc-500 group-hover:text-zinc-300 transition-colors">
               Keep me signed in on this device
             </span>
           </label>
 
           {/* Legal */}
           <p className="text-[10px] text-zinc-600 leading-relaxed text-center font-medium">
-            By signing in, you agree to our <a href="#" className="underline hover:text-neutral-600 dark:text-zinc-400">Terms of Service</a> and <a href="#" className="underline hover:text-neutral-600 dark:text-zinc-400">Privacy Policy</a>.<br/>
+            By signing in, you agree to our <a href="#" className="underline hover:text-zinc-400">Terms of Service</a> and <a href="#" className="underline hover:text-zinc-400">Privacy Policy</a>.<br/>
             Your data is encrypted and never shared.
           </p>
         </div>

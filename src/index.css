@@ -7,8 +7,6 @@
   --color-neutral-900: #000000;
 }
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 /* ─── Custom Scrollbar ─── */
 ::-webkit-scrollbar {
   width: 5px;
@@ -42,18 +40,11 @@ body,
   min-height: 100vh;
   overflow-x: hidden;
   font-family: var(--font-sans);
-  background-color: #fafafa;
-  color: #18181b;
+  background-color: #000000;
+  color: #f4f4f5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-}
-
-.dark html,
-.dark body,
-.dark #root {
-  background-color: #000000;
-  color: #f4f4f5;
 }
 
 /* ─── Focus Ring ─── */

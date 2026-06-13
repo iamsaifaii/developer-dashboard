@@ -138,7 +138,7 @@ export const ProjectCalendar: React.FC = () => {
  {/* Month Label */}
  <div className="flex items-center gap-3">
  <FiCalendar className="w-5 h-5 text-neutral-700 dark:text-neutral-300" />
- <h3 className="text-sm font-bold text-black dark:text-white uppercase tracking-wider">
+ <h3 className="text-sm font-bold text-white uppercase tracking-wider">
  {monthNames[currentMonth]} {currentYear}
  </h3>
  </div>
@@ -147,7 +147,7 @@ export const ProjectCalendar: React.FC = () => {
  <div className="flex items-center gap-2">
  <button
  onClick={handleGoToday}
- className="px-3 py-1.5 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black/40 text-neutral-500 dark:text-neutral-400 hover:text-black dark:text-white rounded-lg text-xxs font-bold cursor-pointer hover:bg-neutral-100 dark:bg-neutral-800"
+ className="px-3 py-1.5 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black/40 text-neutral-500 dark:text-neutral-400 hover:text-white rounded-lg text-xxs font-bold cursor-pointer hover:bg-neutral-100 dark:bg-neutral-800"
  >
  Today
  </button>
@@ -155,13 +155,13 @@ export const ProjectCalendar: React.FC = () => {
  <div className="flex items-center bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-0.5">
  <button
  onClick={handlePrevMonth}
- className="p-1 hover:bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:text-black dark:text-white rounded-md cursor-pointer"
+ className="p-1 hover:bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:text-white rounded-md cursor-pointer"
  >
  <FiChevronLeft className="w-4 h-4" />
  </button>
  <button
  onClick={handleNextMonth}
- className="p-1 hover:bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:text-black dark:text-white rounded-md cursor-pointer"
+ className="p-1 hover:bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:text-white rounded-md cursor-pointer"
  >
  <FiChevronRight className="w-4 h-4" />
  </button>
@@ -173,7 +173,7 @@ export const ProjectCalendar: React.FC = () => {
  setSelectedDateStr(new Date().toISOString().split('T')[0]);
  setIsModalOpen(true);
  }}
- className="flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 text-xxs font-bold text-black dark:text-white rounded-lg cursor-pointer shadow-md shadow-neutral-900/10"
+ className="flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 text-xxs font-bold text-white rounded-lg cursor-pointer shadow-md shadow-neutral-900/10"
  >
  <FiPlus className="w-3.5 h-3.5" />
  <span>Add Event</span>
@@ -213,7 +213,7 @@ export const ProjectCalendar: React.FC = () => {
  <span 
  className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
  currentIsToday 
- ? 'bg-neutral-200 dark:bg-neutral-700 text-black dark:text-white shadow-md' 
+ ? 'bg-neutral-200 dark:bg-neutral-700 text-white shadow-md' 
  : 'text-neutral-500 dark:text-neutral-400'
  }`}
  >
@@ -234,7 +234,7 @@ export const ProjectCalendar: React.FC = () => {
  <div
  key={e.id}
  onClick={(evt) => handleEventClick(evt, e)}
- className="px-1.5 py-0.5 rounded text-[10px] truncate font-medium text-black dark:text-white hover:brightness-110 shadow-sm"
+ className="px-1.5 py-0.5 rounded text-[10px] truncate font-medium text-white hover:brightness-110 shadow-sm"
  style={{ 
  backgroundColor: e.color || '#64748b',
  borderLeft: `3px solid rgba(255,255,255,0.4)`

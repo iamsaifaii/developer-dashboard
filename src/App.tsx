@@ -138,22 +138,15 @@ function App() {
     // Run immediately after user loads
     checkOverdueTasks();
     checkProductivityReminder();
-    
-    const interval = setInterval(() => {
-      checkOverdueTasks();
-      checkProductivityReminder();
-    }, 60_000);
-    return () => clearInterval(interval);
   }, [currentUser, checkOverdueTasks]);
 
-  // Handle Theme Toggling
+  // Overdue check interval
   useEffect(() => {
-    if (settings.themeMode === 'light') {
-      document.documentElement.classList.remove('dark');
-    } else {
-      document.documentElement.classList.add('dark');
-    }
-  }, [settings.themeMode]);
+    if (!currentUser) return;
+    checkOverdueTasks();
+    const interval = setInterval(checkOverdueTasks, 60 * 1000);
+    return () => clearInterval(interval);
+  }, [currentUser, checkOverdueTasks]);
 
  // 1. Global Pomodoro Clock Loop
  useEffect(() => {

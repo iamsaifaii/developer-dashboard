@@ -33,9 +33,9 @@ const parseMarkdown = (text: string): string => {
  html = html.replace(/`([^`]+)`/g, '<code class="bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-neutral-800 px-1.5 py-0.5 rounded-md text-sm font-mono text-pink-600 dark:text-pink-400">$1</code>');
 
  // Headers
- html = html.replace(/^# (.*?)$/gm, '<h1 class="text-2xl md:text-3xl font-bold tracking-tight text-black dark:text-white mt-8 mb-4">$1</h1>');
- html = html.replace(/^## (.*?)$/gm, '<h2 class="text-xl md:text-2xl font-bold tracking-tight text-black dark:text-white mt-6 mb-3">$1</h2>');
- html = html.replace(/^### (.*?)$/gm, '<h3 class="text-lg md:text-xl font-bold tracking-tight text-black dark:text-white mt-5 mb-2">$1</h3>');
+ html = html.replace(/^# (.*?)$/gm, '<h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white mt-8 mb-4">$1</h1>');
+ html = html.replace(/^## (.*?)$/gm, '<h2 class="text-xl md:text-2xl font-bold tracking-tight text-white mt-6 mb-3">$1</h2>');
+ html = html.replace(/^### (.*?)$/gm, '<h3 class="text-lg md:text-xl font-bold tracking-tight text-white mt-5 mb-2">$1</h3>');
 
  // Checkboxes
  html = html.replace(/^- \[ \] (.*?)$/gm, '<li class="list-none flex items-center gap-3 text-neutral-700 dark:text-neutral-300 my-2 text-[15px]"><input type="checkbox" disabled class="rounded border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 w-4 h-4 cursor-not-allowed mt-0.5"> <span>$1</span></li>');
@@ -45,7 +45,7 @@ const parseMarkdown = (text: string): string => {
  html = html.replace(/^- (.*?)$/gm, '<li class="list-disc ml-6 text-neutral-700 dark:text-neutral-300 my-1.5 text-[15px] leading-relaxed">$1</li>');
 
  // Bold
- html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-black dark:text-black dark:text-white">$1</strong>');
+ html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-black dark:text-white">$1</strong>');
 
  // Paragraphs
  const paragraphs = html.split(/\n\n+/);
@@ -232,7 +232,7 @@ export const NotesManager: React.FC = () => {
  <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">Notebooks</span>
    <button 
    onClick={() => setIsAddingFolder(!isAddingFolder)} 
-   className="p-1 text-neutral-500 dark:text-neutral-400 hover:text-black dark:text-white hover:bg-neutral-100 dark:bg-neutral-800 rounded cursor-pointer"
+   className="p-1 text-neutral-500 dark:text-neutral-400 hover:text-white hover:bg-neutral-100 dark:bg-neutral-800 rounded cursor-pointer"
    title="New folder"
    >
    <FiPlus className="w-4 h-4" />
@@ -322,7 +322,7 @@ export const NotesManager: React.FC = () => {
        onClick={() => setShowFilters(!showFilters)}
        className={`p-2 rounded-lg border transition-colors ${
          showFilters 
-           ? 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 text-black dark:text-black dark:text-white' 
+           ? 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 text-black dark:text-white' 
            : 'bg-white dark:bg-black/40 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-900'
        }`}
        title="Advanced Filters"
@@ -380,7 +380,7 @@ export const NotesManager: React.FC = () => {
  }`}
  >
  <div className="flex items-start justify-between">
- <h4 className="text-sm font-bold text-black dark:text-white truncate max-w-[85%]">
+ <h4 className="text-sm font-bold text-white truncate max-w-[85%]">
  {note.title || 'Untitled Note'}
  </h4>
  <button
@@ -415,7 +415,7 @@ export const NotesManager: React.FC = () => {
  {/* Create Note Trigger */}
  <button
  onClick={handleCreateNote}
- className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 text-black dark:text-white rounded-xl cursor-pointer"
+ className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 text-white rounded-xl cursor-pointer"
  >
  <FiPlus className="w-4 h-4" />
  <span>New Note</span>
@@ -441,7 +441,7 @@ export const NotesManager: React.FC = () => {
  onClick={() => setEditorTab('write')}
  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xxs font-bold cursor-pointer ${
  editorTab === 'write'
- ? 'bg-neutral-100 dark:bg-neutral-800 text-black dark:text-black dark:text-white'
+ ? 'bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white'
  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:text-neutral-200'
  }`}
  >
@@ -452,7 +452,7 @@ export const NotesManager: React.FC = () => {
  onClick={() => setEditorTab('preview')}
  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xxs font-bold cursor-pointer ${
  editorTab === 'preview'
- ? 'bg-neutral-100 dark:bg-neutral-800 text-black dark:text-black dark:text-white'
+ ? 'bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white'
  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:text-neutral-200'
  }`}
  >
@@ -525,7 +525,7 @@ export const NotesManager: React.FC = () => {
  value={activeNote.title}
  onChange={(e) => handleUpdateNoteTitle(e.target.value)}
  placeholder="Note Title" 
- className="w-full text-xl md:text-2xl font-bold bg-transparent border-b-2 border-transparent hover:border-neutral-200 dark:border-neutral-800 focus:border-neutral-500 focus:outline-none text-black dark:text-white py-2 px-0 transition-all placeholder-neutral-400"
+ className="w-full text-xl md:text-2xl font-bold bg-transparent border-b-2 border-transparent hover:border-neutral-200 dark:border-neutral-800 focus:border-neutral-500 focus:outline-none text-white py-2 px-0 transition-all placeholder-neutral-400"
  />
  </div>
 

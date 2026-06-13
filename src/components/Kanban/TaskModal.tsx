@@ -27,11 +27,11 @@ interface TaskModalProps {
 
 // Status color mapping
 const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
-  'backlog': { label: 'BACKLOG', bg: 'bg-neutral-600', text: 'text-black dark:text-white' },
-  'todo': { label: 'TO DO', bg: 'bg-neutral-500', text: 'text-black dark:text-white' },
-  'in-progress': { label: 'IN PROGRESS', bg: 'bg-blue-600', text: 'text-black dark:text-white' },
+  'backlog': { label: 'BACKLOG', bg: 'bg-neutral-600', text: 'text-white' },
+  'todo': { label: 'TO DO', bg: 'bg-neutral-500', text: 'text-white' },
+  'in-progress': { label: 'IN PROGRESS', bg: 'bg-blue-600', text: 'text-white' },
   'review': { label: 'REVIEW', bg: 'bg-yellow-500', text: 'text-black' },
-  'done': { label: 'DONE', bg: 'bg-green-600', text: 'text-black dark:text-white' },
+  'done': { label: 'DONE', bg: 'bg-green-600', text: 'text-white' },
 };
 
 const priorityConfig: Record<Priority, { label: string; color: string; flag: string }> = {
@@ -486,12 +486,12 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
                         type="button"
                         onClick={() => handleToggleSubtask(sub.id)}
                         className={`w-4 h-4 rounded border flex items-center justify-center cursor-pointer transition-all ${sub.isCompleted
-                            ? 'bg-green-600 border-green-600 text-black dark:text-white'
+                            ? 'bg-green-600 border-green-600 text-white'
                             : 'border-neutral-700 hover:border-neutral-500'
                           }`}
                       >
                         {sub.isCompleted && (
-                          <svg className="w-2.5 h-2.5 text-black dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
+                          <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         )}
