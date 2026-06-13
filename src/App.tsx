@@ -25,6 +25,8 @@ const WhiteboardCanvas = lazy(() => import('./components/Whiteboard/WhiteboardCa
 const GoalsDashboard = lazy(() => import('./components/Goals/GoalsDashboard').then(m => ({ default: m.GoalsDashboard })));
 const TeamsPage = lazy(() => import('./components/Teams/TeamsPage').then(m => ({ default: m.TeamsPage })));
 const JoinTeamPage = lazy(() => import('./components/Teams/JoinTeamPage').then(m => ({ default: m.JoinTeamPage })));
+const TermsPage = lazy(() => import('./components/Docs/TermsPage').then(m => ({ default: m.TermsPage })));
+const UserGuidePage = lazy(() => import('./components/Docs/UserGuidePage').then(m => ({ default: m.UserGuidePage })));
 
 function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -308,6 +310,8 @@ function App() {
           <Route path="/whiteboard" element={<WhiteboardCanvas />} />
           <Route path="/teams" element={<TeamsPage />} />
           <Route path="/join" element={<JoinTeamPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/guide" element={<UserGuidePage />} />
           <Route path="*" element={<DashboardHome onNavigate={(tab) => navigate(tab === 'dashboard' ? '/' : `/${tab}`)} />} />
         </Routes>
       </Suspense>

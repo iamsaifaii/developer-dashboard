@@ -12,7 +12,9 @@ import {
  FiRotateCcw,
  FiPenTool,
  FiTarget,
- FiUsers
+ FiUsers,
+ FiBook,
+ FiShield
 } from 'react-icons/fi';
 
 
@@ -49,6 +51,8 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  { id: 'goals', label: 'Goals & Habits', icon: FiTarget },
  { id: 'whiteboard', label: 'Whiteboard', icon: FiPenTool },
  { id: 'github', label: 'GitHub Sync', icon: GithubIcon },
+ { id: 'guide', label: 'User Guide', icon: FiBook },
+ { id: 'terms', label: 'Terms', icon: FiShield },
  { id: 'settings', label: 'Settings', icon: FiSettings },
  ];
 
