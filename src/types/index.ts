@@ -205,4 +205,36 @@ export interface HabitStreak {
   lastLogDate: string;
 }
 
+// ─── Teams & Collaboration ────────────────────────────────────────────────────
+
+export interface TeamMember {
+  uid: string;
+  email: string;
+  displayName: string | null;
+  photoURL: string | null;
+  role: 'admin' | 'member';
+  joinedAt: string;
+}
+
+export interface TeamInvite {
+  email: string;
+  status: 'pending' | 'accepted' | 'declined';
+  invitedAt: string;
+  invitedBy: string; // uid of inviter
+  invitedByName: string | null;
+  token: string; // unique secure token for the magic link
+}
+
+export interface Team {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  createdBy: string; // uid
+  members: TeamMember[];
+  invites: TeamInvite[];
+}
+
+export type WorkspaceMode = 'personal' | string; // 'personal' or teamId
+
 

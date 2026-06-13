@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './lib/firebase';
 import { getProviderIds, validateGithubToken } from './lib/auth';
 import { useStore } from './store/useStore';
+import { subscribeToMyTeams, subscribeToPendingInvites } from './services/teamService';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { TaskModal } from './components/Kanban/TaskModal';
@@ -22,6 +23,8 @@ const GithubDashboard = lazy(() => import('./components/Github/GithubDashboard')
 const SettingsPanel = lazy(() => import('./components/Settings/SettingsPanel').then(m => ({ default: m.SettingsPanel })));
 const WhiteboardCanvas = lazy(() => import('./components/Whiteboard/WhiteboardCanvas').then(m => ({ default: m.WhiteboardCanvas })));
 const GoalsDashboard = lazy(() => import('./components/Goals/GoalsDashboard').then(m => ({ default: m.GoalsDashboard })));
+const TeamsPage = lazy(() => import('./components/Teams/TeamsPage').then(m => ({ default: m.TeamsPage })));
+const JoinTeamPage = lazy(() => import('./components/Teams/JoinTeamPage').then(m => ({ default: m.JoinTeamPage })));
 
 function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -43,7 +46,9 @@ function App() {
     isHydratingFromCloud,
     cloudSyncStatus,
     cloudSyncError,
-    checkOverdueTasks
+    checkOverdueTasks,
+    setTeams,
+    setPendingInvites
   } = useStore();
 
   const [isQuickTaskOpen, setIsQuickTaskOpen] = useState(false);
@@ -89,7 +94,25 @@ function App() {
     }
   }, [currentUser, githubToken, fetchRealGithubData, setGithubToken]);
 
-  // 2. Request browser notification permission once on mount (for push overdue alerts)
+  // Teams real-time subscription
+  useEffect(() => {
+    if (!currentUser) {
+      setTeams([]);
+      setPendingInvites([]);
+      return;
+    }
+    const unsubTeams = subscribeToMyTeams(currentUser.uid, (teams) => {
+      setTeams(teams);
+    });
+    const unsubInvites = subscribeToPendingInvites(currentUser.email || '', (invites) => {
+      setPendingInvites(invites);
+    });
+    return () => {
+      unsubTeams();
+      unsubInvites();
+    };
+  }, [currentUser, setTeams, setPendingInvites]);
+
   useEffect(() => {
     if (typeof window !== 'undefined' && 'Notification' in window) {
       if (Notification.permission === 'default') {
@@ -235,6 +258,14 @@ function App() {
   }
 
   if (!currentUser) {
+    // Allow the /join page to render even before login — it handles auth internally
+    if (location.pathname === '/join') {
+      return (
+        <Suspense fallback={<div className="min-h-screen bg-[#09090b] flex items-center justify-center"><div className="w-8 h-8 border-4 border-indigo-700 border-t-transparent rounded-full animate-spin" /></div>}>
+          <JoinTeamPage />
+        </Suspense>
+      );
+    }
     return <LoginScreen />;
   }
 
@@ -275,6 +306,8 @@ function App() {
           <Route path="/goals" element={<GoalsDashboard />} />
           <Route path="/settings" element={<SettingsPanel />} />
           <Route path="/whiteboard" element={<WhiteboardCanvas />} />
+          <Route path="/teams" element={<TeamsPage />} />
+          <Route path="/join" element={<JoinTeamPage />} />
           <Route path="*" element={<DashboardHome onNavigate={(tab) => navigate(tab === 'dashboard' ? '/' : `/${tab}`)} />} />
         </Routes>
       </Suspense>

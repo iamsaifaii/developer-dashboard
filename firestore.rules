@@ -2,15 +2,46 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Catch-all rule for development (allows access if logged in)
-    // You can refine this later to strictly restrict based on workspace member arrays
+
+    // ── Personal user data: only the owner can read/write ─────────────────────
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
-    
 
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    // ── Team data ─────────────────────────────────────────────────────────────
+    match /teams/{teamId} {
+
+      // Helper: is the requesting user a member of this team?
+      function isMember() {
+        return request.auth != null &&
+          resource.data.members.exists(m, m.uid == request.auth.uid);
+      }
+
+      // Helper: does the requesting user have a pending invite to this team?
+      function isInvited() {
+        return request.auth != null &&
+          resource.data.invites.exists(
+            inv,
+            inv.email == request.auth.token.email && inv.status == 'pending'
+          );
+      }
+
+      // Helper: is the requesting user the team creator (admin)?
+      function isAdmin() {
+        return request.auth != null && resource.data.createdBy == request.auth.uid;
+      }
+
+      // Read: members can read full doc; invited users can read to validate their invite
+      allow read: if isMember() || isInvited();
+
+      // Create: any authenticated user can create a new team
+      allow create: if request.auth != null;
+
+      // Update: only members can update (invite responses, adding tasks, etc.)
+      allow update: if isMember();
+
+      // Delete: only the admin (creator) can delete the team
+      allow delete: if isAdmin();
     }
   }
 }

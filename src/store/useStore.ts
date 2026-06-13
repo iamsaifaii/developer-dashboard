@@ -6,7 +6,7 @@ import { auth } from '../lib/firebase';
 import type { 
   Task, Column, Note, CalendarEvent, PomodoroSession, TimerMode, DeveloperSettings,
   GithubRepo, GithubIssue, GithubPR, GithubCommit, GithubAnalytics,
-  AppNotification, AIMessage
+  AppNotification, AIMessage, Team, TeamInvite, WorkspaceMode
 } from '../types';
 import { fetchGithubData } from '../services/githubService';
 
@@ -111,6 +111,14 @@ interface State {
 
   // Global time to force UI updates
   currentTime: number;
+
+  // Teams
+  teams: Team[];
+  pendingInvites: { team: Team; invite: TeamInvite }[];
+  activeWorkspace: WorkspaceMode;
+  setTeams: (teams: Team[]) => void;
+  setPendingInvites: (invites: { team: Team; invite: TeamInvite }[]) => void;
+  setActiveWorkspace: (workspace: WorkspaceMode) => void;
 }
 
 export const useStore = create<State>()((set, get) => {
@@ -721,6 +729,14 @@ export const useStore = create<State>()((set, get) => {
       } : h)
     };
   }),
+
+  // Teams state
+  teams: [],
+  pendingInvites: [],
+  activeWorkspace: 'personal',
+  setTeams: (teams) => set({ teams }),
+  setPendingInvites: (invites) => set({ pendingInvites: invites }),
+  setActiveWorkspace: (workspace) => set({ activeWorkspace: workspace }),
 
  // Real Github API functions
  githubToken: null,

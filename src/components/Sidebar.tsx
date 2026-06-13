@@ -11,12 +11,14 @@ import {
  FiPause,
  FiRotateCcw,
  FiPenTool,
- FiTarget
+ FiTarget,
+ FiUsers
 } from 'react-icons/fi';
 
 
 import { TrelloIcon, GithubIcon } from './BrandIcons';
 import { FiChevronLeft, FiChevronRight, FiSkipForward, FiCircle } from 'react-icons/fi';
+import { WorkspaceSwitcher } from './Teams/WorkspaceSwitcher';
 
 export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollapsed?: boolean; onToggleCollapse?: () => void }> = ({ isOpen, onClose, isCollapsed = false, onToggleCollapse }) => {
  const navigate = useNavigate();
@@ -30,7 +32,8 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  setTimerStatus, 
  resetTimer,
  settings,
- totalSessionsCompleted
+ totalSessionsCompleted,
+ pendingInvites
  } = useStore();
 
  const workspaceItems = [
@@ -38,6 +41,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
  { id: 'kanban', label: 'Kanban Board', icon: TrelloIcon },
  { id: 'notes', label: 'Notes', icon: FiFileText },
  { id: 'calendar', label: 'Calendar', icon: FiCalendar },
+ { id: 'teams', label: 'Teams', icon: FiUsers, badge: pendingInvites.length > 0 ? pendingInvites.length : undefined },
  ];
 
  const toolsItems = [
@@ -135,6 +139,13 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
    <Icon className={`shrink-0 transition-colors duration-200 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} ${isActive ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-400'}`} />
    
    {!isCollapsed && <span className="text-[13px] tracking-wide">{item.label}</span>}
+
+   {/* Badge for pending invites */}
+   {item.badge && (
+     <span className={`ml-auto flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-indigo-600 text-white text-[10px] font-bold ${isCollapsed ? 'absolute top-1.5 right-1.5 w-3.5 h-3.5 min-w-0 text-[8px]' : ''}`}>
+       {item.badge}
+     </span>
+   )}
    </button>
    );
    })}
@@ -182,8 +193,15 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
    </nav>
  </div>
 
- {/* Footer Pomodoro Widget */}
- <div className={`p-4 mt-auto shrink-0 border-t border-zinc-800 ${isCollapsed ? 'flex justify-center p-2' : ''}`}>
+ {/* Footer: WorkspaceSwitcher + Pomodoro Widget */}
+ <div className={`mt-auto shrink-0 border-t border-zinc-800 ${isCollapsed ? '' : ''}`}>
+   {/* Workspace Switcher */}
+   <div className={`p-3 border-b border-zinc-800/50 ${isCollapsed ? 'flex justify-center' : ''}`}>
+     <WorkspaceSwitcher isCollapsed={isCollapsed} />
+   </div>
+
+   {/* Pomodoro widget */}
+   <div className={`p-4 ${isCollapsed ? 'flex justify-center p-2' : ''}`}>
  
  {isCollapsed ? (
    <button 
@@ -270,7 +288,8 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
      </div>
    </div>
  )}
- </div>
+ </div>{/* end pomodoro div */}
+ </div>{/* end footer wrapper */}
  </aside>
  </>
  );

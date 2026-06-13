@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 
@@ -82,6 +83,143 @@ const validate = (schema) => (req, res, next) => {
 app.get('/api/health', (req, res) => {
   res.json({ status: 'healthy', model: 'gemini-1.5-flash' });
 });
+
+// ─── Email Invite Endpoint ────────────────────────────────────────────────────
+
+const InviteSchema = z.object({
+  to: z.string().email(),
+  inviterName: z.string().min(1).max(100),
+  teamName: z.string().min(1).max(100),
+  inviteLink: z.string().url(),
+});
+
+// Stricter rate limit for invite emails: 10 per 15 min per IP
+const inviteLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { error: 'Too many invite requests. Please wait before sending more.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+function getEmailTransporter() {
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+  const host = process.env.SMTP_HOST || 'smtp.gmail.com';
+  const port = parseInt(process.env.SMTP_PORT || '587');
+
+  if (!user || !pass) {
+    throw new Error('SMTP credentials not configured. Set SMTP_USER and SMTP_PASS in .env');
+  }
+
+  return nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465,
+    auth: { user, pass },
+  });
+}
+
+function buildInviteEmailHtml({ inviterName, teamName, inviteLink }) {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Invitation - DevFlow</title>
+</head>
+<body style="margin:0;padding:0;background:#09090b;font-family:'Inter',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#09090b;padding:48px 16px;">
+    <tr>
+      <td align="center">
+        <table width="520" cellpadding="0" cellspacing="0" style="background:#0a0a0a;border:1px solid #27272a;border-radius:16px;overflow:hidden;max-width:520px;width:100%;">
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#1e1b4b 0%,#0a0a0a 100%);padding:40px 40px 32px;text-align:center;border-bottom:1px solid #1e1b4b;">
+              <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;">
+                <div style="width:40px;height:40px;background:#000;border:1px solid #27272a;border-radius:10px;display:inline-block;line-height:40px;text-align:center;font-size:20px;">⚡</div>
+                <span style="color:#fff;font-size:18px;font-weight:700;letter-spacing:-0.3px;">DevFlow</span>
+              </div>
+              <h1 style="color:#ffffff;font-size:26px;font-weight:700;margin:0;letter-spacing:-0.5px;line-height:1.2;">
+                You're invited to join a team!
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:36px 40px;">
+              <p style="color:#a1a1aa;font-size:15px;line-height:1.7;margin:0 0 24px;">
+                <strong style="color:#e4e4e7;">${inviterName}</strong> has invited you to collaborate on the
+                <strong style="color:#818cf8;">${teamName}</strong> workspace inside DevFlow.
+              </p>
+
+              <!-- Team card -->
+              <div style="background:#111;border:1px solid #1e1b4b;border-radius:12px;padding:20px 24px;margin:0 0 28px;">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                  <div style="width:36px;height:36px;background:#1e1b4b;border-radius:8px;display:inline-block;line-height:36px;text-align:center;font-size:16px;">👥</div>
+                  <div>
+                    <div style="color:#fff;font-size:15px;font-weight:600;">${teamName}</div>
+                    <div style="color:#6b7280;font-size:12px;">Invited by ${inviterName}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CTA Button -->
+              <div style="text-align:center;margin:0 0 28px;">
+                <a href="${inviteLink}"
+                   style="display:inline-block;background:#4f46e5;color:#fff;font-size:15px;font-weight:600;text-decoration:none;padding:14px 36px;border-radius:10px;letter-spacing:0.2px;box-shadow:0 4px 24px rgba(79,70,229,0.4);">
+                  Accept Invitation &rarr;
+                </a>
+              </div>
+
+              <p style="color:#52525b;font-size:13px;line-height:1.6;margin:0;">
+                If the button doesn't work, copy and paste this link into your browser:<br/>
+                <a href="${inviteLink}" style="color:#818cf8;word-break:break-all;">${inviteLink}</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:20px 40px;border-top:1px solid #18181b;text-align:center;">
+              <p style="color:#3f3f46;font-size:12px;margin:0;">
+                This invitation was sent by <strong>${inviterName}</strong> via DevFlow.<br/>
+                If you weren't expecting this, you can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+app.post('/api/invite/send', inviteLimiter, validate(InviteSchema), async (req, res) => {
+  const { to, inviterName, teamName, inviteLink } = req.body;
+
+  try {
+    const transporter = getEmailTransporter();
+    const fromAddress = process.env.SMTP_FROM || process.env.SMTP_USER;
+
+    await transporter.sendMail({
+      from: `"DevFlow" <${fromAddress}>`,
+      to,
+      subject: `${inviterName} invited you to join "${teamName}" on DevFlow`,
+      html: buildInviteEmailHtml({ inviterName, teamName, inviteLink }),
+      text: `${inviterName} has invited you to join the "${teamName}" workspace on DevFlow.\n\nClick this link to accept: ${inviteLink}\n\nIf you weren't expecting this, you can safely ignore this email.`,
+    });
+
+    return res.json({ success: true, message: 'Invite email sent successfully.' });
+  } catch (error) {
+    console.error('Email send error:', error);
+    return res.status(500).json({ error: error.message || 'Failed to send invite email.' });
+  }
+});
+
 
 // DevPilot AI endpoint
 app.post('/api/ai/generate', validate(AiGenerateRequestSchema), async (req, res) => {
