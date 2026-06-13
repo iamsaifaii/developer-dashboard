@@ -25,6 +25,7 @@ const GoalsDashboard = lazy(() => import('./components/Goals/GoalsDashboard').th
 
 function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
@@ -239,10 +240,15 @@ function App() {
     <div className={`min-h-screen ${settings.themeMode === 'glass' ? 'bg-white dark:bg-neutral-900' : 'bg-white dark:bg-neutral-900'} text-black dark:text-neutral-100 flex relative overflow-hidden `}>
 
  {/* Primary Sidebar Layout */}
- <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+ <Sidebar 
+   isOpen={isMobileMenuOpen} 
+   onClose={() => setIsMobileMenuOpen(false)} 
+   isCollapsed={isSidebarCollapsed}
+   onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+ />
 
  {/* Main Content Area */}
- <div className="flex-1 pl-0 lg:pl-64 flex flex-col h-screen overflow-hidden w-full">
+ <div className={`flex-1 pl-0 ${isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'} flex flex-col h-screen overflow-hidden w-full transition-all duration-300 ease-in-out`}>
  {/* Workspace Top Header */}
  <Header 
  onQuickTaskClick={() => setIsQuickTaskOpen(true)} 
