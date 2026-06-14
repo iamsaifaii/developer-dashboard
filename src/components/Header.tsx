@@ -39,6 +39,7 @@ interface HeaderProps {
  case 'dashboard': return 'Productivity Dashboard';
  case 'ai': return 'DevPilot AI Workspace';
  case 'kanban': return 'Sprint Kanban';
+ case 'projects': return 'Projects To-Do';
  case 'notes': return 'Markdown Notes';
  case 'calendar': return 'Project Calendar';
  case 'pomodoro': return 'Focus Session';

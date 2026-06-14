@@ -6,7 +6,7 @@ import { auth } from '../lib/firebase';
 import type { 
   Task, Column, Note, CalendarEvent, PomodoroSession, TimerMode, DeveloperSettings,
   GithubRepo, GithubIssue, GithubPR, GithubCommit, GithubAnalytics,
-  AppNotification, AIMessage, Team, TeamInvite, WorkspaceMode
+  AppNotification, AIMessage, Team, TeamInvite, WorkspaceMode, Project, ProjectTask
 } from '../types';
 import { fetchGithubData } from '../services/githubService';
 
@@ -112,6 +112,15 @@ interface State {
   // Global time to force UI updates
   currentTime: number;
 
+  // Projects To-Do
+  projects: Project[];
+  projectTasks: ProjectTask[];
+  addProject: (name: string) => void;
+  deleteProject: (projectId: string) => void;
+  addProjectTask: (projectId: string, title: string) => void;
+  updateProjectTask: (taskId: string, updates: Partial<ProjectTask>) => void;
+  deleteProjectTask: (taskId: string) => void;
+
   // Teams
   teams: Team[];
   pendingInvites: { team: Team; invite: TeamInvite }[];
@@ -203,6 +212,8 @@ export const useStore = create<State>()((set, get) => {
       authError: null,
       cloudSyncStatus: null,
       cloudSyncError: null,
+      projects: [],
+      projectTasks: [],
     });
   },
    setCurrentUser: (user) => {
@@ -239,7 +250,9 @@ export const useStore = create<State>()((set, get) => {
                isHydratingFromCloud: false,
                isReceivingSnapshot: true,
                cloudSyncStatus: 'synced',
-               cloudSyncError: null
+               cloudSyncError: null,
+               projects: cloudState.projects || [],
+               projectTasks: cloudState.projectTasks || []
              });
              setTimeout(() => set({ isReceivingSnapshot: false }), 0);
              return;
@@ -255,7 +268,9 @@ export const useStore = create<State>()((set, get) => {
            isHydratingFromCloud: false,
            isReceivingSnapshot: true,
            cloudSyncStatus: 'synced',
-           cloudSyncError: null
+           cloudSyncError: null,
+           projects: [],
+           projectTasks: []
          });
          setTimeout(() => set({ isReceivingSnapshot: false }), 0);
        }, (err) => {
@@ -284,7 +299,9 @@ export const useStore = create<State>()((set, get) => {
         githubUsername: '',
         githubToken: null,
         cloudSyncStatus: null,
-        cloudSyncError: null
+        cloudSyncError: null,
+        projects: [],
+        projectTasks: []
       });
     }
   },
@@ -738,6 +755,39 @@ export const useStore = create<State>()((set, get) => {
   setPendingInvites: (invites) => set({ pendingInvites: invites }),
   setActiveWorkspace: (workspace) => set({ activeWorkspace: workspace }),
 
+  // Projects To-Do State
+  projects: [],
+  projectTasks: [],
+  addProject: (name) => set((state) => {
+    const newProject: Project = {
+      id: `proj-${Date.now()}`,
+      name,
+      createdAt: new Date().toISOString()
+    };
+    return { projects: [...(state.projects || []), newProject] };
+  }),
+  deleteProject: (projectId) => set((state) => ({
+    projects: (state.projects || []).filter(p => p.id !== projectId),
+    projectTasks: (state.projectTasks || []).filter(t => t.projectId !== projectId)
+  })),
+  addProjectTask: (projectId, title) => set((state) => {
+    const newTask: ProjectTask = {
+      id: `ptask-${Date.now()}`,
+      projectId,
+      title,
+      isCompleted: false,
+      subtasks: [],
+      createdAt: new Date().toISOString()
+    };
+    return { projectTasks: [...(state.projectTasks || []), newTask] };
+  }),
+  updateProjectTask: (taskId, updates) => set((state) => ({
+    projectTasks: (state.projectTasks || []).map(t => t.id === taskId ? { ...t, ...updates } : t)
+  })),
+  deleteProjectTask: (taskId) => set((state) => ({
+    projectTasks: (state.projectTasks || []).filter(t => t.id !== taskId)
+  })),
+
  // Real Github API functions
  githubToken: null,
  githubIsLoading: false,
@@ -827,14 +877,18 @@ useStore.subscribe((state, prevState) => {
       tasks: state.tasks,
       notes: state.notes,
       folders: state.folders,
-      events: state.events
+      events: state.events,
+      projects: state.projects,
+      projectTasks: state.projectTasks
     };
 
     const prevCollabState = {
       tasks: prevState.tasks,
       notes: prevState.notes,
       folders: prevState.folders,
-      events: prevState.events
+      events: prevState.events,
+      projects: prevState.projects,
+      projectTasks: prevState.projectTasks
     };
 
     const stateToSave = { ...personalStateToSave, ...collabStateToSave };

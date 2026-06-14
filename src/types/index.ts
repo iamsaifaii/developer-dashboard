@@ -205,6 +205,23 @@ export interface HabitStreak {
   lastLogDate: string;
 }
 
+// ─── Projects & To-Do Lists ───────────────────────────────────────────────────
+
+export interface Project {
+  id: string;
+  name: string;
+  createdAt: string;
+}
+
+export interface ProjectTask {
+  id: string;
+  projectId: string;
+  title: string;
+  isCompleted: boolean;
+  subtasks: Subtask[];
+  createdAt: string;
+}
+
 // ─── Teams & Collaboration ────────────────────────────────────────────────────
 
 export interface TeamMember {

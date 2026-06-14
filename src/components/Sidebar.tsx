@@ -14,7 +14,8 @@ import {
  FiTarget,
  FiUsers,
  FiBook,
- FiShield
+ FiShield,
+ FiCheckSquare
 } from 'react-icons/fi';
 
 
@@ -40,6 +41,7 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void; isCollaps
 
  const workspaceItems = [
  { id: 'dashboard', label: 'Dashboard', icon: FiLayout },
+ { id: 'projects', label: 'Projects To-Do', icon: FiCheckSquare },
  { id: 'kanban', label: 'Kanban Board', icon: TrelloIcon },
  { id: 'notes', label: 'Notes', icon: FiFileText },
  { id: 'calendar', label: 'Calendar', icon: FiCalendar },

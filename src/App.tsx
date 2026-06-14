@@ -15,6 +15,7 @@ import { GlobalShortcuts } from './components/GlobalShortcuts';
 
 // Lazy loaded components
 const DashboardHome = lazy(() => import('./components/DashboardHome').then(m => ({ default: m.DashboardHome })));
+const ProjectsTodoPage = lazy(() => import('./components/Projects/ProjectsTodoPage').then(m => ({ default: m.ProjectsTodoPage })));
 const KanbanBoard = lazy(() => import('./components/Kanban/KanbanBoard').then(m => ({ default: m.KanbanBoard })));
 const NotesManager = lazy(() => import('./components/Notes/NotesManager').then(m => ({ default: m.NotesManager })));
 const ProjectCalendar = lazy(() => import('./components/Calendar/ProjectCalendar').then(m => ({ default: m.ProjectCalendar })));
@@ -300,6 +301,7 @@ function App() {
       }>
         <Routes>
           <Route path="/" element={<DashboardHome onNavigate={(tab) => navigate(tab === 'dashboard' ? '/' : `/${tab}`)} />} />
+          <Route path="/projects" element={<ProjectsTodoPage />} />
           <Route path="/kanban" element={<KanbanBoard />} />
           <Route path="/notes" element={<NotesManager />} />
           <Route path="/calendar" element={<ProjectCalendar />} />
