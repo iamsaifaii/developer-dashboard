@@ -80,7 +80,7 @@ export const ProjectsTodoPage: React.FC = () => {
       <div className="w-full md:w-64 lg:w-80 flex flex-col gap-4">
         <div className="p-4 rounded-xl border border-zinc-800 bg-black/40 backdrop-blur-md flex flex-col gap-4 h-full shadow-lg">
           <h2 className="text-sm font-bold text-white flex items-center gap-2 tracking-wide">
-            <FiFolder className="w-4 h-4 text-indigo-400" />
+            <FiFolder className="w-4 h-4 text-white" />
             Projects
           </h2>
 
@@ -90,12 +90,12 @@ export const ProjectsTodoPage: React.FC = () => {
               placeholder="New project..." 
               value={newProjectName}
               onChange={(e) => setNewProjectName(e.target.value)}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-3 pr-10 py-2 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-3 pr-10 py-2 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white transition-colors"
             />
             <button 
               type="submit"
               disabled={!newProjectName.trim()}
-              className="absolute right-1 top-1 bottom-1 px-2 rounded-md bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors flex items-center justify-center cursor-pointer"
+              className="absolute right-1 top-1 bottom-1 px-2 rounded-md bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black transition-colors flex items-center justify-center cursor-pointer"
             >
               <FiPlus className="w-3.5 h-3.5" />
             </button>
@@ -116,7 +116,7 @@ export const ProjectsTodoPage: React.FC = () => {
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <FiFolder className={`w-3.5 h-3.5 shrink-0 ${activeProjectId === project.id ? 'text-indigo-400' : 'text-zinc-500 group-hover:text-zinc-400'}`} />
+                    <FiFolder className={`w-3.5 h-3.5 shrink-0 ${activeProjectId === project.id ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-400'}`} />
                     <span className={`text-sm truncate font-medium ${activeProjectId === project.id ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-300'}`}>
                       {project.name}
                     </span>
@@ -151,7 +151,7 @@ export const ProjectsTodoPage: React.FC = () => {
               {/* Progress Bar */}
               <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-indigo-500 transition-all duration-500 ease-out" 
+                  className="h-full bg-white transition-all duration-500 ease-out" 
                   style={{ width: `${progressPercent}%` }} 
                 />
               </div>
@@ -177,7 +177,7 @@ export const ProjectsTodoPage: React.FC = () => {
                         <button 
                           onClick={() => toggleTaskCompletion(task)}
                           className={`shrink-0 flex items-center justify-center w-5 h-5 rounded-md border transition-all cursor-pointer ${
-                            task.isCompleted ? 'bg-indigo-500 border-indigo-500 text-white' : 'border-zinc-600 hover:border-indigo-400 text-transparent'
+                            task.isCompleted ? 'bg-white border-white text-black' : 'border-zinc-600 hover:border-white text-transparent'
                           }`}
                         >
                           {task.isCompleted && <FiCheckCircle className="w-3.5 h-3.5" />}
@@ -262,12 +262,12 @@ export const ProjectsTodoPage: React.FC = () => {
                   placeholder="Add a new task..." 
                   value={newTaskTitle}
                   onChange={(e) => setNewTaskTitle(e.target.value)}
-                  className="w-full bg-black/50 border border-zinc-800 rounded-xl pl-10 pr-12 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors shadow-inner"
+                  className="w-full bg-black/50 border border-zinc-800 rounded-xl pl-10 pr-12 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white transition-colors shadow-inner"
                 />
                 <button 
                   type="submit"
                   disabled={!newTaskTitle.trim()}
-                  className="absolute right-1.5 top-1.5 bottom-1.5 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors font-bold text-xs flex items-center justify-center cursor-pointer"
+                  className="absolute right-1.5 top-1.5 bottom-1.5 px-3 rounded-lg bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black transition-colors font-bold text-xs flex items-center justify-center cursor-pointer"
                 >
                   Add
                 </button>
