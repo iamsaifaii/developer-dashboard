@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../../store/useStore';
 import { FiPlus, FiTrash2, FiFolder, FiCheckCircle, FiCircle, FiChevronDown, FiChevronRight } from 'react-icons/fi';
-import { ProjectTask, Subtask } from '../../types';
+import type { ProjectTask, Subtask } from '../../types';
 
 export const ProjectsTodoPage: React.FC = () => {
   const { 
